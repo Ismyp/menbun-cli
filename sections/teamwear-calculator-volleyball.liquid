@@ -1,0 +1,512 @@
+{%- comment -%}
+  Teamwear Kalkulator Section - Volleyball
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{{ 'teamwear-calculator.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'teamwear-calculator.js' | asset_url }}" defer></script>
+
+<div class="teamwear-calculator teamwear-calculator--contained teamwear-calculator--volleyball" data-section="{{ section.id }}">
+  <div class="teamwear-calculator__inner">
+    
+    <div class="teamwear-step" data-step="design">
+      <h2 class="teamwear-step__title">{{ section.settings.design_title }}</h2>
+      {%- if section.settings.design_description != blank -%}
+        <p class="teamwear-step__description">{{ section.settings.design_description }}</p>
+      {%- endif -%}
+      
+      <div class="teamwear-designs">
+        {%- assign has_designs = false -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'design' -%}
+              {%- assign product = block.settings.product -%}
+              {%- if product != blank -%}
+                {%- assign has_designs = true -%}
+                <div class="teamwear-design" data-design-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  <input type="radio" 
+                         name="teamwear-design" 
+                         id="design-{{ block.id }}" 
+                         value="{{ block.id }}"
+                         data-product-id="{{ product.selected_or_first_available_variant.id }}"
+                         data-product-handle="{{ product.handle }}"
+                         data-base-price="{{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}"
+                         data-discount-per-tier="{{ block.settings.discount_per_10 | default: 5 }}"
+                         data-tier-size="10"
+                         data-max-discount="50"
+                         class="teamwear-design__input visually-hidden"
+                         {% if forloop.first %}checked{% endif %}>
+                  <label for="design-{{ block.id }}" class="teamwear-design__label">
+                    {%- if product.featured_image != blank -%}
+                      <div class="teamwear-design__image">
+                        {{ product.featured_image | image_url: width: 400 | image_tag: 
+                           loading: 'lazy',
+                           alt: product.title | escape }}
+                      </div>
+                    {%- endif -%}
+                    <h3 class="teamwear-design__name">
+                      {%- if block.settings.name != blank -%}
+                        {{ block.settings.name }}
+                      {%- else -%}
+                        {{ product.title }}
+                      {%- endif -%}
+                    </h3>
+                    <div class="teamwear-design__price">
+                      {{ product.selected_or_first_available_variant.price | money }}
+                      <span class="teamwear-design__price-note">{{ section.settings.price_note }}</span>
+                    </div>
+                    {%- if block.settings.discount_per_10 > 0 -%}
+                      <div class="teamwear-design__discount-info">
+                        {{ block.settings.discount_per_10 }}% Rabatt pro 10 {{ section.settings.unit }}
+                      </div>
+                    {%- endif -%}
+                  </label>
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+        
+        {%- if has_designs == false and section.settings.fallback_product != blank -%}
+          {%- assign fallback_product = section.settings.fallback_product -%}
+          <div class="teamwear-design" data-design-id="fallback">
+            <input type="radio" 
+                   name="teamwear-design" 
+                   id="design-fallback" 
+                   value="fallback"
+                                  data-product-id="{{ fallback_product.selected_or_first_available_variant.id }}"
+               data-product-handle="{{ fallback_product.handle }}"
+               data-base-price="{{ fallback_product.selected_or_first_available_variant.price | divided_by: 100.0 }}"
+                   data-discount-per-tier="{{ section.settings.fallback_discount_per_tier | default: 5 }}"
+                   data-tier-size="10"
+                   data-max-discount="50"
+                   class="teamwear-design__input visually-hidden"
+                   checked>
+            <label for="design-fallback" class="teamwear-design__label">
+              {%- if fallback_product.featured_image != blank -%}
+                <div class="teamwear-design__image">
+                  {{ fallback_product.featured_image | image_url: width: 400 | image_tag: 
+                     loading: 'lazy',
+                     alt: fallback_product.title | escape }}
+                </div>
+              {%- endif -%}
+              <h3 class="teamwear-design__name">{{ fallback_product.title }}</h3>
+              <div class="teamwear-design__price">
+                {{ fallback_product.selected_or_first_available_variant.price | money }}
+                <span class="teamwear-design__price-note">{{ section.settings.price_note }}</span>
+              </div>
+              {%- if section.settings.fallback_discount_per_tier > 0 -%}
+                <div class="teamwear-design__discount-info">
+                  {{ section.settings.fallback_discount_per_tier }}% Rabatt pro 10 {{ section.settings.unit }}
+                </div>
+              {%- endif -%}
+            </label>
+          </div>
+        {%- endif -%}
+        
+        {%- if has_designs == false and section.settings.fallback_product == blank -%}
+          <div class="teamwear-placeholder" style="text-align: center; padding: 2rem; border: 2px dashed #ddd; border-radius: 8px; background: #fafafa;">
+            <h3>🏐 Volleyball-Designs hinzufügen</h3>
+            <p class="teamwear-placeholder-text" style="margin: 1rem 0;">
+              Füge Volleyball-Design-Blocks im Theme Editor hinzu.
+            </p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    
+    <div class="teamwear-step" data-step="quantity">
+      <h2 class="teamwear-step__title">{{ section.settings.quantity_title }}</h2>
+      {%- if section.settings.quantity_description != blank -%}
+        <p class="teamwear-step__description">{{ section.settings.quantity_description }}</p>
+      {%- endif -%}
+      
+      <div class="teamwear-quantities" style="display: none;">
+        {%- assign quantities = section.settings.quantities | split: ',' -%}
+        {%- for quantity in quantities -%}
+          {%- assign qty_num = quantity | strip | times: 1 -%}
+          <button type="button" class="teamwear-quantity" data-quantity="{{ qty_num }}">
+            <span class="teamwear-quantity__amount">{{ qty_num }} {{ section.settings.unit }}</span>
+            <span class="teamwear-quantity__discount" data-discount-info></span>
+            <span class="teamwear-quantity__price" data-price-display></span>
+          </button>
+        {%- endfor -%}
+      </div>
+      
+      <div class="teamwear-quantities__placeholder">
+        <p class="teamwear-placeholder-text">Wähle zuerst ein Volleyball-Design aus.</p>
+      </div>
+    </div>
+    
+    <div class="teamwear-step" data-step="sizes">
+      <h2 class="teamwear-step__title">{{ section.settings.sizes_title }}</h2>
+      {%- if section.settings.sizes_description != blank -%}
+        <p class="teamwear-step__description">{{ section.settings.sizes_description }}</p>
+      {%- endif -%}
+      
+      <div class="teamwear-sizes">
+        {%- assign sizes = section.settings.sizes | split: ',' -%}
+        {%- for size in sizes -%}
+          <div class="teamwear-size">
+            <label for="size-{{ size | strip | handleize }}" class="teamwear-size__label">
+              {{ size | strip }}
+            </label>
+            <input type="number" 
+                   id="size-{{ size | strip | handleize }}"
+                   name="size-{{ size | strip | handleize }}"
+                   class="teamwear-size__input"
+                   min="0"
+                   value="0"
+                   data-size="{{ size | strip }}">
+          </div>
+        {%- endfor -%}
+      </div>
+      
+      <div class="teamwear-sizes__validation">
+        <span class="teamwear-sizes__total">Gesamt: <strong data-total>0</strong></span>
+        <span class="teamwear-sizes__required">von <strong data-required>0</strong> benötigt</span>
+      </div>
+      
+      {%- if section.settings.size_chart_image != blank -%}
+        <button type="button" class="teamwear-size-chart-toggle">
+          {{ section.settings.size_chart_button_text }}
+        </button>
+        <div class="teamwear-size-chart" style="display: none;">
+          {{ section.settings.size_chart_image | image_url: width: 800 | image_tag: 
+             loading: 'lazy',
+             alt: 'Volleyball Größentabelle' | escape }}
+        </div>
+      {%- endif -%}
+    </div>
+    
+    {%- if section.settings.enable_personalization -%}
+      <div class="teamwear-step" data-step="personalization">
+        <h2 class="teamwear-step__title">
+          {{ section.settings.personalization_title }}
+          <span class="teamwear-step__optional">({{ section.settings.optional_text }})</span>
+        </h2>
+        {%- if section.settings.personalization_description != blank -%}
+          <p class="teamwear-step__description">{{ section.settings.personalization_description }}</p>
+        {%- endif -%}
+        
+        <button type="button" class="teamwear-personalization__toggle" aria-expanded="false">
+          <span class="teamwear-personalization__toggle-text">{{ section.settings.personalization_toggle_text }}</span>
+          <svg class="teamwear-personalization__toggle-icon" width="12" height="12" viewBox="0 0 12 12">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+        
+        <div class="teamwear-personalization__content" style="display: none;">
+          <div class="teamwear-personalization__list"></div>
+        </div>
+      </div>
+    {%- endif -%}
+    
+    <div class="teamwear-summary">
+      <div class="teamwear-summary__price">
+        <span class="teamwear-summary__label">{{ section.settings.total_price_label }}</span>
+        <span class="teamwear-summary__amount" data-total-price>{{ 0 | money }}</span>
+        <span class="teamwear-summary__details" data-price-details></span>
+      </div>
+      
+      <button type="button" 
+              class="teamwear-submit button button--primary"
+              disabled>
+        {{ section.settings.add_to_cart_text }}
+      </button>
+      
+      <div class="teamwear-messages" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.teamwearConfig = {
+    sectionId: '{{ section.id }}',
+    currency: '{{ cart.currency.iso_code }}',
+    moneyFormat: {{ shop.money_format | json }},
+    defaultQuantity: 10,
+    translations: {
+      required: {{ 'Benötigt' | json }},
+      total: {{ 'Gesamt' | json }},
+      perPiece: {{ 'pro Stück' | json }},
+      discount: {{ 'Rabatt' | json }},
+      basePrice: {{ 'Basispreis' | json }},
+      selectDesign: {{ section.settings.error_select_design | json }},
+      selectQuantity: {{ section.settings.error_select_quantity | json }},
+      correctSizes: {{ section.settings.error_correct_sizes | json }},
+      addingToCart: {{ section.settings.adding_to_cart_text | json }},
+      addedToCart: {{ section.settings.added_to_cart_text | json }},
+      error: {{ section.settings.error_general | json }}
+    }
+  };
+</script>
+
+{% schema %}
+{
+  "name": "Volleyball Teamwear",
+  "tag": "section",
+  "class": "section-teamwear-calculator-volleyball",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Volleyball-Einstellungen"
+    },
+    {
+      "type": "product",
+      "id": "fallback_product",
+      "label": "Fallback Volleyball-Produkt"
+    },
+    {
+      "type": "range",
+      "id": "fallback_discount_per_tier",
+      "label": "Fallback Rabatt pro Staffel",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Design-Auswahl"
+    },
+    {
+      "type": "text",
+      "id": "design_title",
+      "label": "Überschrift Design-Auswahl",
+      "default": "1. Wähle dein Volleyball-Design"
+    },
+    {
+      "type": "text",
+      "id": "design_description",
+      "label": "Beschreibung Design-Auswahl",
+      "default": "Wähle aus unseren verfügbaren Volleyball-Designs"
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Preis-Hinweis",
+      "default": "Stückpreis"
+    },
+    {
+      "type": "header",
+      "content": "Mengenstaffel"
+    },
+    {
+      "type": "text",
+      "id": "quantity_title",
+      "label": "Überschrift Mengenstaffel",
+      "default": "2. Wähle die Anzahl"
+    },
+    {
+      "type": "text",
+      "id": "quantity_description",
+      "label": "Beschreibung Mengenstaffel",
+      "default": "Je mehr du bestellst, desto günstiger wird es!"
+    },
+    {
+      "type": "text",
+      "id": "quantities",
+      "label": "Verfügbare Mengen",
+      "default": "10,20,30,40,50"
+    },
+    {
+      "type": "text",
+      "id": "unit",
+      "label": "Einheit",
+      "default": "Stück"
+    },
+    {
+      "type": "header",
+      "content": "Größenverteilung"
+    },
+    {
+      "type": "text",
+      "id": "sizes_title",
+      "label": "Überschrift Größen",
+      "default": "3. Größenverteilung angeben"
+    },
+    {
+      "type": "text",
+      "id": "sizes_description",
+      "label": "Beschreibung Größen",
+      "default": "Gib an, wie viele Volleyball-Trikots du benötigst"
+    },
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Verfügbare Größen",
+      "default": "XS,S,M,L,XL,XXL"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_image",
+      "label": "Volleyball Größentabelle Bild"
+    },
+    {
+      "type": "text",
+      "id": "size_chart_button_text",
+      "label": "Größentabelle Button-Text",
+      "default": "Volleyball Größentabelle anzeigen"
+    },
+    {
+      "type": "header",
+      "content": "Personalisierung"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_personalization",
+      "label": "Personalisierung aktivieren",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "personalization_title",
+      "label": "Überschrift Personalisierung",
+      "default": "4. Personalisierung"
+    },
+    {
+      "type": "text",
+      "id": "personalization_description",
+      "label": "Beschreibung Personalisierung",
+      "default": "Füge Namen und Rückennummern hinzu"
+    },
+    {
+      "type": "text",
+      "id": "optional_text",
+      "label": "Optional-Text",
+      "default": "Optional"
+    },
+    {
+      "type": "text",
+      "id": "personalization_toggle_text",
+      "label": "Toggle-Button Text",
+      "default": "Personalisierung hinzufügen"
+    },
+    {
+      "type": "header",
+      "content": "Zusammenfassung & Button"
+    },
+    {
+      "type": "text",
+      "id": "total_price_label",
+      "label": "Gesamtpreis Label",
+      "default": "Gesamtpreis:"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "In den Warenkorb Button-Text",
+      "default": "In den Warenkorb"
+    },
+    {
+      "type": "text",
+      "id": "adding_to_cart_text",
+      "label": "Wird hinzugefügt Text",
+      "default": "Wird hinzugefügt..."
+    },
+    {
+      "type": "text",
+      "id": "added_to_cart_text",
+      "label": "Hinzugefügt Text",
+      "default": "Erfolgreich hinzugefügt!"
+    },
+    {
+      "type": "header",
+      "content": "Fehlermeldungen"
+    },
+    {
+      "type": "text",
+      "id": "error_select_design",
+      "label": "Fehler: Design auswählen",
+      "default": "Bitte wähle ein Volleyball-Design aus"
+    },
+    {
+      "type": "text",
+      "id": "error_select_quantity",
+      "label": "Fehler: Menge auswählen",
+      "default": "Bitte wähle eine Menge aus"
+    },
+    {
+      "type": "text",
+      "id": "error_correct_sizes",
+      "label": "Fehler: Größen korrigieren",
+      "default": "Die Summe der Größen muss der gewählten Menge entsprechen"
+    },
+    {
+      "type": "text",
+      "id": "error_general",
+      "label": "Allgemeiner Fehler",
+      "default": "Es ist ein Fehler aufgetreten."
+    },
+    {
+      "type": "header",
+      "content": "Abstände"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Abstand oben",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Abstand unten",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "design",
+      "name": "Volleyball Design",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Volleyball-Produkt auswählen"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Custom Design-Name (optional)"
+        },
+        {
+          "type": "range",
+          "id": "discount_per_10",
+          "label": "Rabatt pro 10 Stück",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "unit": "%",
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Volleyball Teamwear",
+      "blocks": [
+        {
+          "type": "design"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 

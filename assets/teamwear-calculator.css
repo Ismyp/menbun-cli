@@ -1,0 +1,604 @@
+/* Teamwear Calculator Styles */
+.teamwear-calculator {
+  --border-radius: 8px;
+  --transition-duration: 0.2s;
+  --primary-color: #000;
+  --success-color: #198754;
+  --error-color: #dc3545;
+  --border-color: #f5f5f5;
+  --hover-bg: #f5f5f5;
+  --selected-bg: #000;
+  --selected-color: #fff;
+}
+
+/* Entferne schwarze Striche von Announcement Bar und Divider auf Teamwear-Seiten */
+.page-teamwear .announcement-bar {
+  --border-bottom-width: 0px !important;
+  border-bottom: none !important;
+}
+
+.page-teamwear .divider__line {
+  --divider-border-thickness: 0px !important;
+  border: none !important;
+  display: none !important;
+}
+
+.page-teamwear .divider {
+  display: none !important;
+}
+
+/* Header-Bereich mit eigener Breitenkontrolle anstatt page-width */
+.teamwear-page-width {
+  width: 100% !important;
+  max-width: calc(100% - 8rem) !important; /* Zieht 4rem auf jeder Seite ab */
+  margin: 0 auto !important;
+  padding-left: 4rem !important;
+  padding-right: 4rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Responsive Abstände für Header-Bereich */
+@media screen and (max-width: 1200px) {
+  .teamwear-page-width {
+    max-width: calc(100% - 6rem) !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-page-width {
+    max-width: calc(100% - 4rem) !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .teamwear-page-width {
+    max-width: calc(100% - 2rem) !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Container mit eigener Breitenkontrolle anstatt page-width */
+.teamwear-calculator--contained {
+  width: 100% !important;
+  max-width: calc(100% - 8rem) !important; /* Zieht 4rem auf jeder Seite ab */
+  margin: 0 auto !important;
+  padding-left: 4rem !important;
+  padding-right: 4rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Responsive Abstände für kleinere Bildschirme */
+@media screen and (max-width: 1200px) {
+  .teamwear-calculator--contained {
+    max-width: calc(100% - 6rem) !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-calculator--contained {
+    max-width: calc(100% - 4rem) !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .teamwear-calculator--contained {
+    max-width: calc(100% - 2rem) !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+.teamwear-calculator__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Steps */
+.teamwear-step {
+  margin-bottom: 2rem;
+}
+
+.teamwear-step__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.teamwear-step__optional {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #666;
+}
+
+.teamwear-step__description {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Design Selection */
+.teamwear-designs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-designs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+.teamwear-design {
+  position: relative;
+}
+
+.teamwear-design__label {
+  display: block;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+  height: 100%;
+  text-align: center;
+}
+
+.teamwear-design__label:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.teamwear-design__input:checked + .teamwear-design__label {
+  border-color: var(--primary-color) !important;
+  border-width: 3px !important;
+  box-shadow: 0 0 0 1px var(--primary-color) !important;
+  position: relative;
+}
+
+.teamwear-design__input:checked + .teamwear-design__label::after {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.teamwear-design__image {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: calc(var(--border-radius) / 2);
+  margin-bottom: 1rem;
+}
+
+.teamwear-design__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: none;
+  filter: none;
+}
+
+/* Verhindere jeden Overlay-Effekt auf Bildern */
+.teamwear-design__label:hover .teamwear-design__image img,
+.teamwear-design__input:checked + .teamwear-design__label .teamwear-design__image img {
+  filter: none;
+  opacity: 1;
+  transform: none;
+}
+
+.teamwear-design__name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.teamwear-design__description {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+.teamwear-design__price {
+  margin-top: 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.teamwear-design__price-note {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.7;
+  display: block;
+}
+
+.teamwear-design__discount-info {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+/* Quantity Selection */
+.teamwear-quantities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-quantities {
+    flex-direction: column;
+  }
+}
+
+.teamwear-quantity {
+  flex: 1;
+  min-width: 140px;
+  padding: 1.25rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+  text-align: center;
+}
+
+.teamwear-quantity:hover {
+  border-color: var(--primary-color);
+  background-color: var(--hover-bg);
+}
+
+.teamwear-quantity.active {
+  border-color: var(--primary-color);
+  background-color: var(--selected-bg);
+  color: var(--selected-color);
+}
+
+.teamwear-quantity__amount {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.teamwear-quantity__discount {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--success-color);
+  margin: 0.25rem 0;
+}
+
+.teamwear-quantity__price {
+  display: block;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* Quantity Placeholder */
+.teamwear-quantities__placeholder {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f8f8f8;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.teamwear-placeholder-text {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Size Distribution */
+.teamwear-sizes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 479px) {
+  .teamwear-sizes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.teamwear-size {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.teamwear-size__label {
+  font-weight: 600;
+  text-align: center;
+}
+
+.teamwear-size__input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: calc(var(--border-radius) / 2);
+  text-align: center;
+  font-size: 1rem;
+  transition: border-color var(--transition-duration) ease;
+}
+
+.teamwear-size__input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.teamwear-size__input.error {
+  border-color: var(--error-color);
+}
+
+/* Size Validation */
+.teamwear-sizes__validation {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
+.teamwear-sizes__validation.valid {
+  background-color: #d4edda;
+  color: var(--success-color);
+}
+
+.teamwear-sizes__validation.invalid {
+  background-color: #f8d7da;
+  color: var(--error-color);
+}
+
+/* Size Chart */
+.teamwear-size-chart-toggle {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+}
+
+.teamwear-size-chart-toggle:hover {
+  border-color: var(--primary-color);
+  background-color: var(--hover-bg);
+}
+
+.teamwear-size-chart {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.teamwear-size-chart img {
+  width: 100%;
+  height: auto;
+}
+
+/* Personalization */
+.teamwear-personalization__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+}
+
+.teamwear-personalization__toggle:hover {
+  border-color: var(--primary-color);
+  background-color: var(--hover-bg);
+}
+
+.teamwear-personalization__toggle[aria-expanded="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.teamwear-personalization__toggle-icon {
+  transition: transform var(--transition-duration) ease;
+}
+
+.teamwear-personalization__toggle[aria-expanded="true"] .teamwear-personalization__toggle-icon {
+  transform: rotate(180deg);
+}
+
+.teamwear-personalization__content {
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  padding: 1.5rem;
+}
+
+.teamwear-personalization__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.teamwear-personalization__item {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f8f8f8;
+  border-radius: calc(var(--border-radius) / 2);
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-personalization__item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.teamwear-personalization__number {
+  font-weight: 600;
+  min-width: 2rem;
+}
+
+.teamwear-personalization__input {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: calc(var(--border-radius) / 2);
+  font-size: 0.875rem;
+}
+
+/* Summary */
+.teamwear-summary {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-summary {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+}
+
+.teamwear-summary__price {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.teamwear-summary__label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.teamwear-summary__amount {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.teamwear-summary__details {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+/* Submit Button */
+.teamwear-submit {
+  min-width: 200px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-submit {
+    width: 100%;
+  }
+}
+
+.teamwear-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.teamwear-submit.loading {
+  position: relative;
+  color: transparent;
+}
+
+.teamwear-submit.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #ccc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Messages */
+.teamwear-messages {
+  text-align: center;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+  display: none;
+}
+
+.teamwear-messages.show {
+  display: block;
+}
+
+.teamwear-messages.success {
+  background-color: #d4edda;
+  color: var(--success-color);
+}
+
+.teamwear-messages.error {
+  background-color: #f8d7da;
+  color: var(--error-color);
+}
+
+/* Utility Classes */
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+} 

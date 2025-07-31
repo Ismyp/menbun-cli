@@ -1,0 +1,19 @@
+{%- comment -%}
+  Template für die Teamwear-Kalkulator Seite
+  Verwendet eine dedizierte Section für den Konfigurator
+{%- endcomment -%}
+
+<section class="page-teamwear">
+  <div class="teamwear-page-width">
+    <header class="page-header">
+      <h1 class="h1">{{ page.title }}</h1>
+      {%- if page.content != blank -%}
+        <div class="rte">
+          {{ page.content }}
+        </div>
+      {%- endif -%}
+    </header>
+  </div>
+</section>
+
+{%- section 'teamwear-calculator' -%} 

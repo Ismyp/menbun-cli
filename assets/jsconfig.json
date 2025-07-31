@@ -1,0 +1,16 @@
+{
+  "exclude": ["node_modules", ".meteor", ".cache"],
+  "compilerOptions": {
+    "checkJs": false,
+    "allowJs": true,
+    "lib": ["ES2020", "DOM"],
+    "module": "ES2022",
+    "target": "ES2022",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  }
+}
