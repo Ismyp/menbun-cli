@@ -16,7 +16,7 @@ class TeamwearCalculator {
     this.config = (window.teamwearConfig) || {};
     this.state = {
       selectedProduct: null,
-      selectedQuantity: 0,
+      selectedQuantity: 0, // wird nun aus Größenfeldern abgeleitet
       selectedDiscount: 0,
       basePrice: 0,
       finalPrice: 0,
@@ -30,6 +30,7 @@ class TeamwearCalculator {
       quantities: this.section.querySelectorAll('.teamwear-quantity'),
       quantitiesContainer: this.section.querySelector('.teamwear-quantities'),
       quantitiesPlaceholder: this.section.querySelector('.teamwear-quantities__placeholder'),
+      quantitiesInfo: this.section.querySelector('.teamwear-quantities__info'),
       sizeInputs: this.section.querySelectorAll('.teamwear-size__input'),
       sizeTotal: this.section.querySelector('[data-total]'),
       sizeRequired: this.section.querySelector('[data-required]'),
@@ -76,6 +77,7 @@ class TeamwearCalculator {
     });
     
     this.attachEventListeners();
+    this.initializeDynamicDiscounts();
     
     // Check if fallback design is pre-selected
     const checkedDesign = this.section.querySelector('.teamwear-design__input:checked');
@@ -105,6 +107,65 @@ class TeamwearCalculator {
     }
     
     this.updateUI();
+  }
+  
+  initializeDynamicDiscounts() {
+    // Read dynamic discount settings from DOM
+    this.state.useDynamicDiscounts = this.section.dataset.useDynamicDiscounts === 'true';
+    this.state.maxDiscountLimit = parseInt(this.section.dataset.maxDiscountLimit) || 25;
+    
+    console.log('🔧 Reading discount settings from DOM:', {
+      'data-use-dynamic-discounts': this.section.dataset.useDynamicDiscounts,
+      'data-discount-tiers': this.section.dataset.discountTiers,
+      'data-max-discount-limit': this.section.dataset.maxDiscountLimit,
+      parsed: {
+        useDynamicDiscounts: this.state.useDynamicDiscounts,
+        maxDiscountLimit: this.state.maxDiscountLimit
+      }
+    });
+    
+    // Parse discount tiers JSON
+    try {
+      const tiersData = this.section.dataset.discountTiers;
+      if (tiersData) {
+        // Clean up the JSON string (remove any escaping issues)
+        const cleanedTiersData = tiersData.trim().replace(/&quot;/g, '"');
+        console.log('🧹 Cleaning JSON data:', {
+          original: tiersData,
+          cleaned: cleanedTiersData
+        });
+        
+        this.state.discountTiers = JSON.parse(cleanedTiersData);
+        
+        // Validate that we have an array
+        if (!Array.isArray(this.state.discountTiers)) {
+          throw new Error('Discount tiers must be an array');
+        }
+        
+        // Sort tiers by quantity in descending order for easier lookup
+        this.state.discountTiers.sort((a, b) => b.quantity - a.quantity);
+        
+        console.log('🎯 Dynamic discounts initialized:', {
+          enabled: this.state.useDynamicDiscounts,
+          rawTiersData: tiersData,
+          cleanedTiersData: cleanedTiersData,
+          parsedTiers: this.state.discountTiers,
+          maxLimit: this.state.maxDiscountLimit
+        });
+        
+        // FORCE ENABLE for testing - remove this later
+        if (!this.state.useDynamicDiscounts && this.state.discountTiers.length > 0) {
+          console.log('🚨 FORCING dynamic discounts ON for testing');
+          this.state.useDynamicDiscounts = true;
+        }
+      } else {
+        console.log('💡 No tiers data found, using legacy discount system');
+      }
+    } catch (error) {
+      console.error('❌ Error parsing discount tiers:', error, 'Raw data:', this.section.dataset.discountTiers);
+      this.state.useDynamicDiscounts = false;
+      this.state.discountTiers = [];
+    }
   }
   
   // Debug helper method
@@ -181,12 +242,9 @@ class TeamwearCalculator {
               discountSettings: this.state.discountSettings
             });
             
-            // Show quantities and update prices
-            this.showQuantityOptions();
+            // Bei Wegfall der manuellen Mengenwahl: Preise nach Größenänderungen aktualisieren
+            this.updateQuantityFromSizes();
             this.updateQuantityPrices();
-            
-            // Auto-select default quantity (10)
-            this.selectDefaultQuantity();
             
             this.updateUI();
           }
@@ -194,41 +252,19 @@ class TeamwearCalculator {
       });
     }
     
-    // Quantity selection  
-    if (this.elements.quantities) {
-      this.elements.quantities.forEach(button => {
-        button.addEventListener('click', (e) => {
-          if (button instanceof HTMLElement) {
-            const quantity = parseInt(button.dataset.quantity || '0');
-            
-            // Remove active class from all buttons
-            this.elements.quantities.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            
-            this.state.selectedQuantity = quantity;
-            
-            // Calculate discount and final price
-            this.calculateDiscountAndPrice();
-            
-            // Update size required
-            if (this.elements.sizeRequired) {
-              this.elements.sizeRequired.textContent = quantity.toString();
-            }
-            
-            // Reset and rebuild personalization if quantity changed
-            this.buildPersonalizationList();
-            
-            this.updateUI();
-          }
-        });
-      });
-    }
+    // Entfernt: Manuelle Mengenwahl. Menge wird dynamisch aus Größen berechnet.
     
     // Size inputs
     if (this.elements.sizeInputs) {
       this.elements.sizeInputs.forEach(input => {
         input.addEventListener('input', () => {
+          // Menge aus Größen neu berechnen
+          this.updateQuantityFromSizes();
           this.updateSizeValidation();
+          // Preis neu kalkulieren
+          this.calculateDiscountAndPrice();
+          // Personalisierungsliste neu aufbauen (abhängig von Gesamtmenge)
+          this.buildPersonalizationList();
           this.updateUI();
         });
       });
@@ -267,9 +303,15 @@ class TeamwearCalculator {
   }
   
   showQuantityOptions() {
-    if (this.elements.quantitiesContainer && this.elements.quantitiesPlaceholder) {
-      this.elements.quantitiesContainer.style.display = 'flex';
+    // Deaktiviert: keine manuelle Mengenanzeige mehr
+    if (this.elements.quantitiesContainer) {
+      this.elements.quantitiesContainer.style.display = 'none';
+    }
+    if (this.elements.quantitiesPlaceholder) {
       this.elements.quantitiesPlaceholder.style.display = 'none';
+    }
+    if (this.elements.quantitiesInfo) {
+      this.elements.quantitiesInfo.style.display = 'block';
     }
   }
   
@@ -299,24 +341,67 @@ class TeamwearCalculator {
   }
   
   selectDefaultQuantity() {
-    const defaultQuantity = this.config.defaultQuantity || 10;
-    const defaultButton = Array.from(this.elements.quantities).find(btn => 
-      parseInt(btn.dataset.quantity) === defaultQuantity
-    );
-    
-    if (defaultButton) {
-      defaultButton.click();
-    }
+    // Nicht mehr erforderlich, Menge kommt aus Größenfeldern
   }
   
   calculateDiscount(quantity) {
-    if (!this.state.discountSettings) return 0;
+    console.log('🔢 Calculating discount for quantity:', quantity, {
+      useDynamicDiscounts: this.state.useDynamicDiscounts,
+      hasTiers: !!this.state.discountTiers,
+      discountTiers: this.state.discountTiers,
+      hasDiscountSettings: !!this.state.discountSettings
+    });
+    
+    // Check if dynamic discounts are enabled
+    if (this.state.useDynamicDiscounts && this.state.discountTiers && this.state.discountTiers.length > 0) {
+      const dynamicDiscount = this.calculateDynamicDiscount(quantity);
+      console.log('💰 Using dynamic discount:', dynamicDiscount, '% for quantity:', quantity);
+      return dynamicDiscount;
+    }
+    
+    // Fallback to legacy tier-based system
+    if (!this.state.discountSettings) {
+      console.log('⚠️ No discount settings available, returning 0');
+      return 0;
+    }
     
     const { discountPerTier, tierSize, maxDiscount } = this.state.discountSettings;
     const tiers = Math.floor(quantity / tierSize);
     const discount = Math.min(tiers * discountPerTier, maxDiscount);
     
+    console.log('🔄 Using legacy discount system:', discount, '% for quantity:', quantity);
     return discount;
+  }
+  
+  calculateDynamicDiscount(quantity) {
+    let applicableDiscount = 0;
+    let applicableTier = null;
+    
+    console.log('🎯 Finding dynamic discount for quantity:', quantity, 'in tiers:', this.state.discountTiers);
+    
+    // Find the highest applicable discount for the given quantity
+    for (const tier of this.state.discountTiers) {
+      console.log('   Checking tier:', tier, 'quantity>=', tier.quantity, '?', quantity >= tier.quantity);
+      if (quantity >= tier.quantity && tier.discount > applicableDiscount) {
+        applicableDiscount = tier.discount;
+        applicableTier = tier;
+        console.log('   ✅ New best discount:', applicableDiscount, '% from tier:', tier);
+      }
+    }
+    
+    // Apply maximum discount limit
+    const maxLimit = this.state.maxDiscountLimit || 25;
+    const finalDiscount = Math.min(applicableDiscount, maxLimit);
+    
+    console.log('🎉 Final dynamic discount result:', {
+      quantity: quantity,
+      applicableTier: applicableTier,
+      applicableDiscount: applicableDiscount,
+      maxLimit: maxLimit,
+      finalDiscount: finalDiscount
+    });
+    
+    return finalDiscount;
   }
   
   calculateDiscountAndPrice() {
@@ -351,7 +436,7 @@ class TeamwearCalculator {
       this.elements.sizeTotal.textContent = total;
     }
     
-    const isValid = total === this.state.selectedQuantity && this.state.selectedQuantity > 0;
+    const isValid = total > 0; // Menge ergibt sich aus Summe, daher nur > 0 prüfen
     
     // Update validation styling
     if (this.elements.sizeValidation) {
@@ -367,6 +452,18 @@ class TeamwearCalculator {
     }
     
     return isValid;
+  }
+
+  updateQuantityFromSizes() {
+    // Summe der Größen als aktuelle Menge setzen
+    const total = Array.from(this.elements.sizeInputs || []).reduce((sum, input) => {
+      const value = parseInt(input.value) || 0;
+      return sum + value;
+    }, 0);
+    this.state.selectedQuantity = total;
+    if (this.elements.sizeRequired) {
+      this.elements.sizeRequired.textContent = total.toString();
+    }
   }
   
   buildPersonalizationList() {
@@ -729,4 +826,6 @@ if (!window.teamwearCalculatorInitialized) {
     // DOM already loaded
     setTimeout(initCalculator, 100);
   }
-} console.log('🚀 FORCE RELOAD - Version 1753978149');
+}
+
+console.log('🚀 DYNAMIC DISCOUNTS FIX - Version 20250107-185300 - Fixed JSON parsing with proper escaping!');

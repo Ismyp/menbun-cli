@@ -1,0 +1,170 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --card-transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --card-hover-scale: 1.05;
+    --card-hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-start {
+    padding: 80px 0;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  }
+
+  /* Animierte Sport-Karten */
+  #shopify-section-{{ section.id }} .sport-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: var(--card-transition);
+    cursor: pointer;
+    display: grid;
+    grid-template-rows: 200px auto;
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--animation-order) * 0.1s);
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Gradient-Hintergrund mit Icon */
+  #shopify-section-{{ section.id }} .sport-card__media {
+    background: var(--sport-gradient, linear-gradient(135deg, #667eea, #764ba2));
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animiertes Icon */
+  #shopify-section-{{ section.id }} .sport-card__icon {
+    font-size: 4rem;
+    animation: pulse 2s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* Animierter Hintergrund-Pattern */
+  #shopify-section-{{ section.id }} .sport-card__media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.1) 10px,
+      rgba(255,255,255,0.1) 20px
+    );
+    animation: slide 20s linear infinite;
+  }
+
+  @keyframes slide {
+    from { transform: translateX(0); }
+    to { transform: translateX(28.28px); }
+  }
+
+  /* Hover-Effekte */
+  #shopify-section-{{ section.id }} .sport-card:hover {
+    transform: translateY(-8px) scale(var(--card-hover-scale));
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  #shopify-section-{{ section.id }} .sport-card:hover .sport-card__icon {
+    animation-duration: 0.5s;
+  }
+
+  #shopify-section-{{ section.id }} .sport-card:hover .sport-card__cta {
+    gap: 1rem;
+    color: var(--sport-primary-color, #16a34a);
+  }
+
+  /* Call-to-Action Button */
+  #shopify-section-{{ section.id }} .sport-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #374151;
+    transition: var(--card-transition);
+  }
+
+  /* Mobile Optimierung */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .teamwear-start__grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    #shopify-section-{{ section.id }} .sport-card {
+      grid-template-rows: 150px auto;
+    }
+  }
+{%- endstyle -%}
+
+<div class="teamwear-start page-width" id="sport-selection">
+  <div class="teamwear-start__header">
+    <h2 class="teamwear-start__title">{{ section.settings.title }}</h2>
+    <p class="teamwear-start__subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="teamwear-start__grid">
+    {%- for block in section.blocks -%}
+      <article 
+        class="sport-card" 
+        style="--animation-order: {{ forloop.index0 }}; --sport-gradient: {{ block.settings.gradient }};"
+        {{ block.shopify_attributes }}
+      >
+        <div class="sport-card__media">
+          <span class="sport-card__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+        </div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">{{ block.settings.title }}</h3>
+          <p class="sport-card__subtitle">{{ block.settings.subtitle }}</p>
+          <a class="sport-card__cta" href="{{ block.settings.page.url | default: block.settings.url }}">
+            Jetzt konfigurieren
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7.5 5l5 5-5 5" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  // Intersection Observer für Scroll-Animationen
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.sport-card').forEach(card => {
+    card.style.animationPlayState = 'paused';
+    observer.observe(card);
+  });
+</script>

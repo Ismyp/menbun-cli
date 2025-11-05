@@ -4,16 +4,18 @@
 {%- endcomment -%}
 
 <section class="page-teamwear">
-  <div class="teamwear-page-width">
-    <header class="page-header">
-      <h1 class="h1">{{ page.title }}</h1>
-      {%- if page.content != blank -%}
-        <div class="rte">
-          {{ page.content }}
-        </div>
-      {%- endif -%}
-    </header>
+  <div class="section section--page-width">
+    <div class="spacing-style">
+      <header class="page-header">
+        <h1 class="h1">Teamwear</h1>
+        {%- if page.content != blank -%}
+          <div class="rte">
+            {{ page.content }}
+          </div>
+        {%- endif -%}
+      </header>
+    </div>
   </div>
 </section>
 
-{%- section 'teamwear-calculator' -%} 
+{%- section 'teamwear-config' -%}

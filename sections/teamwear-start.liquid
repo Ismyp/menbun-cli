@@ -1,0 +1,331 @@
+{%- comment -%}
+  Teamwear Start (Sportart wählen)
+  Zeigt Karten für Sportarten als Einstieg in den Konfigurator
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .teamwear-start {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-start__header {
+    text-align: center;
+    margin: 0 auto 2rem;
+    max-width: 900px;
+  }
+  #shopify-section-{{ section.id }} .teamwear-start__title {
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    font-weight: 700;
+    margin: 0 0 .5rem;
+  }
+  #shopify-section-{{ section.id }} .teamwear-start__subtitle {
+    color: #666;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-start__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  #shopify-section-{{ section.id }} .sport-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    display: grid;
+    grid-template-rows: 180px auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+  }
+  
+  #shopify-section-{{ section.id }} .sport-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,.12);
+  }
+  #shopify-section-{{ section.id }} .sport-card__media {
+    background: var(--sport-gradient, linear-gradient(135deg, #667eea, #764ba2));
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #shopify-section-{{ section.id }} .sport-card__media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.1) 10px,
+      rgba(255,255,255,0.1) 20px
+    );
+    animation: slidePattern 20s linear infinite;
+  }
+  
+  @keyframes slidePattern {
+    from { transform: translateX(0); }
+    to { transform: translateX(28.28px); }
+  }
+  
+  #shopify-section-{{ section.id }} .sport-card__icon {
+    position: relative;
+    z-index: 1;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  
+  #shopify-section-{{ section.id }} .sport-card:hover .sport-card__icon {
+    animation-duration: 0.5s;
+  }
+  #shopify-section-{{ section.id }} .sport-card__body {
+    padding: 1.5rem;
+  }
+  #shopify-section-{{ section.id }} .sport-card__title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 .5rem;
+    color: #1a1a1a;
+  }
+  #shopify-section-{{ section.id }} .sport-card__subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0 0 1rem;
+  }
+  #shopify-section-{{ section.id }} .sport-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--sport-primary-color, #374151);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .sport-card:hover .sport-card__link {
+    gap: .75rem;
+    color: var(--sport-accent-color, #059669);
+  }
+  #shopify-section-{{ section.id }} .sport-card__link svg {
+    width: 18px; 
+    height: 18px;
+    transition: transform 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .sport-card:hover .sport-card__link svg {
+    transform: translateX(4px);
+  }
+  /* Animationen */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+  
+  #shopify-section-{{ section.id }} .sport-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--animation-order, 0) * 0.1s);
+    opacity: 0;
+  }
+  
+  /* Mobile Anpassungen */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .teamwear-start__grid {
+      grid-template-columns: 1fr;
+    }
+    
+    #shopify-section-{{ section.id }} .sport-card {
+      grid-template-rows: 150px auto;
+    }
+    
+    #shopify-section-{{ section.id }} .sport-card__media {
+      font-size: 3rem;
+    }
+  }
+  
+  /* Barrierefreiheit - reduzierte Bewegung */
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .sport-card,
+    .animate-fade-up {
+      animation: none;
+      opacity: 1;
+    }
+    
+    #shopify-section-{{ section.id }} .sport-card__icon {
+      animation: none;
+    }
+    
+    #shopify-section-{{ section.id }} .sport-card__media::before {
+      animation: none;
+    }
+  }
+{%- endstyle -%}
+
+<div class="teamwear-start">
+  <div class="teamwear-start__header">
+    <h2 class="teamwear-start__title animate-fade-up">{{ section.settings.title }}</h2>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="teamwear-start__subtitle animate-fade-up" style="animation-delay: 0.1s;">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="teamwear-start__grid">
+      {%- assign has_blocks = section.blocks | size -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'sport' -%}
+        {%- assign sport_gradient = 'linear-gradient(135deg, #667eea, #764ba2)' -%}
+        {%- assign sport_primary = '#374151' -%}
+        {%- assign sport_accent = '#059669' -%}
+        
+        {%- case block.settings.title -%}
+          {%- when 'Basketball' -%}
+            {%- assign sport_gradient = 'linear-gradient(135deg, #FF6B35, #F7931E)' -%}
+            {%- assign sport_accent = '#F7931E' -%}
+          {%- when 'Fußball' -%}
+            {%- assign sport_gradient = 'linear-gradient(135deg, #27AE60, #229954)' -%}
+            {%- assign sport_accent = '#27AE60' -%}
+          {%- when 'Handball' -%}
+            {%- assign sport_gradient = 'linear-gradient(135deg, #3498DB, #2980B9)' -%}
+            {%- assign sport_accent = '#3498DB' -%}
+          {%- when 'Volleyball' -%}
+            {%- assign sport_gradient = 'linear-gradient(135deg, #E74C3C, #C0392B)' -%}
+            {%- assign sport_accent = '#E74C3C' -%}
+          {%- when 'Weitere Sportarten' -%}
+            {%- assign sport_gradient = 'linear-gradient(135deg, #95A5A6, #7F8C8D)' -%}
+            {%- assign sport_accent = '#7F8C8D' -%}
+        {%- endcase -%}
+        
+        <article class="sport-card" 
+                 style="--sport-gradient: {{ sport_gradient }}; --sport-primary-color: {{ sport_primary }}; --sport-accent-color: {{ sport_accent }}; --animation-order: {{ forloop.index0 }};"
+                 {{ block.shopify_attributes }}>
+          <div class="sport-card__media">
+            {%- if block.settings.icon != blank -%}
+              <span class="sport-card__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+            {%- endif -%}
+          </div>
+          <div class="sport-card__body">
+            <h3 class="sport-card__title">{{ block.settings.title }}</h3>
+            {%- if block.settings.subtitle != blank -%}
+              <p class="sport-card__subtitle">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+            {%- if block.settings.page != blank -%}
+              <a class="sport-card__link" href="{{ block.settings.page.url }}">
+                {{ section.settings.cta_text }}
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg>
+              </a>
+            {%- elsif block.settings.url != blank -%}
+              <a class="sport-card__link" href="{{ block.settings.url }}">
+                {{ section.settings.cta_text }}
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg>
+              </a>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if has_blocks == 0 -%}
+      <article class="sport-card">
+        <div class="sport-card__media"><span aria-hidden="true">🏀</span></div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">Basketball</h3>
+          <p class="sport-card__subtitle">Tank Tops & Shorts</p>
+          <a class="sport-card__link" href="/pages/basketball">{{ section.settings.cta_text }}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg></a>
+        </div>
+      </article>
+      <article class="sport-card">
+        <div class="sport-card__media"><span aria-hidden="true">⚽</span></div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">Fußball</h3>
+          <p class="sport-card__subtitle">Trikots & Hosen</p>
+          <a class="sport-card__link" href="/pages/fussball">{{ section.settings.cta_text }}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg></a>
+        </div>
+      </article>
+      <article class="sport-card">
+        <div class="sport-card__media"><span aria-hidden="true">🤾</span></div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">Handball</h3>
+          <p class="sport-card__subtitle">Trikots & Shorts</p>
+          <a class="sport-card__link" href="/pages/handball">{{ section.settings.cta_text }}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg></a>
+        </div>
+      </article>
+      <article class="sport-card">
+        <div class="sport-card__media"><span aria-hidden="true">🏐</span></div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">Volleyball</h3>
+          <p class="sport-card__subtitle">Trikots & Shorts</p>
+          <a class="sport-card__link" href="/pages/volleyball">{{ section.settings.cta_text }}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg></a>
+        </div>
+      </article>
+      <article class="sport-card">
+        <div class="sport-card__media"><span aria-hidden="true">🏓</span></div>
+        <div class="sport-card__body">
+          <h3 class="sport-card__title">Tischtennis</h3>
+          <p class="sport-card__subtitle">Trikots & Shorts</p>
+          <a class="sport-card__link" href="/pages/tischtennis">{{ section.settings.cta_text }}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.5 5l5 5-5 5"/></svg></a>
+        </div>
+      </article>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Teamwear Start",
+  "tag": "section",
+  "class": "section-teamwear-start",
+  "settings": [
+    {"type": "text", "id": "title", "label": "Titel", "default": "Schritt 1: Sportart wählen"},
+    {"type": "text", "id": "subtitle", "label": "Untertitel", "default": "Für welche Sportart benötigen Sie Teamwear?"},
+    {"type": "text", "id": "cta_text", "label": "Button-Text", "default": "Auswählen"},
+    {"type": "range", "id": "padding_top", "label": "Abstand oben", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 24},
+    {"type": "range", "id": "padding_bottom", "label": "Abstand unten", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 24}
+  ],
+  "blocks": [
+    {
+      "type": "sport",
+      "name": "Sportkarte",
+      "settings": [
+        {"type": "text", "id": "icon", "label": "Icon (Emoji)", "default": "🏀"},
+        {"type": "text", "id": "title", "label": "Titel", "default": "Basketball"},
+        {"type": "text", "id": "subtitle", "label": "Untertitel", "default": "Tank Tops & Shorts"},
+        {"type": "page", "id": "page", "label": "Zielseite (optional)"},
+        {"type": "url", "id": "url", "label": "Alternative URL (wenn keine Seite gewählt)"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Teamwear Start",
+      "blocks": [
+        {"type": "sport", "settings": {"icon": "🏀", "title": "Basketball", "subtitle": "Tank Tops & Shorts", "url": "/pages/basketball"}},
+        {"type": "sport", "settings": {"icon": "⚽", "title": "Fußball", "subtitle": "Trikots & Hosen", "url": "/pages/fussball"}},
+        {"type": "sport", "settings": {"icon": "🤾", "title": "Handball", "subtitle": "Trikots & Shorts", "url": "/pages/handball"}},
+        {"type": "sport", "settings": {"icon": "🏐", "title": "Volleyball", "subtitle": "Trikots & Shorts", "url": "/pages/volleyball"}},
+        {"type": "sport", "settings": {"icon": "🏓", "title": "Tischtennis", "subtitle": "Trikots & Shorts", "url": "/pages/tischtennis"}}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

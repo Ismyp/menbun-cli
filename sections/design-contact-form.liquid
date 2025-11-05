@@ -1,0 +1,289 @@
+{%- comment -%}
+  Design Contact Form - Kontaktformular für kostenloses Design-Beispiel
+  Basierend auf Screenshot mit zweispaltiger Aufteilung
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    padding: 80px 0;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-content {
+    padding-right: 40px;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 20px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-text {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 32px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-features li {
+    font-size: 15px;
+    color: #374151;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-features li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #65a30d;
+    font-weight: bold;
+  }
+
+  #shopify-section-{{ section.id }} .contact-form-wrapper {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+  }
+
+  #shopify-section-{{ section.id }} .form-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .form-group {
+    margin-bottom: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .form-input,
+  #shopify-section-{{ section.id }} .form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #374151;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .form-input:focus,
+  #shopify-section-{{ section.id }} .form-textarea:focus {
+    outline: none;
+    border-color: #65a30d;
+    box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.1);
+  }
+
+  #shopify-section-{{ section.id }} .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  #shopify-section-{{ section.id }} .form-submit {
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .form-submit:hover {
+    background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+    transform: translateY(-1px);
+  }
+
+  #shopify-section-{{ section.id }} .form-note {
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+    margin-top: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .contact-form-container {
+      grid-template-columns: 1fr;
+      gap: 50px;
+    }
+    
+    #shopify-section-{{ section.id }} .contact-form-content {
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+{%- endstyle -%}
+
+<section class="contact-form-container" id="contact">
+  <div class="contact-form-content">
+    <h2 class="contact-form-title">{{ section.settings.title }}</h2>
+    <p class="contact-form-text">{{ section.settings.description }}</p>
+    
+    <ul class="contact-form-features">
+      <li>{{ section.settings.feature1 }}</li>
+      <li>{{ section.settings.feature2 }}</li>
+      <li>{{ section.settings.feature3 }}</li>
+      <li>{{ section.settings.feature4 }}</li>
+    </ul>
+  </div>
+
+  <div class="contact-form-wrapper">
+    <h3 class="form-title">{{ section.settings.form_title }}</h3>
+    
+    {% form 'contact', id: 'design-contact-form' %}
+      {% if form.posted_successfully? %}
+        <div style="background: #d1fae5; color: #065f46; padding: 16px; border-radius: 6px; margin-bottom: 20px; text-align: center;">
+          <p style="margin: 0; font-weight: 600;">Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div style="background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+          {% for field in form.errors %}
+            <p style="margin: 0;">{{ field | capitalize }} {{ form.errors.messages[field] }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="contact-name" class="form-label">Vor- und Nachname</label>
+        <input type="text" id="contact-name" name="contact[name]" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label for="contact-email" class="form-label">E-Mail</label>
+        <input type="email" id="contact-email" name="contact[email]" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label for="contact-team" class="form-label">Team/Verein (optional)</label>
+        <input type="text" id="contact-team" name="contact[team]" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="contact-sport" class="form-label">Sportart (z.B. Schwarz, Weiß, Rot ODER PDF)</label>
+        <input type="text" id="contact-sport" name="contact[sport]" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="contact-message" class="form-label">Designwünsche / Besondere Anfrage</label>
+        <textarea id="contact-message" name="contact[body]" class="form-textarea" placeholder="Beschreibe deine Designwünsche..."></textarea>
+      </div>
+
+      <input type="hidden" name="contact[subject]" value="Kostenloses Design-Beispiel Anfrage">
+
+      <button type="submit" class="form-submit">
+        Anfrage senden
+      </button>
+
+      <p class="form-note">
+        Mit dem Senden stimmst du den AGB und der Datenschutzerklärung zu.
+      </p>
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Design Contact Form",
+  "tag": "section",
+  "class": "design-contact-form-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Inhalt"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titel",
+      "default": "Kostenloses Design-Beispiel anfordern"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Beschreibung",
+      "default": "Lade dein Logo hoch, teile Farben und Wünsche – wir schicken dir vorab Mockups als PDF. Unverbindlich & kostenlos."
+    },
+    {
+      "type": "text",
+      "id": "feature1",
+      "label": "Feature 1",
+      "default": "Logo (Datei) Upload"
+    },
+    {
+      "type": "text",
+      "id": "feature2",
+      "label": "Feature 2",
+      "default": "Farbwünsche (z. Vereinsfarben, Hex-Codes)"
+    },
+    {
+      "type": "text",
+      "id": "feature3",
+      "label": "Feature 3",
+      "default": "Designwünsche / Beispiele"
+    },
+    {
+      "type": "text",
+      "id": "feature4",
+      "label": "Feature 4",
+      "default": "Kontaktdaten"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Formular Titel",
+      "default": "Formular"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Design Contact Form"
+    }
+  ]
+}
+{% endschema %}

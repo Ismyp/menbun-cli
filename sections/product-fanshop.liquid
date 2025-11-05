@@ -1,0 +1,364 @@
+{%- comment -%}
+  Produkt Fanshop - Personalisierbare Teamwear
+{%- endcomment -%}
+
+{%- style -%}
+  .fanshop-section {
+    padding: 60px 0;
+  }
+  
+  .fanshop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .fanshop-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .fanshop-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+  }
+  
+  .fanshop-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+  }
+  
+  .product-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 250px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-content {
+    padding: 20px;
+  }
+  
+  .product-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+  }
+  
+  .product-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-bottom: 20px;
+  }
+  
+  .product-options {
+    margin-bottom: 20px;
+  }
+  
+  .option-group {
+    margin-bottom: 15px;
+  }
+  
+  .option-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .option-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .personalization-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .personalization-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .checkbox-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .personalization-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 8px;
+    display: none;
+  }
+  
+  .add-cart-button {
+    width: 100%;
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-cart-button:hover {
+    background: #219a52;
+  }
+  
+  .add-cart-button:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+  }
+{%- endstyle -%}
+
+<div class="fanshop-section">
+  <div class="fanshop-container">
+    <div class="fanshop-header">
+      <h2 class="fanshop-title">{{ section.settings.section_title }}</h2>
+      {%- if section.settings.section_subtitle != blank -%}
+        <p class="fanshop-subtitle">{{ section.settings.section_subtitle }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="products-grid">
+      {%- if section.settings.product_collection != blank -%}
+        {%- for product in section.settings.product_collection.products -%}
+          {%- if forloop.index <= section.settings.product_count -%}
+          <div class="product-item" data-product-id="{{ product.selected_or_first_available_variant.id }}">
+            <div class="product-image">
+              {%- if product.featured_image -%}
+                {{ product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: product.title }}
+              {%- else -%}
+                <div style="font-size: 4rem; color: #ccc;">📦</div>
+              {%- endif -%}
+            </div>
+            
+            <div class="product-content">
+              <h3 class="product-name">{{ product.title }}</h3>
+              <div class="product-price">{{ product.selected_or_first_available_variant.price | money }}</div>
+              
+              <div class="product-options">
+                {%- for option in product.options_with_values -%}
+                  <div class="option-group">
+                    <label class="option-label">{{ option.name }}</label>
+                    <select class="option-select" data-option="{{ option.name | downcase }}">
+                      {%- for value in option.values -%}
+                        <option value="{{ value }}">{{ value }}</option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                {%- endfor -%}
+              </div>
+
+              <div class="personalization-box">
+                <div class="personalization-title">Personalisierung</div>
+                <div class="checkbox-row">
+                  <label class="checkbox-item">
+                    <input type="checkbox" data-toggle="name">
+                    Name hinzufügen
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" data-toggle="number">
+                    Nummer hinzufügen
+                  </label>
+                </div>
+                <input type="text" class="personalization-input" data-field="name" placeholder="Name eingeben">
+                <input type="text" class="personalization-input" data-field="number" placeholder="Nummer eingeben">
+              </div>
+
+              <button type="button" class="add-cart-button" data-add-to-cart>
+                In den Warenkorb
+              </button>
+            </div>
+          </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+          <h3>Keine Produkte gefunden</h3>
+          <p>Bitte wählen Sie eine Produktkollektion in den Einstellungen aus.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Personalisierung Toggle
+  document.addEventListener('change', function(e) {
+    if (e.target.matches('[data-toggle]')) {
+      const fieldType = e.target.getAttribute('data-toggle');
+      const productItem = e.target.closest('.product-item');
+      const inputField = productItem.querySelector(`[data-field="${fieldType}"]`);
+      
+      if (inputField) {
+        inputField.style.display = e.target.checked ? 'block' : 'none';
+        if (!e.target.checked) {
+          inputField.value = '';
+        }
+      }
+    }
+  });
+
+  // Add to Cart
+  document.addEventListener('click', async function(e) {
+    if (!e.target.matches('[data-add-to-cart]')) return;
+    
+    const button = e.target;
+    const productItem = button.closest('.product-item');
+    const productId = productItem.getAttribute('data-product-id');
+    
+    if (!productId) return;
+    
+    // Sammle Properties
+    const properties = {};
+    
+    // Name und Nummer
+    const nameToggle = productItem.querySelector('[data-toggle="name"]');
+    const numberToggle = productItem.querySelector('[data-toggle="number"]');
+    const nameField = productItem.querySelector('[data-field="name"]');
+    const numberField = productItem.querySelector('[data-field="number"]');
+    
+    if (nameToggle && nameToggle.checked && nameField && nameField.value.trim()) {
+      properties['Name'] = nameField.value.trim();
+    }
+    
+    if (numberToggle && numberToggle.checked && numberField && numberField.value.trim()) {
+      properties['Nummer'] = numberField.value.trim();
+    }
+    
+    try {
+      button.disabled = true;
+      button.textContent = 'Wird hinzugefügt...';
+      
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: parseInt(productId),
+          quantity: 1,
+          properties: properties
+        })
+      });
+      
+      if (response.ok) {
+        button.textContent = '✓ Hinzugefügt!';
+        button.style.background = '#27ae60';
+        
+        setTimeout(() => {
+          button.textContent = 'In den Warenkorb';
+          button.disabled = false;
+        }, 2000);
+      } else {
+        throw new Error('Fehler');
+      }
+    } catch (error) {
+      button.textContent = 'Fehler - Erneut versuchen';
+      button.disabled = false;
+      button.style.background = '#e74c3c';
+      
+      setTimeout(() => {
+        button.textContent = 'In den Warenkorb';
+        button.style.background = '#27ae60';
+      }, 3000);
+    }
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Produkt Fanshop",
+  "tag": "section",
+  "class": "section-product-fanshop",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Titel",
+      "default": "Fanshop"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Untertitel",
+      "default": "Personalisierbare Produkte mit Name und Nummer"
+    },
+    {
+      "type": "collection",
+      "id": "product_collection",
+      "label": "Produktkollektion"
+    },
+    {
+      "type": "range",
+      "id": "product_count",
+      "label": "Anzahl Produkte",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Produkt Fanshop"
+    }
+  ]
+}
+{% endschema %}

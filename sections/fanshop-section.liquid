@@ -1,0 +1,331 @@
+{%- comment -%}
+  Vereins-Fanshops Sektion - 3 Teambilder mit schwarzen Buttons
+  Genau nach Screenshot Design
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    padding: 80px 0;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 10px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    max-width: 680px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease;
+    border: 1px solid #f1f5f9;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-image {
+    width: 100%;
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .team-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .team-logo {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1f2937;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-content {
+    padding: 24px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-team-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 6px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-team-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 18px 0;
+    line-height: 1.3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-button {
+    background: #1f2937;
+    color: #ffffff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .fanshop-button:hover {
+    background: #1f2937;
+    transform: translateY(-1px);
+    color: #ffffff;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .fanshop-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+{%- endstyle -%}
+
+<section class="fanshop-container">
+  <div class="fanshop-header">
+    <h2 class="fanshop-title">{{ section.settings.title }}</h2>
+    <p class="fanshop-subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="fanshop-grid">
+    <!-- Basketball Team Fanshop -->
+    <div class="fanshop-card">
+      <div class="fanshop-image">
+        {% if section.settings.basketball_image != blank %}
+          <img src="{{ section.settings.basketball_image | image_url: width: 600 }}" alt="{{ section.settings.basketball_title }}" loading="lazy" width="600" height="240">
+        {% else %}
+          <div class="team-overlay">
+            <div class="team-logo">🏀</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="fanshop-content">
+        <h3 class="fanshop-team-title">{{ section.settings.basketball_title }}</h3>
+        <p class="fanshop-team-subtitle">{{ section.settings.basketball_subtitle }}</p>
+        <a href="{{ section.settings.basketball_link | default: '/collections/basketball' }}" class="fanshop-button">
+          Zum Shop
+        </a>
+      </div>
+    </div>
+
+    <!-- Fußball Team Fanshop -->
+    <div class="fanshop-card">
+      <div class="fanshop-image">
+        {% if section.settings.fussball_image != blank %}
+          <img src="{{ section.settings.fussball_image | image_url: width: 600 }}" alt="{{ section.settings.fussball_title }}" loading="lazy" width="600" height="240">
+        {% else %}
+          <div class="team-overlay">
+            <div class="team-logo">⚽</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="fanshop-content">
+        <h3 class="fanshop-team-title">{{ section.settings.fussball_title }}</h3>
+        <p class="fanshop-team-subtitle">{{ section.settings.fussball_subtitle }}</p>
+        <a href="{{ section.settings.fussball_link | default: '/collections/fussball' }}" class="fanshop-button">
+          Zum Shop
+        </a>
+      </div>
+    </div>
+
+    <!-- Handball Team Fanshop -->
+    <div class="fanshop-card">
+      <div class="fanshop-image">
+        {% if section.settings.handball_image != blank %}
+          <img src="{{ section.settings.handball_image | image_url: width: 600 }}" alt="{{ section.settings.handball_title }}" loading="lazy" width="600" height="240">
+        {% else %}
+          <div class="team-overlay">
+            <div class="team-logo">🤾</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="fanshop-content">
+        <h3 class="fanshop-team-title">{{ section.settings.handball_title }}</h3>
+        <p class="fanshop-team-subtitle">{{ section.settings.handball_subtitle }}</p>
+        <a href="{{ section.settings.handball_link | default: '/collections/handball' }}" class="fanshop-button">
+          Zum Shop
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fanshop Section",
+  "tag": "section",
+  "class": "fanshop-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Allgemein"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titel",
+      "default": "Vereins-Fanshops"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Du bist Vereinsmitglied oder Supporter? Entdecke die offiziellen Fanshops deiner Teams. Bestelle Trikots und Fan-Artikel direkt von deinem Lieblingsteam."
+    },
+    {
+      "type": "header",
+      "content": "Basketball Team"
+    },
+    {
+      "type": "image_picker",
+      "id": "basketball_image",
+      "label": "Basketball Team Bild"
+    },
+    {
+      "type": "text",
+      "id": "basketball_title",
+      "label": "Basketball Team Titel",
+      "default": "Basketball Team Fanshop"
+    },
+    {
+      "type": "text",
+      "id": "basketball_subtitle",
+      "label": "Basketball Team Untertitel",
+      "default": "Trikots, Merchandise & Accessoires"
+    },
+    {
+      "type": "url",
+      "id": "basketball_link",
+      "label": "Basketball Shop Link"
+    },
+    {
+      "type": "header",
+      "content": "Fußball Team"
+    },
+    {
+      "type": "image_picker",
+      "id": "fussball_image",
+      "label": "Fußball Team Bild"
+    },
+    {
+      "type": "text",
+      "id": "fussball_title",
+      "label": "Fußball Team Titel",
+      "default": "Fußballverein Fanshop"
+    },
+    {
+      "type": "text",
+      "id": "fussball_subtitle",
+      "label": "Fußball Team Untertitel",
+      "default": "Trikots, Merchandise & Accessoires"
+    },
+    {
+      "type": "url",
+      "id": "fussball_link",
+      "label": "Fußball Shop Link"
+    },
+    {
+      "type": "header",
+      "content": "Handball Team"
+    },
+    {
+      "type": "image_picker",
+      "id": "handball_image",
+      "label": "Handball Team Bild"
+    },
+    {
+      "type": "text",
+      "id": "handball_title",
+      "label": "Handball Team Titel",
+      "default": "Handballclub Fanshop"
+    },
+    {
+      "type": "text",
+      "id": "handball_subtitle",
+      "label": "Handball Team Untertitel",
+      "default": "Trikots, Merchandise & Accessoires"
+    },
+    {
+      "type": "url",
+      "id": "handball_link",
+      "label": "Handball Shop Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fanshop Section"
+    }
+  ]
+}
+{% endschema %}

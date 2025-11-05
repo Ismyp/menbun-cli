@@ -1,0 +1,265 @@
+{%- comment -%}
+  Design Landing Hero - Basierend auf Screenshot
+  - Links: "Teamwear mit individuellem Design" Text + Buttons
+  - Rechts: Teambild mit 5 Personen in verschiedenen Trikots
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    padding: 80px 0;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-content {
+    padding-right: 40px;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-title {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    color: #000000;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 32px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-features li {
+    font-size: 15px;
+    color: #374151;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-features li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #65a30d;
+    font-weight: bold;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  #shopify-section-{{ section.id }} .btn-primary {
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .btn-primary:hover {
+    background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+    transform: translateY(-1px);
+    color: #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .btn-secondary {
+    background: #1f2937;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .btn-secondary:hover {
+    background: #374151;
+    transform: translateY(-1px);
+    color: #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-image {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f8fafc;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .landing-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .landing-hero-container {
+      grid-template-columns: 1fr;
+      gap: 50px;
+      text-align: center;
+    }
+    
+    #shopify-section-{{ section.id }} .landing-hero-content {
+      padding-right: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .landing-hero-buttons {
+      flex-direction: column;
+    }
+  }
+{%- endstyle -%}
+
+<section class="landing-hero-container">
+  <div class="landing-hero-content">
+    <h1 class="landing-hero-title">{{ section.settings.title }}</h1>
+    <p class="landing-hero-subtitle">{{ section.settings.subtitle }}</p>
+    
+    <ul class="landing-hero-features">
+      <li>{{ section.settings.feature1 }}</li>
+      <li>{{ section.settings.feature2 }}</li>
+      <li>{{ section.settings.feature3 }}</li>
+    </ul>
+    
+    <div class="landing-hero-buttons">
+      <a href="{{ section.settings.primary_button_link | default: '#contact' }}" class="btn-primary">
+        {{ section.settings.primary_button_text }}
+      </a>
+      <a href="{{ section.settings.secondary_button_link | default: '/collections/all' }}" class="btn-secondary">
+        {{ section.settings.secondary_button_text }}
+      </a>
+    </div>
+  </div>
+
+  <div class="landing-hero-image">
+    {% if section.settings.hero_image != blank %}
+      <img src="{{ section.settings.hero_image | image_url: width: 800 }}" alt="{{ section.settings.title }}" loading="lazy" width="800" height="400">
+    {% else %}
+      <div style="text-align: center; color: #64748b; padding: 60px 20px;">
+        <p>Teambild hier hinzufügen</p>
+        <p style="font-size: 12px;">5 Personen in verschiedenen Trikots</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Design Landing Hero",
+  "tag": "section",
+  "class": "design-landing-hero-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Inhalt"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Haupttitel",
+      "default": "Teamwear mit individuellem Design"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Sende uns Logo, Farben und Wünsche. Wir erstellen dir kostenlose Mockups vorab und liefern Premium-Qualität schnell und zuverlässig."
+    },
+    {
+      "type": "text",
+      "id": "feature1",
+      "label": "Feature 1",
+      "default": "Eigenes, modernes Design"
+    },
+    {
+      "type": "text",
+      "id": "feature2",
+      "label": "Feature 2",
+      "default": "Sublimation in Profi-Qualität"
+    },
+    {
+      "type": "text",
+      "id": "feature3",
+      "label": "Feature 3",
+      "default": "Schnelle Lieferzeiten"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primärer Button Text",
+      "default": "Kostenloses Design anfordern"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primärer Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Sekundärer Button Text",
+      "default": "Zur Preisliste/Shop"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Sekundärer Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Bild"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Bild (Teambild)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Design Landing Hero"
+    }
+  ]
+}
+{% endschema %}

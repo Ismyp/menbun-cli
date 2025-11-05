@@ -1,0 +1,288 @@
+{%- comment -%}
+  Neue Hero-Section - Exakt nach Screenshot Design
+  - Badge oben
+  - Großer Titel "Teamwear, die begeistert"
+  - Untertitel
+  - Zwei Buttons: Gelb/Grün Gradient + Schwarz
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    {% if section.settings.background_image != blank %}
+      background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    {% endif %}
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+  }
+
+  {% if section.settings.background_image != blank %}
+  #shopify-section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    z-index: 1;
+  }
+  {% endif %}
+
+  #shopify-section-{{ section.id }} .hero-container {
+    position: relative;
+    z-index: 2;
+  }
+
+  #shopify-section-{{ section.id }} .hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .hero-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 24px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #shopify-section-{{ section.id }} .hero-title {
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 800;
+    color: #000000;
+    line-height: 1.0;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.03em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .hero-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 auto 40px auto;
+    max-width: 580px;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #shopify-section-{{ section.id }} .btn-primary {
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+    color: #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .btn-secondary {
+    background: #1f2937;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .btn-secondary:hover {
+    background: #1f2937;
+    transform: translateY(-1px);
+    color: #ffffff;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .hero-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    #shopify-section-{{ section.id }} .btn-primary,
+    #shopify-section-{{ section.id }} .btn-secondary {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+{%- endstyle -%}
+
+<section class="hero-container">
+  {% if section.settings.badge_text != blank %}
+    <div class="hero-badge">
+      {{ section.settings.badge_text }}
+    </div>
+  {% endif %}
+
+  {% if section.settings.main_title != blank %}
+    <h1 class="hero-title">
+      {{ section.settings.main_title }}
+    </h1>
+  {% endif %}
+
+  {% if section.settings.subtitle != blank %}
+    <p class="hero-subtitle">
+      {{ section.settings.subtitle }}
+    </p>
+  {% endif %}
+
+  <div class="hero-buttons">
+    {% if section.settings.primary_button_text != blank %}
+      <a href="{{ section.settings.primary_button_link | default: '#' }}" class="btn-primary">
+        {{ section.settings.primary_button_text }}
+      </a>
+    {% endif %}
+
+    {% if section.settings.secondary_button_text != blank %}
+      <a href="{{ section.settings.secondary_button_link | default: '#' }}" class="btn-secondary">
+        {{ section.settings.secondary_button_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Redesign",
+  "tag": "section",
+  "class": "hero-redesign-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hintergrundbild"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Hintergrundbild"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Farbe",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Transparenz",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Inhalt"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Druck-Qualität direkt vom Hersteller"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Haupttitel",
+      "default": "Teamwear, die begeistert"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Individuelle Sportbekleidung für Basketball, Fußball, Handball und Volleyball"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primärer Button Text",
+      "default": "Konfiguration starten"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primärer Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Sekundärer Button Text",
+      "default": "Design umfragen"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Sekundärer Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding oben",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 120,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding unten",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 120,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Redesign"
+    }
+  ]
+}
+{% endschema %}

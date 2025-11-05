@@ -1,0 +1,132 @@
+{%- comment -%}
+  Teamwear & Merch – Vereinsverzeichnis (z. B. Basketball-Vereine)
+  - Grid mit Karten pro Verein
+  - Beliebig viele Vereine via Blöcke
+  - CTA führt auf eine Fanshop-Seite (Page-Link oder URL)
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .tm-dir { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  #shopify-section-{{ section.id }} .tm-dir__header { text-align:center; margin: 0 0 18px; }
+  #shopify-section-{{ section.id }} .tm-dir__title { 
+    font-weight: 800; 
+    font-size: clamp(24px, 3vw, 32px); 
+    margin: 0 0 10px; 
+    color: #000000;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  #shopify-section-{{ section.id }} .tm-dir__sub { 
+    color: #64748b; 
+    margin: 0; 
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  #shopify-section-{{ section.id }} .tm-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 900px) { #shopify-section-{{ section.id }} .tm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { #shopify-section-{{ section.id }} .tm-grid { grid-template-columns: 1fr; } }
+  #shopify-section-{{ section.id }} .tm-card { border-radius: 14px; background:#fff; border:1px solid #e5e7eb; box-shadow: 0 6px 18px rgba(16,24,40,.06); padding: 14px; display:flex; flex-direction:column; gap: 10px; }
+  #shopify-section-{{ section.id }} .tm-card__head { display:flex; align-items:center; gap: 10px; }
+  #shopify-section-{{ section.id }} .tm-card__logo { width: 96px; height:96px; border-radius:999px; overflow:hidden; display:grid; place-items:center; background:#f3f4f6; }
+  #shopify-section-{{ section.id }} .tm-card__logo img { width: 100%; height:100%; object-fit: cover; }
+  #shopify-section-{{ section.id }} .tm-card__title { 
+    margin:0; 
+    font-weight:700; 
+    font-size: 18px; 
+    color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  #shopify-section-{{ section.id }} .tm-card__meta { 
+    color: #64748b; 
+    font-size: 14px; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  #shopify-section-{{ section.id }} .tm-badges { display:flex; flex-wrap:wrap; gap:6px; }
+  #shopify-section-{{ section.id }} .tm-badge { font-size:.75rem; background:#f1f5f9; color:#0f172a; border:1px solid #e5e7eb; border-radius: 8px; padding: 4px 8px; }
+  #shopify-section-{{ section.id }} .tm-card__cta { margin-top:auto; display:flex; justify-content:flex-start; }
+{%- endstyle -%}
+
+<div class="tm-dir">
+  <header class="tm-dir__header">
+    <h2 class="tm-dir__title">{{ section.settings.title }}</h2>
+    {%- if section.settings.sub != blank -%}
+      <p class="tm-dir__sub">{{ section.settings.sub }}</p>
+    {%- endif -%}
+  </header>
+
+  <div class="tm-grid">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'club' -%}
+        <article class="tm-card" {{ block.shopify_attributes }}>
+          <div class="tm-card__head">
+            <div class="tm-card__logo">
+              {%- if block.settings.logo != blank -%}
+                {{ block.settings.logo | image_url: width: 112 | image_tag: loading: 'lazy', alt: block.settings.name | escape }}
+              {%- else -%}
+                <span aria-hidden="true">🏀</span>
+              {%- endif -%}
+            </div>
+            <div>
+              <h3 class="tm-card__title">{{ block.settings.name }}</h3>
+              {%- if block.settings.location != blank -%}
+                <div class="tm-card__meta">{{ block.settings.location }}</div>
+              {%- endif -%}
+            </div>
+          </div>
+          {%- if block.settings.description != blank -%}
+            <div class="tm-card__desc" style="color:#475569;">{{ block.settings.description }}</div>
+          {%- endif -%}
+          <div class="tm-badges">
+            {%- if block.settings.badge_1 != blank -%}<span class="tm-badge">{{ block.settings.badge_1 }}</span>{%- endif -%}
+            {%- if block.settings.badge_2 != blank -%}<span class="tm-badge">{{ block.settings.badge_2 }}</span>{%- endif -%}
+            {%- if block.settings.badge_3 != blank -%}<span class="tm-badge">{{ block.settings.badge_3 }}</span>{%- endif -%}
+          </div>
+          <div class="tm-card__cta">
+            {%- if block.settings.page != blank -%}
+              <a class="button" href="{{ block.settings.page.url }}">{{ section.settings.cta_text }}</a>
+            {%- elsif block.settings.url != blank -%}
+              <a class="button" href="{{ block.settings.url }}">{{ section.settings.cta_text }}</a>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Vereinsverzeichnis",
+  "tag": "section",
+  "class": "section-teams-directory",
+  "settings": [
+    {"type": "text", "id": "title", "label": "Titel", "default": "Basketball-Vereine"},
+    {"type": "text", "id": "sub", "label": "Untertitel", "default": "Entdecken Sie unsere Partner-Vereine und ihre individuellen Fan-Shops."},
+    {"type": "text", "id": "cta_text", "label": "CTA-Text", "default": "Fan-Shop besuchen"}
+  ],
+  "blocks": [
+    {
+      "type": "club",
+      "name": "Verein",
+      "settings": [
+        {"type": "image_picker", "id": "logo", "label": "Logo"},
+        {"type": "text", "id": "name", "label": "Name", "default": "Vereinsname"},
+        {"type": "text", "id": "location", "label": "Ort", "default": "Stadt"},
+        {"type": "text", "id": "description", "label": "Kurzbeschreibung"},
+        {"type": "text", "id": "badge_1", "label": "Badge 1"},
+        {"type": "text", "id": "badge_2", "label": "Badge 2"},
+        {"type": "text", "id": "badge_3", "label": "Badge 3"},
+        {"type": "page", "id": "page", "label": "Fanshop-Seite (empfohlen)"},
+        {"type": "url", "id": "url", "label": "Alternative URL"}
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Vereinsverzeichnis" }
+  ]
+}
+{% endschema %}
+
+

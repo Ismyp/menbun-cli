@@ -14,7 +14,8 @@
 <script src="{{ 'teamwear-calculator.js' | asset_url }}" defer></script>
 
 <div class="teamwear-calculator teamwear-calculator--contained" data-section="{{ section.id }}">
-  <div class="teamwear-calculator__inner">
+  <div class="page-width">
+    <div class="teamwear-calculator__inner">
     
     {%- comment -%} Step 1: Design-Auswahl {%- endcomment -%}
     <div class="teamwear-step" data-step="design">
@@ -141,27 +142,8 @@
         <p class="teamwear-step__description">{{ section.settings.quantity_description }}</p>
       {%- endif -%}
       
-      <div class="teamwear-quantities" style="display: none;">
-        {%- assign quantities = section.settings.quantities | split: ',' -%}
-        
-        {%- for quantity in quantities -%}
-          {%- assign qty_num = quantity | strip | times: 1 -%}
-          <button type="button" 
-                  class="teamwear-quantity" 
-                  data-quantity="{{ qty_num }}">
-            <span class="teamwear-quantity__amount">{{ qty_num }} {{ section.settings.unit }}</span>
-            <span class="teamwear-quantity__discount" data-discount-info>
-              <!-- Wird dynamisch befüllt -->
-            </span>
-            <span class="teamwear-quantity__price" data-price-display>
-              <!-- Wird dynamisch befüllt -->
-            </span>
-          </button>
-        {%- endfor -%}
-      </div>
-      
-      <div class="teamwear-quantities__placeholder">
-        <p class="teamwear-placeholder-text">{{ section.settings.select_design_first | default: 'Wähle zuerst ein Design aus, um die Mengenstaffeln zu sehen.' }}</p>
+      <div class="teamwear-quantities__info">
+        <p class="teamwear-placeholder-text">Die Anzahl wird automatisch aus der Größenverteilung ermittelt.</p>
       </div>
     </div>
     
@@ -248,6 +230,7 @@
       </button>
       
       <div class="teamwear-messages" role="status" aria-live="polite"></div>
+    </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,407 @@
+{%- comment -%}
+  Sportarten-Sektion Redesign - Mit echten Produktbildern
+  - Basketball: Gelbes Trikot #23
+  - Fußball: Rotes Trikot #10  
+  - Handball: Grünes Trikot
+  - Volleyball: Oranges Trikot #12
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .sports-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} .sports-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .sports-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 10px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .sports-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    max-width: 680px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .sports-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  #shopify-section-{{ section.id }} .sport-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease;
+    position: relative;
+    border: 1px solid #f1f5f9;
+  }
+
+  #shopify-section-{{ section.id }} .sport-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .sport-image {
+    width: 100%;
+    height: 240px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #f8fafc;
+  }
+
+  #shopify-section-{{ section.id }} .sport-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .jersey-mockup {
+    width: 100px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  #shopify-section-{{ section.id }} .jersey-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1f2937;
+    margin-top: 15px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  #shopify-section-{{ section.id }} .sport-content {
+    padding: 24px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .sport-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 6px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .sport-description {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 18px 0;
+    line-height: 1.3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .sport-button {
+    background: #1f2937;
+    color: #ffffff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .sport-button:hover {
+    background: #1f2937;
+    transform: translateY(-1px);
+    color: #ffffff;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .sports-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .sports-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    #shopify-section-{{ section.id }} .sports-title {
+      font-size: 32px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="sports-container">
+  <div class="sports-header">
+    <h2 class="sports-title">{{ section.settings.title }}</h2>
+    <p class="sports-subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="sports-grid">
+    <!-- Basketball -->
+    <div class="sport-card">
+      <div class="sport-image">
+        {% if section.settings.basketball_image != blank %}
+          <img src="{{ section.settings.basketball_image | image_url: width: 400 }}" alt="Basketball Trikot" loading="lazy" width="400" height="240">
+        {% else %}
+          <div class="jersey-mockup">
+            <div class="jersey-number">23</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="sport-content">
+        <h3 class="sport-title">{{ section.settings.basketball_title }}</h3>
+        <p class="sport-description">{{ section.settings.basketball_description }}</p>
+        <a href="{{ section.settings.basketball_link | default: '/pages/basketball' }}" class="sport-button">Konfiguration starten</a>
+      </div>
+    </div>
+
+    <!-- Fußball -->
+    <div class="sport-card">
+      <div class="sport-image">
+        {% if section.settings.fussball_image != blank %}
+          <img src="{{ section.settings.fussball_image | image_url: width: 400 }}" alt="Fußball Trikot" loading="lazy" width="400" height="240">
+        {% else %}
+          <div class="jersey-mockup">
+            <div class="jersey-number">10</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="sport-content">
+        <h3 class="sport-title">{{ section.settings.fussball_title }}</h3>
+        <p class="sport-description">{{ section.settings.fussball_description }}</p>
+        <a href="{{ section.settings.fussball_link | default: '/pages/fussball' }}" class="sport-button">Konfiguration starten</a>
+      </div>
+    </div>
+
+    <!-- Handball -->
+    <div class="sport-card">
+      <div class="sport-image">
+        {% if section.settings.handball_image != blank %}
+          <img src="{{ section.settings.handball_image | image_url: width: 400 }}" alt="Handball Trikot" loading="lazy" width="400" height="240">
+        {% else %}
+          <div class="jersey-mockup">
+            <div class="jersey-number">7</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="sport-content">
+        <h3 class="sport-title">{{ section.settings.handball_title }}</h3>
+        <p class="sport-description">{{ section.settings.handball_description }}</p>
+        <a href="{{ section.settings.handball_link | default: '/pages/handball' }}" class="sport-button">Konfiguration starten</a>
+      </div>
+    </div>
+
+    <!-- Volleyball -->
+    <div class="sport-card">
+      <div class="sport-image">
+        {% if section.settings.volleyball_image != blank %}
+          <img src="{{ section.settings.volleyball_image | image_url: width: 400 }}" alt="Volleyball Trikot" loading="lazy" width="400" height="240">
+        {% else %}
+          <div class="jersey-mockup">
+            <div class="jersey-number">12</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="sport-content">
+        <h3 class="sport-title">{{ section.settings.volleyball_title }}</h3>
+        <p class="sport-description">{{ section.settings.volleyball_description }}</p>
+        <a href="{{ section.settings.volleyball_link | default: '/pages/volleyball' }}" class="sport-button">Konfiguration starten</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sportarten Redesign",
+  "tag": "section",
+  "class": "sports-redesign-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Allgemein"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titel",
+      "default": "Wähle deine Sportart"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Spezialisierte Lösungen für jede Sportart mit individuellen Designs"
+    },
+    {
+      "type": "header",
+      "content": "Basketball"
+    },
+    {
+      "type": "image_picker",
+      "id": "basketball_image",
+      "label": "Basketball Bild"
+    },
+    {
+      "type": "text",
+      "id": "basketball_title",
+      "label": "Basketball Titel",
+      "default": "Basketball"
+    },
+    {
+      "type": "text",
+      "id": "basketball_description",
+      "label": "Basketball Beschreibung",
+      "default": "Tank Tops & Shorts"
+    },
+    {
+      "type": "url",
+      "id": "basketball_link",
+      "label": "Basketball Link"
+    },
+    {
+      "type": "header",
+      "content": "Fußball"
+    },
+    {
+      "type": "image_picker",
+      "id": "fussball_image",
+      "label": "Fußball Bild"
+    },
+    {
+      "type": "text",
+      "id": "fussball_title",
+      "label": "Fußball Titel",
+      "default": "Fußball"
+    },
+    {
+      "type": "text",
+      "id": "fussball_description",
+      "label": "Fußball Beschreibung",
+      "default": "Trikots & Hosen"
+    },
+    {
+      "type": "url",
+      "id": "fussball_link",
+      "label": "Fußball Link"
+    },
+    {
+      "type": "header",
+      "content": "Handball"
+    },
+    {
+      "type": "image_picker",
+      "id": "handball_image",
+      "label": "Handball Bild"
+    },
+    {
+      "type": "text",
+      "id": "handball_title",
+      "label": "Handball Titel",
+      "default": "Handball"
+    },
+    {
+      "type": "text",
+      "id": "handball_description",
+      "label": "Handball Beschreibung",
+      "default": "Trikots & Shorts"
+    },
+    {
+      "type": "url",
+      "id": "handball_link",
+      "label": "Handball Link"
+    },
+    {
+      "type": "header",
+      "content": "Volleyball"
+    },
+    {
+      "type": "image_picker",
+      "id": "volleyball_image",
+      "label": "Volleyball Bild"
+    },
+    {
+      "type": "text",
+      "id": "volleyball_title",
+      "label": "Volleyball Titel",
+      "default": "Volleyball"
+    },
+    {
+      "type": "text",
+      "id": "volleyball_description",
+      "label": "Volleyball Beschreibung",
+      "default": "Trikots & Shorts"
+    },
+    {
+      "type": "url",
+      "id": "volleyball_link",
+      "label": "Volleyball Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding oben",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding unten",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sportarten Redesign"
+    }
+  ]
+}
+{% endschema %}

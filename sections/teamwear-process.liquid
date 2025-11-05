@@ -1,0 +1,283 @@
+{%- comment -%}
+  Teamwear Prozess - Zeigt die 3 Schritte des Bestellprozesses
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --process-bg: #f8f9fa;
+    --process-card-bg: #ffffff;
+    --process-number-bg: var(--color-foreground);
+    --process-number-color: var(--color-background);
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-process {
+    background: var(--process-bg);
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-process__header {
+    text-align: center;
+    margin: 0 auto 3rem;
+    max-width: 700px;
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-process__title {
+    font-size: clamp(1.75rem, 2vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--color-foreground);
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-process__subtitle {
+    color: #6b7280;
+    font-size: 1.125rem;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .teamwear-process__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    position: relative;
+  }
+
+  /* Verbindungslinie zwischen Steps */
+  #shopify-section-{{ section.id }} .teamwear-process__steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 16.66%;
+    right: 16.66%;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .process-step {
+    background: var(--process-card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .process-step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+
+  #shopify-section-{{ section.id }} .process-step__number {
+    width: 80px;
+    height: 80px;
+    background: var(--process-number-bg);
+    color: var(--process-number-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  #shopify-section-{{ section.id }} .process-step__icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #shopify-section-{{ section.id }} .process-step__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    color: var(--color-foreground);
+  }
+
+  #shopify-section-{{ section.id }} .process-step__description {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Mobile Anpassungen */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .teamwear-process__steps {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    #shopify-section-{{ section.id }} .teamwear-process__steps::before {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .process-step__number {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Animationen */
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  #shopify-section-{{ section.id }} .process-step {
+    animation: fadeInScale 0.6s ease-out forwards;
+    animation-delay: calc(var(--step-index) * 0.15s);
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .process-step {
+      animation: none;
+      opacity: 1;
+    }
+  }
+{%- endstyle -%}
+
+<div class="teamwear-process page-width">
+  <div class="teamwear-process__header">
+    <h2 class="teamwear-process__title">{{ section.settings.title }}</h2>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="teamwear-process__subtitle">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="teamwear-process__steps">
+    <div class="process-step" style="--step-index: 0;">
+      <div class="process-step__number">1</div>
+      <div class="process-step__icon">{{ section.settings.step1_icon }}</div>
+      <h3 class="process-step__title">{{ section.settings.step1_title }}</h3>
+      <p class="process-step__description">{{ section.settings.step1_description }}</p>
+    </div>
+
+    <div class="process-step" style="--step-index: 1;">
+      <div class="process-step__number">2</div>
+      <div class="process-step__icon">{{ section.settings.step2_icon }}</div>
+      <h3 class="process-step__title">{{ section.settings.step2_title }}</h3>
+      <p class="process-step__description">{{ section.settings.step2_description }}</p>
+    </div>
+
+    <div class="process-step" style="--step-index: 2;">
+      <div class="process-step__number">3</div>
+      <div class="process-step__icon">{{ section.settings.step3_icon }}</div>
+      <h3 class="process-step__title">{{ section.settings.step3_title }}</h3>
+      <p class="process-step__description">{{ section.settings.step3_description }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Teamwear Prozess",
+  "tag": "section",
+  "class": "section-teamwear-process",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Überschrift",
+      "default": "So einfach geht's"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "In nur 3 Schritten zu Ihrer individuellen Teamwear"
+    },
+    {
+      "type": "text",
+      "id": "step1_icon",
+      "label": "Schritt 1 Icon",
+      "default": "🎯"
+    },
+    {
+      "type": "text",
+      "id": "step1_title",
+      "label": "Schritt 1 Titel",
+      "default": "Sportart wählen"
+    },
+    {
+      "type": "text",
+      "id": "step1_description",
+      "label": "Schritt 1 Beschreibung",
+      "default": "Wählen Sie aus unseren spezialisierten Sportarten-Kollektionen"
+    },
+    {
+      "type": "text",
+      "id": "step2_icon",
+      "label": "Schritt 2 Icon",
+      "default": "🎨"
+    },
+    {
+      "type": "text",
+      "id": "step2_title",
+      "label": "Schritt 2 Titel",
+      "default": "Design konfigurieren"
+    },
+    {
+      "type": "text",
+      "id": "step2_description",
+      "label": "Schritt 2 Beschreibung",
+      "default": "Gestalten Sie Farben, Logos und Personalisierungen nach Ihren Wünschen"
+    },
+    {
+      "type": "text",
+      "id": "step3_icon",
+      "label": "Schritt 3 Icon",
+      "default": "📦"
+    },
+    {
+      "type": "text",
+      "id": "step3_title",
+      "label": "Schritt 3 Titel",
+      "default": "Bestellen & Liefern"
+    },
+    {
+      "type": "text",
+      "id": "step3_description",
+      "label": "Schritt 3 Beschreibung",
+      "default": "Wir produzieren Ihre Teamwear und liefern sie innerhalb von 2-3 Wochen"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Abstand oben",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Abstand unten",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Teamwear Prozess"
+    }
+  ]
+}
+{% endschema %}

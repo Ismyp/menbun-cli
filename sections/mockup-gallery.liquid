@@ -1,0 +1,303 @@
+{%- comment -%}
+  Mockup Gallery - Design-Beispiele mit "PDF-ready" Labels
+  Basierend auf Screenshot - 4 Mockups in 2x2 Grid
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #ffffff;
+    padding: 80px 0;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-gallery-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-gallery-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 10px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-gallery-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-item {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+    border: 1px solid #f1f5f9;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .mockup-image {
+    width: 100%;
+    height: 300px;
+    background-color: #f8fafc;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-content {
+    padding: 20px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 8px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .mockup-label {
+    display: inline-block;
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .mockup-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="mockup-gallery-container">
+  <div class="mockup-gallery-header">
+    <h2 class="mockup-gallery-title">{{ section.settings.title }}</h2>
+    <p class="mockup-gallery-subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="mockup-grid">
+    <!-- Mockup 1 -->
+    <div class="mockup-item">
+      <div class="mockup-image">
+        {% if section.settings.mockup_image_1 != blank %}
+          <img src="{{ section.settings.mockup_image_1 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_1 }}" loading="lazy" width="600" height="300">
+        {% else %}
+          <div style="text-align: center; color: #64748b; padding: 40px 20px;">
+            <p>Design-Mockup 1</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="mockup-content">
+        <h3 class="mockup-title">{{ section.settings.mockup_title_1 }}</h3>
+        <span class="mockup-label">{{ section.settings.mockup_label_1 }}</span>
+      </div>
+    </div>
+
+    <!-- Mockup 2 -->
+    <div class="mockup-item">
+      <div class="mockup-image">
+        {% if section.settings.mockup_image_2 != blank %}
+          <img src="{{ section.settings.mockup_image_2 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_2 }}" loading="lazy" width="600" height="300">
+        {% else %}
+          <div style="text-align: center; color: #64748b; padding: 40px 20px;">
+            <p>Design-Mockup 2</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="mockup-content">
+        <h3 class="mockup-title">{{ section.settings.mockup_title_2 }}</h3>
+        <span class="mockup-label">{{ section.settings.mockup_label_2 }}</span>
+      </div>
+    </div>
+
+    <!-- Mockup 3 -->
+    <div class="mockup-item">
+      <div class="mockup-image">
+        {% if section.settings.mockup_image_3 != blank %}
+          <img src="{{ section.settings.mockup_image_3 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_3 }}" loading="lazy" width="600" height="300">
+        {% else %}
+          <div style="text-align: center; color: #64748b; padding: 40px 20px;">
+            <p>Design-Mockup 3</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="mockup-content">
+        <h3 class="mockup-title">{{ section.settings.mockup_title_3 }}</h3>
+        <span class="mockup-label">{{ section.settings.mockup_label_3 }}</span>
+      </div>
+    </div>
+
+    <!-- Mockup 4 -->
+    <div class="mockup-item">
+      <div class="mockup-image">
+        {% if section.settings.mockup_image_4 != blank %}
+          <img src="{{ section.settings.mockup_image_4 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_4 }}" loading="lazy" width="600" height="300">
+        {% else %}
+          <div style="text-align: center; color: #64748b; padding: 40px 20px;">
+            <p>Design-Mockup 4</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="mockup-content">
+        <h3 class="mockup-title">{{ section.settings.mockup_title_4 }}</h3>
+        <span class="mockup-label">{{ section.settings.mockup_label_4 }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Mockup Gallery",
+  "tag": "section",
+  "class": "mockup-gallery-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Allgemein"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titel",
+      "default": "Mockups wie im PDF – in Szene gesetzt"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Hier zeigen wir Beispiele – deine PDF-Mockups können wir direkt einsetzen."
+    },
+    {
+      "type": "header",
+      "content": "Mockup 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "mockup_image_1",
+      "label": "Mockup Bild 1"
+    },
+    {
+      "type": "text",
+      "id": "mockup_title_1",
+      "label": "Mockup Titel 1",
+      "default": "Design-Mockup"
+    },
+    {
+      "type": "text",
+      "id": "mockup_label_1",
+      "label": "Mockup Label 1",
+      "default": "PDF-ready"
+    },
+    {
+      "type": "header",
+      "content": "Mockup 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "mockup_image_2",
+      "label": "Mockup Bild 2"
+    },
+    {
+      "type": "text",
+      "id": "mockup_title_2",
+      "label": "Mockup Titel 2",
+      "default": "Design-Mockup"
+    },
+    {
+      "type": "text",
+      "id": "mockup_label_2",
+      "label": "Mockup Label 2",
+      "default": "PDF-ready"
+    },
+    {
+      "type": "header",
+      "content": "Mockup 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "mockup_image_3",
+      "label": "Mockup Bild 3"
+    },
+    {
+      "type": "text",
+      "id": "mockup_title_3",
+      "label": "Mockup Titel 3",
+      "default": "Design-Mockup"
+    },
+    {
+      "type": "text",
+      "id": "mockup_label_3",
+      "label": "Mockup Label 3",
+      "default": "PDF-ready"
+    },
+    {
+      "type": "header",
+      "content": "Mockup 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "mockup_image_4",
+      "label": "Mockup Bild 4"
+    },
+    {
+      "type": "text",
+      "id": "mockup_title_4",
+      "label": "Mockup Titel 4",
+      "default": "Design-Mockup"
+    },
+    {
+      "type": "text",
+      "id": "mockup_label_4",
+      "label": "Mockup Label 4",
+      "default": "PDF-ready"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mockup Gallery"
+    }
+  ]
+}
+{% endschema %}

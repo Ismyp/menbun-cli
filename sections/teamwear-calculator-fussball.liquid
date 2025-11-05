@@ -13,8 +13,13 @@
 {{ 'teamwear-calculator.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'teamwear-calculator.js' | asset_url }}" defer></script>
 
-<div class="teamwear-calculator teamwear-calculator--contained teamwear-calculator--fussball" data-section="{{ section.id }}">
-  <div class="teamwear-calculator__inner">
+<div class="teamwear-calculator teamwear-calculator--contained teamwear-calculator--fussball" 
+     data-section="{{ section.id }}"
+     data-use-dynamic-discounts="{{ section.settings.use_dynamic_discounts }}"
+     data-discount-tiers='{{ section.settings.discount_tiers }}'
+     data-max-discount-limit="{{ section.settings.max_discount_limit | default: 25 }}">
+  <div class="page-width">
+    <div class="teamwear-calculator__inner">
     
     {%- comment -%} Step 1: Design-Auswahl {%- endcomment -%}
     <div class="teamwear-step" data-step="design">
@@ -236,6 +241,7 @@
       </button>
       
       <div class="teamwear-messages" role="status" aria-live="polite"></div>
+    </div>
     </div>
   </div>
 </div>
@@ -481,7 +487,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "default": 40
+      "default": 0
     },
     {
       "type": "range",
@@ -491,7 +497,36 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "default": 40
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "⚽ Rabatt-System"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_dynamic_discounts",
+      "label": "Dynamische Rabatt-Tiers aktivieren",
+      "info": "Ermöglicht individuelle Mengen-Rabatt Konfiguration",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "discount_tiers",
+      "label": "Rabatt-Tiers (JSON Format)",
+      "info": "Beispiel: [{\"quantity\": 11, \"discount\": 8}, {\"quantity\": 22, \"discount\": 12}, {\"quantity\": 33, \"discount\": 18}]",
+      "default": "[{\"quantity\": 11, \"discount\": 8}, {\"quantity\": 22, \"discount\": 12}, {\"quantity\": 33, \"discount\": 18}]"
+    },
+    {
+      "type": "range",
+      "id": "max_discount_limit",
+      "label": "Maximaler Rabatt (%)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 25,
+      "info": "Sicherheitsgrenze für maximalen Rabatt"
     }
   ],
   "blocks": [

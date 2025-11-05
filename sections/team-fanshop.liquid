@@ -1,0 +1,208 @@
+{%- comment -%}
+  Team-Fanshop Section
+  - Kopfbereich mit Logo, Name, optionalem Intro-Text
+  - Produktgrid aus gewählter Kollektion mit einfachen Personalisierungsoptionen
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .tf { max-width: 1160px; margin:0 auto; padding: 0 24px; }
+  #shopify-section-{{ section.id }} .tf-hero { border:1px solid #e5e7eb; border-radius: 12px; background:#fff; padding: 18px; display:flex; gap: 16px; align-items:center; }
+  #shopify-section-{{ section.id }} .tf-hero__logo { width:84px; height:84px; border-radius:999px; overflow:hidden; display:grid; place-items:center; background:#f3f4f6; }
+  #shopify-section-{{ section.id }} .tf-hero__logo img{ width:100%; height:100%; object-fit:cover; }
+  #shopify-section-{{ section.id }} .tf-hero__title { margin:0 0 2px; font-weight:800; font-size: clamp(1.25rem, 1rem + .8vw, 1.75rem); }
+  #shopify-section-{{ section.id }} .tf-hero__meta { color:#64748b; }
+  #shopify-section-{{ section.id }} .tf-intro { margin: 18px 0 8px; color:#475569; text-align:center; }
+  #shopify-section-{{ section.id }} .tf-filters { display:flex; gap:8px; justify-content:center; margin: 8px 0 16px; flex-wrap:wrap; }
+  #shopify-section-{{ section.id }} .tf-chip { padding:8px 12px; border:1px solid #e5e7eb; border-radius:999px; background:#fff; cursor:pointer; font-weight:600; }
+  #shopify-section-{{ section.id }} .tf-chip.is-active { background:#111827; color:#fff; border-color:#111827; }
+  #shopify-section-{{ section.id }} .tf-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 900px) { #shopify-section-{{ section.id }} .tf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { #shopify-section-{{ section.id }} .tf-grid { grid-template-columns: 1fr; } }
+  #shopify-section-{{ section.id }} .tf-card { border:1px solid #e5e7eb; background:#fff; border-radius: 12px; overflow:hidden; display:flex; flex-direction:column; }
+  #shopify-section-{{ section.id }} .tf-card__media { aspect-ratio: 4/3; background:#f1f5f9; display:grid; place-items:center; }
+  #shopify-section-{{ section.id }} .tf-card__body { padding: 10px; display:grid; gap:8px; }
+  #shopify-section-{{ section.id }} .tf-price { font-weight:800; }
+  #shopify-section-{{ section.id }} .tf-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  #shopify-section-{{ section.id }} .tf-input { width:100%; padding:6px 8px; border:1px solid #e5e7eb; border-radius:8px; }
+{%- endstyle -%}
+
+<div class="tf">
+  <div class="tf-hero">
+    <div class="tf-hero__logo">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 136 | image_tag: loading: 'lazy', alt: section.settings.team_name | escape }}
+      {%- else -%}
+        <span aria-hidden="true">🏀</span>
+      {%- endif -%}
+    </div>
+    <div>
+      <h2 class="tf-hero__title">{{ section.settings.team_name }}</h2>
+      <div class="tf-hero__meta">{{ section.settings.team_sub }}</div>
+    </div>
+  </div>
+
+  {%- if section.settings.intro != blank -%}
+    <div class="tf-intro">{{ section.settings.intro }}</div>
+  {%- endif -%}
+
+  {%- if section.settings.show_filters and section.settings.collection != blank -%}
+    <div class="tf-filters" data-filter-chips>
+      <button class="tf-chip is-active" data-filter="all">Alle</button>
+      {%- if section.settings.filter1_label != blank and section.settings.filter1_tag != blank -%}
+        <button class="tf-chip" data-filter="{{ section.settings.filter1_tag | escape }}">{{ section.settings.filter1_label }}</button>
+      {%- endif -%}
+      {%- if section.settings.filter2_label != blank and section.settings.filter2_tag != blank -%}
+        <button class="tf-chip" data-filter="{{ section.settings.filter2_tag | escape }}">{{ section.settings.filter2_label }}</button>
+      {%- endif -%}
+      {%- if section.settings.filter3_label != blank and section.settings.filter3_tag != blank -%}
+        <button class="tf-chip" data-filter="{{ section.settings.filter3_tag | escape }}">{{ section.settings.filter3_label }}</button>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="tf-grid" data-product-grid>
+    {%- if section.settings.collection != blank -%}
+      {%- for product in section.settings.collection.products -%}
+        <article class="tf-card" data-product-id="{{ product.selected_or_first_available_variant.id }}" data-tags="{{ product.tags | join: ',' | escape }}">
+          <div class="tf-card__media">
+            {%- if product.featured_image -%}
+              {{ product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: product.title | escape }}
+            {%- endif -%}
+          </div>
+          <div class="tf-card__body">
+            <div class="tf-card__title" style="font-weight:700;">{{ product.title }}</div>
+            <div class="tf-price">{{ product.selected_or_first_available_variant.price | money }}</div>
+            {%- assign size_opt = product.options_with_values | where: 'name', 'Größe' -%}
+            {%- if size_opt.size > 0 -%}
+              <div class="tf-row">
+                <label>Größe</label>
+                <select class="tf-input" data-variant-size>
+                  {%- for opt in size_opt.first.values -%}
+                    <option value="{{ opt }}">{{ opt }}</option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+            {%- assign color_opt = product.options_with_values | where: 'name', 'Farbe' -%}
+            {%- if color_opt.size > 0 -%}
+              <div class="tf-row">
+                <label>Farbe</label>
+                <select class="tf-input" data-variant-color>
+                  {%- for opt in color_opt.first.values -%}
+                    <option value="{{ opt }}">{{ opt }}</option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+            <div class="tf-row">
+              <label><input type="checkbox" data-opt-name> Namen hinzufügen</label>
+              <label><input type="checkbox" data-opt-number> Nummer hinzufügen</label>
+            </div>
+            <div class="tf-row" data-name-field style="display:none;">
+              <input type="text" class="tf-input" placeholder="Name" data-input-name>
+            </div>
+            <div class="tf-row" data-number-field style="display:none;">
+              <input type="text" class="tf-input" placeholder="Nummer" data-input-number>
+            </div>
+            <div class="tf-row" style="justify-content:flex-end;">
+              <button type="button" class="button" data-add-to-cart>In den Warenkorb</button>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    {%- else -%}
+      <div style="grid-column:1/-1; border:1px dashed #e5e7eb; border-radius: 10px; padding: 12px; background:#fafafa;">Bitte Kollektion auswählen.</div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function(){
+    const root = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!root) return;
+    // Filter
+    const grid = root.querySelector('[data-product-grid]');
+    const chips = root.querySelectorAll('[data-filter-chips] .tf-chip');
+    chips.forEach(chip => chip?.addEventListener('click', () => {
+      chips.forEach(c=>c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+      const tag = chip.getAttribute('data-filter');
+      grid.querySelectorAll('.tf-card').forEach(card => {
+        const tags = (card.getAttribute('data-tags')||'').split(',');
+        const show = tag === 'all' ? true : tags.includes(tag);
+        card.style.display = show ? '' : 'none';
+      });
+    }));
+    root.addEventListener('change', (e) => {
+      if (e.target.matches('[data-opt-name]')) {
+        const card = e.target.closest('.tf-card');
+        const field = card.querySelector('[data-name-field]');
+        field.style.display = e.target.checked ? 'block' : 'none';
+      }
+      if (e.target.matches('[data-opt-number]')) {
+        const card = e.target.closest('.tf-card');
+        const field = card.querySelector('[data-number-field]');
+        field.style.display = e.target.checked ? 'block' : 'none';
+      }
+    });
+    root.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-add-to-cart]');
+      if (!btn) return;
+      const card = btn.closest('.tf-card');
+      const productId = Number(card.getAttribute('data-product-id'));
+      if (!productId) return;
+      const properties = {};
+      const nameOn = card.querySelector('[data-opt-name]')?.checked;
+      const numberOn = card.querySelector('[data-opt-number]')?.checked;
+      if (nameOn) properties['Name'] = card.querySelector('[data-input-name]')?.value || '';
+      if (numberOn) properties['Nummer'] = card.querySelector('[data-input-number]')?.value || '';
+      try {
+        btn.setAttribute('disabled', 'disabled');
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: productId, quantity: 1, properties })
+        });
+        if (!res.ok) throw new Error('Cart add failed');
+        btn.removeAttribute('disabled');
+      } catch(err) { btn.removeAttribute('disabled'); }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Team-Fanshop",
+  "tag": "section",
+  "class": "section-team-fanshop",
+  "settings": [
+    {"type": "image_picker", "id": "logo", "label": "Team-Logo"},
+    {"type": "text", "id": "team_name", "label": "Teamname", "default": "Vereinsname"},
+    {"type": "text", "id": "team_sub", "label": "Untertitel"},
+    {"type": "text", "id": "intro", "label": "Intro-Text"},
+    {"type": "collection", "id": "collection", "label": "Kollektion (Produkte)"},
+    {"type": "checkbox", "id": "show_filters", "label": "Filter-Chips anzeigen", "default": true},
+    {"type": "text", "id": "filter1_label", "label": "Filter 1 Label", "default": "Trikots"},
+    {"type": "text", "id": "filter1_tag", "label": "Filter 1 Tag (Produkt-Tag)", "default": "trikot"},
+    {"type": "text", "id": "filter2_label", "label": "Filter 2 Label", "default": "Fanwear"},
+    {"type": "text", "id": "filter2_tag", "label": "Filter 2 Tag (Produkt-Tag)", "default": "fanwear"},
+    {"type": "text", "id": "filter3_label", "label": "Filter 3 Label", "default": "Trainingskleidung"},
+    {"type": "text", "id": "filter3_tag", "label": "Filter 3 Tag (Produkt-Tag)", "default": "training"}
+  ],
+  "presets": [ 
+    {
+      "name": "Team-Fanshop",
+      "settings": {
+        "team_name": "Mein Verein",
+        "team_sub": "Offizielle Fanshop-Produkte",
+        "intro": "Entdecken Sie unsere exklusiven Fanartikel mit Personalisierungsoption"
+      }
+    } 
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
+
+
