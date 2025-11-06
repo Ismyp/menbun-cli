@@ -67,8 +67,8 @@
         "volleyball_title": "Volleyball",
         "volleyball_description": "Trikots & Shorts",
         "volleyball_link": "/pages/volleyball",
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 70,
+        "padding_bottom": 40
       }
     },
     "custom_design_section": {
