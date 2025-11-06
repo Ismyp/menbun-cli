@@ -10,6 +10,7 @@
 {%- endstyle -%}
 
 {{ 'teamwear-calculator.css' | asset_url | stylesheet_tag }}
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript" defer></script>
 <script
   src="{{ 'teamwear-calculator.js' | asset_url }}"
   defer
@@ -239,11 +240,11 @@
             {%- comment -%} Logo Upload {%- endcomment -%}
             <div class="teamwear-team-section__logo-upload" style="display: none;">
               <label class="teamwear-team-section__file-label">
-                <input type="file" 
-                       class="teamwear-team-section__file-input" 
-                       accept="image/*"
-                       data-team-logo>
-                <span class="teamwear-team-section__file-button">Datei auswählen</span>
+                <button type="button" 
+                        class="teamwear-team-section__file-input" 
+                        data-team-logo>
+                  <span class="teamwear-team-section__file-button">Datei auswählen</span>
+                </button>
                 <span class="teamwear-team-section__file-name">Keine ausgewählt</span>
               </label>
             </div>

@@ -163,13 +163,9 @@ class TeamwearCalculator {
       }
       
       if (this.elements.teamLogoInput) {
-        this.elements.teamLogoInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            this.state.teamLogo = file;
-            const fileName = this.elements.teamSection.querySelector('.teamwear-team-section__file-name');
-            if (fileName) fileName.textContent = file.name;
-          }
+        this.elements.teamLogoInput.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.openCloudinaryUpload();
         });
       }
       
@@ -999,7 +995,13 @@ class TeamwearCalculator {
     // Team-Optionen nur hinzufügen, wenn Checkboxen aktiviert sind
     const teamLogoCheckbox = this.section.querySelector('[data-team-option="logo"]');
     if (teamLogoCheckbox && teamLogoCheckbox.checked && this.state.teamLogo) {
-      personalProps['Team Logo'] = this.state.teamLogo.name || 'Logo hochgeladen';
+      // Speichere Logo-URL statt nur Dateiname
+      if (this.state.teamLogo.url) {
+        personalProps['Team Logo'] = this.state.teamLogo.url;
+        personalProps['Team Logo Name'] = this.state.teamLogo.name || 'Logo';
+      } else {
+        personalProps['Team Logo'] = this.state.teamLogo.name || 'Logo hochgeladen';
+      }
     }
     
     const teamNameCheckbox = this.section.querySelector('[data-team-option="teamname"]');
@@ -1038,6 +1040,106 @@ class TeamwearCalculator {
     }
     
     return personalProps;
+  }
+  
+  openCloudinaryUpload() {
+    // Cloudinary Upload Widget konfigurieren
+    if (typeof cloudinary === 'undefined') {
+      this.showMessage('Upload-Service nicht verfügbar. Bitte Seite neu laden.', 'error');
+      return;
+    }
+    
+    const widget = cloudinary.createUploadWidget({
+      cloudName: 'dr2vjuzvh',
+      uploadPreset: 'teamwear-logos',
+      folder: 'teamwear-logos',
+      clientAllowedFormats: ['png', 'jpg', 'jpeg', 'svg', 'pdf', 'ai'],
+      maxFileSize: 10485760, // 10MB
+      maxFiles: 1,
+      multiple: false,
+      sources: ['local'],
+      language: 'de',
+      text: {
+        de: {
+          or: 'oder',
+          back: 'Zurück',
+          advanced: 'Erweitert',
+          close: 'Schließen',
+          no_results: 'Keine Ergebnisse',
+          search_placeholder: 'Dateien durchsuchen',
+          about_uw: 'Über den Upload Widget',
+          menu: {
+            files: 'Meine Dateien',
+            web: 'Web-Adresse',
+            camera: 'Kamera'
+          },
+          local: {
+            browse: 'Durchsuchen',
+            dd_title_single: 'Datei hier ablegen',
+            dd_title_multi: 'Dateien hier ablegen',
+            drop_title_single: 'Datei ablegen zum Hochladen',
+            drop_title_multi: 'Dateien ablegen zum Hochladen'
+          },
+          actions: {
+            upload: 'Hochladen',
+            clear_all: 'Alle löschen',
+            log_out: 'Abmelden'
+          },
+          queue: {
+            title: 'Upload-Warteschlange',
+            title_uploading_with_counter: 'Lade {{num}} Dateien hoch',
+            title_processing_with_counter: 'Verarbeite {{num}} Dateien',
+            mini_title: 'Hochgeladen',
+            mini_title_uploading: 'Wird hochgeladen',
+            mini_title_processing: 'Wird verarbeitet',
+            show_completed: 'Abgeschlossene anzeigen',
+            retry_failed: 'Fehlgeschlagene wiederholen',
+            abort_all: 'Alle abbrechen',
+            upload_more: 'Weitere hochladen',
+            done: 'Fertig',
+            mini_upload_count: '{{num}} hochgeladen',
+            mini_failed: '{{num}} fehlgeschlagen',
+            statuses: {
+              uploading: 'Wird hochgeladen...',
+              processing: 'Wird verarbeitet...',
+              timeout: 'Zeitüberschreitung',
+              error: 'Fehler',
+              uploaded: 'Fertig',
+              aborted: 'Abgebrochen'
+            }
+          }
+        }
+      }
+    }, (error, result) => {
+      if (error) {
+        console.error('Cloudinary Upload Error:', error);
+        this.showMessage('Fehler beim Hochladen. Bitte versuche es erneut.', 'error');
+        return;
+      }
+      
+      if (result.event === 'success') {
+        const logoUrl = result.info.secure_url;
+        const fileName = result.info.original_filename + '.' + result.info.format;
+        
+        // Speichere Logo-URL und Dateiname
+        this.state.teamLogo = {
+          url: logoUrl,
+          name: fileName,
+          publicId: result.info.public_id
+        };
+        
+        // Zeige Dateinamen im UI
+        const fileNameElement = this.elements.teamSection.querySelector('.teamwear-team-section__file-name');
+        if (fileNameElement) {
+          fileNameElement.textContent = fileName;
+        }
+        
+        this.showMessage('Logo erfolgreich hochgeladen!', 'success');
+        console.log('Logo hochgeladen:', logoUrl);
+      }
+    });
+    
+    widget.open();
   }
   
   updateCartCount() {
@@ -1139,7 +1241,7 @@ class TeamwearCalculator {
       this.elements.colorPreviewImage.alt = '';
     }
     
-    this.updateUI();
+     this.updateUI();
   }
 }
 
