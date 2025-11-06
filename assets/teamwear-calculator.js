@@ -3,9 +3,6 @@
  * Handles all interactions and cart integration
  */
 
-// Import CartAddEvent für Cart Drawer Integration
-import { CartAddEvent } from './events.js';
-
 class TeamwearCalculator {
   constructor(sectionId) {
     this.section = document.querySelector(`[data-section="${sectionId}"]`);
@@ -916,21 +913,30 @@ class TeamwearCalculator {
       
       const cartData = await response.json();
       
-      // Dispatche CartAddEvent für automatisches Öffnen des Cart Drawers
-      document.dispatchEvent(
-        new CartAddEvent({}, this.state.selectedVariantId, {
-          source: 'teamwear-calculator',
-          itemCount: this.state.selectedQuantity,
-          productId: this.state.selectedProduct?.id,
-          sections: cartData.sections
-        })
-      );
+      // Dispatche CustomEvent für Cart Drawer (ohne Import)
+      const cartAddEvent = new CustomEvent('theme:cart:update', {
+        bubbles: true,
+        detail: {
+          resource: {},
+          sourceId: this.state.selectedVariantId,
+          data: {
+            source: 'teamwear-calculator',
+            itemCount: this.state.selectedQuantity,
+            productId: this.state.selectedProduct?.id,
+            sections: cartData.sections
+          }
+        }
+      });
+      document.dispatchEvent(cartAddEvent);
       
       this.showMessage(this.config.translations.addedToCart || 'Erfolgreich hinzugefügt!', 'success');
       this.updateCartCount();
       
-      // Optional: Automatisch zum Warenkorb scrollen oder Drawer öffnen
-      // Der CartAddEvent öffnet automatisch den Cart Drawer (wenn auto-open aktiviert ist)
+      // Öffne Cart Drawer manuell
+      const cartDrawer = document.querySelector('cart-drawer-component');
+      if (cartDrawer && typeof cartDrawer.open === 'function') {
+        setTimeout(() => cartDrawer.open(), 300);
+      }
       
       setTimeout(() => this.resetForm(), 2000);
       
