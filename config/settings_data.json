@@ -75,6 +75,75 @@
     "variant_button_border_width": 1,
     "variant_button_radius": 14,
     "variant_button_width": "equal-width-buttons",
+    "sections": {
+      "teamwear-calculator-basketball": {
+        "type": "teamwear-calculator-basketball",
+        "blocks": {
+          "design_q6mkyJ": {
+            "type": "design",
+            "settings": {
+              "product": "test-produkt-4",
+              "name": "",
+              "discount_per_10": 5
+            }
+          },
+          "design_kfJmWz": {
+            "type": "design",
+            "settings": {
+              "product": "menbun-double-face-shirt",
+              "name": "",
+              "discount_per_10": 5
+            }
+          }
+        },
+        "block_order": [
+          "design_q6mkyJ",
+          "design_kfJmWz"
+        ],
+        "settings": {
+          "fallback_product": "",
+          "fallback_discount_per_tier": 5,
+          "design_title": "1. Wähle dein Basketball-Design",
+          "design_description": "Wähle aus unseren verfügbaren Basketball-Designs",
+          "price_note": "Stückpreis",
+          "unit": "Stück",
+          "color_title": "2. Wähle die Farbe",
+          "color_description": "Wähle deine gewünschte Trikotfarbe aus",
+          "sizes_title": "3. Größenverteilung angeben",
+          "sizes_description": "Gib an, wie viele Trikots du pro Größe benötigst. Die Gesamtmenge wird automatisch berechnet.",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "size_chart_button_text": "Basketball Größentabelle anzeigen",
+          "team_logo_text": "Logo hinzufügen",
+          "team_logo_price": 0,
+          "team_name_text": "Teamname",
+          "team_name_price": 0,
+          "enable_personalization": true,
+          "personalization_title": "3. Personalisierung und Größen",
+          "personalization_description": "Füge Namen und Rückennummern für jedes Basketball-Trikot hinzu",
+          "number_chest_text": "Nummer Brust",
+          "number_chest_price": 0,
+          "number_back_text": "Nummer Rücken",
+          "number_back_price": 0,
+          "player_names_text": "Spielernamen",
+          "player_names_price": 0,
+          "optional_text": "Optional",
+          "total_price_label": "Gesamtpreis:",
+          "add_to_cart_text": "In den Warenkorb",
+          "adding_to_cart_text": "Wird hinzugefügt...",
+          "added_to_cart_text": "Erfolgreich hinzugefügt!",
+          "error_select_design": "Bitte wähle ein Basketball-Design aus",
+          "error_select_quantity": "Bitte wähle eine Menge aus",
+          "error_correct_sizes": "Die Summe der Größen muss der gewählten Menge entsprechen",
+          "error_general": "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+          "padding_top": 0,
+          "padding_bottom": 40,
+          "use_dynamic_discounts": false,
+          "discount_tiers": "[{\"quantity\": 10, \"discount\": 5}, {\"quantity\": 20, \"discount\": 10}, {\"quantity\": 50, \"discount\": 15}]",
+          "max_discount_limit": 25
+        }
+      }
+    },
+    "content_for_index": [],
     "color_schemes": {
       "scheme-1": {
         "settings": {
@@ -122,7 +191,7 @@
           "foreground": "#000000cf",
           "primary": "#000000cf",
           "primary_hover": "#ffffff",
-          "border": "#DFDFDF",
+          "border": "#dfdfdf",
           "shadow": "#000000",
           "primary_button_background": "#000000",
           "primary_button_text": "#ffffff",
