@@ -169,10 +169,194 @@
   color: #666;
 }
 
-.teamwear-step__description {
-  color: #666;
-  margin-bottom: 1.5rem;
+/* Color Selection */
+.teamwear-color-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
 }
+
+.teamwear-color-preview {
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+.teamwear-color-preview__image-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teamwear-color-preview__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.teamwear-color-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.teamwear-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-color-selection {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .teamwear-color-preview {
+    position: relative;
+    top: 0;
+  }
+  
+  .teamwear-color-preview__image-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+.teamwear-color {
+  position: relative;
+  cursor: pointer;
+}
+
+.teamwear-color__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.teamwear-color__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.teamwear-color__label:hover {
+  border-color: #a3e635;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(163, 230, 53, 0.2);
+}
+
+.teamwear-color__input:checked + .teamwear-color__label {
+  border-color: #65a30d;
+  border-width: 3px;
+  background: #f7fee7;
+  box-shadow: 0 0 0 1px #65a30d;
+}
+
+.teamwear-color__swatch {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: var(--color-value, #f3f4f6);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.teamwear-color__input:checked + .teamwear-color__label .teamwear-color__swatch {
+  border-color: #65a30d;
+  border-width: 3px;
+  transform: scale(1.1);
+}
+
+.teamwear-color__input:checked + .teamwear-color__label .teamwear-color__swatch::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.teamwear-color__name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  text-align: center;
+}
+
+.teamwear-color__input:checked + .teamwear-color__label .teamwear-color__name {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.teamwear-colors__placeholder {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.teamwear-colors__placeholder.loading {
+  position: relative;
+}
+
+.teamwear-colors__placeholder.loading::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive für Farbauswahl */
+@media screen and (max-width: 749px) {
+  .teamwear-colors {
+    gap: 0.75rem;
+  }
+  
+  .teamwear-color__label {
+    min-width: 80px;
+    padding: 0.75rem;
+  }
+  
+  .teamwear-color__swatch {
+    width: 50px;
+    height: 50px;
+  }
+}
+
 
 /* Design Selection - Zentraler und übersichtlicher für alle Kalkulatoren */
 .teamwear-designs,
@@ -259,25 +443,105 @@
   font-weight: bold;
 }
 
-.teamwear-design__image {
+.teamwear-design__image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.teamwear-design__image-slider {
+  position: relative;
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
+}
+
+.teamwear-design__image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.teamwear-design__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+  background: #f9fafb;
+}
+
+.teamwear-design__image.visually-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.teamwear-design__slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+  color: #374151;
+}
+
+.teamwear-design__slider-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+
+.teamwear-design__slider-btn--prev {
+  left: 8px;
+}
+
+.teamwear-design__slider-btn--next {
+  right: 8px;
+}
+
+.teamwear-design__image-wrapper:hover .teamwear-design__slider-btn {
+  opacity: 0.7;
+}
+
+.teamwear-design__image-wrapper:hover .teamwear-design__slider-btn:hover {
+  opacity: 1;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-design__slider-btn {
+    width: 36px;
+    height: 36px;
+    opacity: 0.6;
+  }
+  
+  .teamwear-design__slider-btn--prev {
+    left: 4px;
+  }
+  
+  .teamwear-design__slider-btn--next {
+    right: 4px;
+  }
+}
+
+.teamwear-design__image-wrapper {
   border-radius: calc(var(--border-radius) / 2);
   margin-bottom: 1rem;
 }
 
-.teamwear-design__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: none;
-  filter: none;
-}
-
 /* Verhindere jeden Overlay-Effekt auf Bildern */
-.teamwear-design__label:hover .teamwear-design__image img,
-.teamwear-design__input:checked + .teamwear-design__label .teamwear-design__image img {
+.teamwear-design__label:hover .teamwear-design__image,
+.teamwear-design__input:checked + .teamwear-design__label .teamwear-design__image {
   filter: none;
   opacity: 1;
   transform: none;
@@ -504,79 +768,226 @@
   height: auto;
 }
 
-/* Personalization */
-.teamwear-personalization__toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 1rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: all var(--transition-duration) ease;
-}
-
-.teamwear-personalization__toggle:hover {
-  border-color: var(--primary-color);
-  background-color: var(--hover-bg);
-}
-
-.teamwear-personalization__toggle[aria-expanded="true"] {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.teamwear-personalization__toggle-icon {
-  transition: transform var(--transition-duration) ease;
-}
-
-.teamwear-personalization__toggle[aria-expanded="true"] .teamwear-personalization__toggle-icon {
-  transform: rotate(180deg);
-}
-
-.teamwear-personalization__content {
-  border: 1px solid var(--border-color);
-  border-top: none;
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+/* Team Section */
+.teamwear-team-section {
+  margin-top: 2rem;
   padding: 1.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 }
 
-.teamwear-personalization__list {
+.teamwear-team-section__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.teamwear-team-section__options {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.teamwear-personalization__item {
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
-  gap: 1rem;
+.teamwear-team-section__checkbox {
+  display: flex;
   align-items: center;
-  padding: 0.75rem;
-  background-color: #f8f8f8;
-  border-radius: calc(var(--border-radius) / 2);
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
-@media screen and (max-width: 749px) {
-  .teamwear-personalization__item {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
+.teamwear-team-section__checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
 
-.teamwear-personalization__number {
-  font-weight: 600;
-  min-width: 2rem;
-}
-
-.teamwear-personalization__input {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: calc(var(--border-radius) / 2);
+.teamwear-team-section__checkbox-label {
   font-size: 0.875rem;
+  color: #374151;
+}
+
+.teamwear-team-section__logo-upload {
+  margin-top: 1rem;
+}
+
+.teamwear-team-section__file-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.teamwear-team-section__file-input {
+  display: none;
+}
+
+.teamwear-team-section__file-button {
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.teamwear-team-section__file-button:hover {
+  border-color: #a3e635;
+  background: #f7fee7;
+}
+
+.teamwear-team-section__file-name {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.teamwear-team-section__teamname-input {
+  margin-top: 1rem;
+}
+
+.teamwear-team-section__text-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.teamwear-team-section__text-input:focus {
+  outline: none;
+  border-color: #a3e635;
+}
+
+/* Quantity Section */
+.teamwear-quantity-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.teamwear-quantity-section__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.teamwear-quantity-section__input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.teamwear-quantity-section__input:focus {
+  outline: none;
+  border-color: #a3e635;
+}
+
+.teamwear-team-section__price,
+.teamwear-personalization__price {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: normal;
+  margin-left: 0.25rem;
+}
+
+/* Personalization Options */
+.teamwear-personalization__options {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.teamwear-personalization__option-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.teamwear-personalization__option-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Personalization Table */
+.teamwear-personalization__content {
+  margin-top: 1rem;
+}
+
+.teamwear-personalization__table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.teamwear-personalization__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.teamwear-personalization__table thead {
+  background: #f9fafb;
+}
+
+.teamwear-personalization__table th,
+.teamwear-personalization__table td {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 8px;
+  text-align: left;
+}
+
+.teamwear-personalization__table th {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.teamwear-personalization__table th:first-child,
+.teamwear-personalization__table td:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+.teamwear-personalization__table input,
+.teamwear-personalization__table select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.teamwear-personalization__table input:focus,
+.teamwear-personalization__table select:focus {
+  outline: none;
+  border-color: #a3e635;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.1);
+}
+
+.teamwear-personalization__table select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23374151' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 32px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
 }
 
 /* Summary - Zentraler und übersichtlicher für alle Kalkulatoren */

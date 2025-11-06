@@ -2,7 +2,7 @@
   "sections": {
     "new_hero": {
       "type": "new-hero-redesign",
-      "settings": {
+          "settings": {
         "badge_text": "Druck-Qualität direkt vom Hersteller",
         "main_title": "Teamwear, die begeistert",
         "subtitle": "Individuelle Sportbekleidung für Basketball, Fußball, Handball und Volleyball - mit professionellem Custom Design und Vereins-Fanshops. Gestalte deine Trikots, Trainingsanzüge und komplette Teamsportbekleidung ganz nach deinen Wünschen.",
@@ -17,7 +17,7 @@
     
     "stats_section": {
       "type": "stats-section",
-      "settings": {
+          "settings": {
         "stat1_number": "5000+",
         "stat1_label": "Zufriedene Kunden",
         "stat2_number": "4.9/5",
@@ -65,7 +65,7 @@
     
     "custom_design_section": {
       "type": "custom-design-section",
-      "settings": {
+          "settings": {
         "title": "Individuelles Design gewünscht?",
         "description": "Unsere Design-Experten erstellen individuelle Konzepte für Ihr Team. Von Logo-Integration bis hin zu komplett neuen Designs - wir setzen Ihre Vorstellungen um.",
         "feature1": "Kostenlose Design-Mockups",

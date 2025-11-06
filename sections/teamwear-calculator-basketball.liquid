@@ -11,7 +11,10 @@
 {%- endstyle -%}
 
 {{ 'teamwear-calculator.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'teamwear-calculator.js' | asset_url }}" defer></script>
+<script
+  src="{{ 'teamwear-calculator.js' | asset_url }}"
+  defer
+></script>
 
 <div class="teamwear-calculator teamwear-calculator--contained teamwear-calculator--basketball" 
      data-section="{{ section.id }}"
@@ -51,10 +54,32 @@
                          {% if forloop.first %}checked{% endif %}>
                   <label for="design-{{ block.id }}" class="teamwear-design__label">
                     {%- if product.featured_image != blank -%}
-                      <div class="teamwear-design__image">
-                        {{ product.featured_image | image_url: width: 400 | image_tag: 
-                           loading: 'lazy',
-                           alt: product.title | escape }}
+                      <div class="teamwear-design__image-wrapper" data-product-handle="{{ product.handle }}">
+                        <div class="teamwear-design__image-slider">
+                          {%- if product.images.size > 1 -%}
+                            <button type="button" class="teamwear-design__slider-btn teamwear-design__slider-btn--prev" aria-label="Vorheriges Bild" data-slider-action="prev">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                              </svg>
+                            </button>
+                            <button type="button" class="teamwear-design__slider-btn teamwear-design__slider-btn--next" aria-label="Nächstes Bild" data-slider-action="next">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                              </svg>
+                            </button>
+                          {%- endif -%}
+                          <div class="teamwear-design__image-container">
+                            {%- for image in product.images -%}
+                              <img class="teamwear-design__image {% unless forloop.first %}visually-hidden{% endunless %}" 
+                                   src="{{ image | image_url: width: 400 }}" 
+                                   alt="{{ product.title | escape }}"
+                                   loading="{% if forloop.first %}lazy{% else %}eager{% endif %}"
+                                   data-image-index="{{ forloop.index0 }}"
+                                   width="400"
+                                   height="{{ 400 | divided_by: image.aspect_ratio | round }}">
+                            {%- endfor -%}
+                          </div>
+                        </div>
                       </div>
                     {%- endif -%}
                     <h3 class="teamwear-design__name">
@@ -97,10 +122,32 @@
                    checked>
             <label for="design-fallback" class="teamwear-design__label">
               {%- if fallback_product.featured_image != blank -%}
-                <div class="teamwear-design__image">
-                  {{ fallback_product.featured_image | image_url: width: 400 | image_tag: 
-                     loading: 'lazy',
-                     alt: fallback_product.title | escape }}
+                <div class="teamwear-design__image-wrapper" data-product-handle="{{ fallback_product.handle }}">
+                  <div class="teamwear-design__image-slider">
+                    {%- if fallback_product.images.size > 1 -%}
+                      <button type="button" class="teamwear-design__slider-btn teamwear-design__slider-btn--prev" aria-label="Vorheriges Bild" data-slider-action="prev">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                      </button>
+                      <button type="button" class="teamwear-design__slider-btn teamwear-design__slider-btn--next" aria-label="Nächstes Bild" data-slider-action="next">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                      </button>
+                    {%- endif -%}
+                    <div class="teamwear-design__image-container">
+                      {%- for image in fallback_product.images -%}
+                        <img class="teamwear-design__image {% unless forloop.first %}visually-hidden{% endunless %}" 
+                             src="{{ image | image_url: width: 400 }}" 
+                             alt="{{ fallback_product.title | escape }}"
+                             loading="{% if forloop.first %}lazy{% else %}eager{% endif %}"
+                             data-image-index="{{ forloop.index0 }}"
+                             width="400"
+                             height="{{ 400 | divided_by: image.aspect_ratio | round }}">
+                      {%- endfor -%}
+                    </div>
+                  </div>
                 </div>
               {%- endif -%}
               <h3 class="teamwear-design__name">{{ fallback_product.title }}</h3>
@@ -136,100 +183,166 @@
       </div>
     </div>
     
-    {%- comment -%} Step 2: Mengenstaffel {%- endcomment -%}
-    <div class="teamwear-step" data-step="quantity">
-      <h2 class="teamwear-step__title">{{ section.settings.quantity_title }}</h2>
-      {%- if section.settings.quantity_description != blank -%}
-        <p class="teamwear-step__description">{{ section.settings.quantity_description }}</p>
+    <div class="teamwear-step" data-step="color">
+      <h2 class="teamwear-step__title">{{ section.settings.color_title }}</h2>
+      {%- if section.settings.color_description != blank -%}
+        <p class="teamwear-step__description">{{ section.settings.color_description }}</p>
       {%- endif -%}
       
-      <div class="teamwear-quantities" style="display: none;">
-        {%- assign quantities = section.settings.quantities | split: ',' -%}
-        
-        {%- for quantity in quantities -%}
-          {%- assign qty_num = quantity | strip | times: 1 -%}
-          <button type="button" 
-                  class="teamwear-quantity" 
-                  data-quantity="{{ qty_num }}">
-            <span class="teamwear-quantity__amount">{{ qty_num }} {{ section.settings.unit }}</span>
-            <span class="teamwear-quantity__discount" data-discount-info>
-              <!-- Wird dynamisch befüllt -->
-            </span>
-            <span class="teamwear-quantity__price" data-price-display>
-              <!-- Wird dynamisch befüllt -->
-            </span>
-          </button>
-        {%- endfor -%}
+      <div class="teamwear-color-selection" style="display: none;">
+        <div class="teamwear-color-preview">
+          <div class="teamwear-color-preview__image-wrapper">
+            <img class="teamwear-color-preview__image" 
+                 alt="" 
+                 loading="lazy"
+                 width="600"
+                 height="600"
+                 data-color-preview>
       </div>
-      
-      <div class="teamwear-quantities__placeholder">
-        <p class="teamwear-placeholder-text">{{ section.settings.select_design_first | default: 'Wähle zuerst ein Basketball-Design aus, um die Mengenstaffeln zu sehen.' }}</p>
-      </div>
-    </div>
-    
-    {%- comment -%} Step 3: Größenverteilung {%- endcomment -%}
-    <div class="teamwear-step" data-step="sizes">
-      <h2 class="teamwear-step__title">{{ section.settings.sizes_title }}</h2>
-      {%- if section.settings.sizes_description != blank -%}
-        <p class="teamwear-step__description">{{ section.settings.sizes_description }}</p>
-      {%- endif -%}
-      
-      <div class="teamwear-sizes">
-        {%- assign sizes = section.settings.sizes | split: ',' -%}
-        {%- for size in sizes -%}
-          <div class="teamwear-size">
-            <label for="size-{{ size | strip | handleize }}" class="teamwear-size__label">
-              {{ size | strip }}
-            </label>
-            <input type="number" 
-                   id="size-{{ size | strip | handleize }}"
-                   name="size-{{ size | strip | handleize }}"
-                   class="teamwear-size__input"
-                   min="0"
-                   value="0"
-                   data-size="{{ size | strip }}">
-          </div>
-        {%- endfor -%}
-      </div>
-      
-      <div class="teamwear-sizes__validation">
-        <span class="teamwear-sizes__total">Gesamt: <strong data-total>0</strong></span>
-        <span class="teamwear-sizes__required">von <strong data-required>0</strong> benötigt</span>
-      </div>
-      
-      {%- if section.settings.size_chart_image != blank -%}
-        <button type="button" class="teamwear-size-chart-toggle">
-          {{ section.settings.size_chart_button_text }}
-        </button>
-        <div class="teamwear-size-chart" style="display: none;">
-          {{ section.settings.size_chart_image | image_url: width: 800 | image_tag: 
-             loading: 'lazy',
-             alt: 'Basketball Größentabelle' | escape }}
         </div>
-      {%- endif -%}
+        <div class="teamwear-color-options">
+          <div class="teamwear-colors">
+            <!-- Wird dynamisch per JavaScript befüllt -->
     </div>
     
-    {%- comment -%} Step 4: Personalisierung (Optional) {%- endcomment -%}
+          {%- comment -%} Anzahl-Feld zwischen Farbe und Team {%- endcomment -%}
+          <div class="teamwear-quantity-section" style="display: none;">
+            <h3 class="teamwear-quantity-section__title">Anzahl</h3>
+            <input type="number" 
+                   class="teamwear-quantity-section__input" 
+                   min="1"
+                   value="10"
+                   data-quantity-input>
+          </div>
+          
+          {%- comment -%} Team-Sektion nach Anzahl {%- endcomment -%}
+          <div class="teamwear-team-section" style="display: none;">
+            <h3 class="teamwear-team-section__title">Team</h3>
+            
+            <div class="teamwear-team-section__options">
+              <label class="teamwear-team-section__checkbox">
+                <input type="checkbox" 
+                       class="teamwear-team-section__input" 
+                       data-team-option="logo"
+                       data-price="{{ section.settings.team_logo_price | default: 0 }}">
+                <span class="teamwear-team-section__checkbox-label">
+                  {{ section.settings.team_logo_text | default: 'Logo hinzufügen' }}
+                  {%- if section.settings.team_logo_price > 0 -%}
+                    <span class="teamwear-team-section__price">({{ section.settings.team_logo_price | times: 100 | money }} pro Stk.)</span>
+                  {%- endif -%}
+                </span>
+              </label>
+              
+              <label class="teamwear-team-section__checkbox">
+                <input type="checkbox" 
+                       class="teamwear-team-section__input" 
+                       data-team-option="teamname"
+                       data-price="{{ section.settings.team_name_price | default: 0 }}">
+                <span class="teamwear-team-section__checkbox-label">
+                  {{ section.settings.team_name_text | default: 'Teamname' }}
+                  {%- if section.settings.team_name_price > 0 -%}
+                    <span class="teamwear-team-section__price">({{ section.settings.team_name_price | times: 100 | money }} pro Stk.)</span>
+                  {%- endif -%}
+                </span>
+              </label>
+            </div>
+            
+            {%- comment -%} Logo Upload {%- endcomment -%}
+            <div class="teamwear-team-section__logo-upload" style="display: none;">
+              <label class="teamwear-team-section__file-label">
+                <input type="file" 
+                       class="teamwear-team-section__file-input" 
+                       accept="image/*"
+                       data-team-logo>
+                <span class="teamwear-team-section__file-button">Datei auswählen</span>
+                <span class="teamwear-team-section__file-name">Keine ausgewählt</span>
+              </label>
+      </div>
+      
+            {%- comment -%} Teamname Input {%- endcomment -%}
+            <div class="teamwear-team-section__teamname-input" style="display: none;">
+              <input type="text" 
+                     class="teamwear-team-section__text-input" 
+                     placeholder="Teamname eingeben"
+                     data-team-name>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="teamwear-colors__placeholder">
+        <p class="teamwear-placeholder-text">Wähle zuerst ein Design aus.</p>
+        </div>
+    </div>
+    
+    {%- comment -%} Step 3: Personalisierung und Größen {%- endcomment -%}
     {%- if section.settings.enable_personalization -%}
       <div class="teamwear-step" data-step="personalization">
         <h2 class="teamwear-step__title">
           {{ section.settings.personalization_title }}
-          <span class="teamwear-step__optional">({{ section.settings.optional_text }})</span>
         </h2>
         {%- if section.settings.personalization_description != blank -%}
           <p class="teamwear-step__description">{{ section.settings.personalization_description }}</p>
         {%- endif -%}
         
-        <button type="button" class="teamwear-personalization__toggle" aria-expanded="false">
-          <span class="teamwear-personalization__toggle-text">{{ section.settings.personalization_toggle_text }}</span>
-          <svg class="teamwear-personalization__toggle-icon" width="12" height="12" viewBox="0 0 12 12">
-            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-        </button>
+        {%- comment -%} Checkboxen für Personalisierungsoptionen {%- endcomment -%}
+        <div class="teamwear-personalization__options">
+          <label class="teamwear-personalization__option-checkbox">
+            <input type="checkbox" 
+                   class="teamwear-personalization__option-input" 
+                   data-personalization-option="number-chest"
+                   data-price="{{ section.settings.number_chest_price | default: 0 }}">
+            <span>
+              {{ section.settings.number_chest_text | default: 'Nummer Brust' }}
+              {%- if section.settings.number_chest_price > 0 -%}
+                <span class="teamwear-personalization__price">({{ section.settings.number_chest_price | times: 100 | money }} pro Stk.)</span>
+              {%- endif -%}
+            </span>
+          </label>
+          
+          <label class="teamwear-personalization__option-checkbox">
+            <input type="checkbox" 
+                   class="teamwear-personalization__option-input" 
+                   data-personalization-option="number-back"
+                   data-price="{{ section.settings.number_back_price | default: 0 }}">
+            <span>
+              {{ section.settings.number_back_text | default: 'Nummer Rücken' }}
+              {%- if section.settings.number_back_price > 0 -%}
+                <span class="teamwear-personalization__price">({{ section.settings.number_back_price | times: 100 | money }} pro Stk.)</span>
+              {%- endif -%}
+            </span>
+          </label>
+          
+          <label class="teamwear-personalization__option-checkbox">
+            <input type="checkbox" 
+                   class="teamwear-personalization__option-input" 
+                   data-personalization-option="playernames"
+                   data-price="{{ section.settings.player_names_price | default: 0 }}">
+            <span>
+              {{ section.settings.player_names_text | default: 'Spielernamen' }}
+              {%- if section.settings.player_names_price > 0 -%}
+                <span class="teamwear-personalization__price">({{ section.settings.player_names_price | times: 100 | money }} pro Stk.)</span>
+              {%- endif -%}
+            </span>
+          </label>
+        </div>
         
-        <div class="teamwear-personalization__content" style="display: none;">
-          <div class="teamwear-personalization__list">
-            <!-- Wird dynamisch über JS befüllt -->
+        {%- comment -%} Personalisierungs-Tabelle {%- endcomment -%}
+        <div class="teamwear-personalization__content">
+          <div class="teamwear-personalization__table-wrapper">
+            <table class="teamwear-personalization__table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th data-col-name>Name</th>
+                  <th data-col-number>Nummer</th>
+                  <th>Größe</th>
+                </tr>
+              </thead>
+              <tbody class="teamwear-personalization__list" data-players-body>
+                <!-- Wird dynamisch über JS befüllt -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -326,39 +439,26 @@
       "default": "Stückpreis"
     },
     {
-      "type": "header",
-      "content": "Mengenstaffel"
-    },
-    {
-      "type": "text",
-      "id": "quantity_title",
-      "label": "Überschrift Mengenstaffel",
-      "default": "2. Wähle die Anzahl"
-    },
-    {
-      "type": "text",
-      "id": "quantity_description",
-      "label": "Beschreibung Mengenstaffel",
-      "default": "Je mehr du bestellst, desto günstiger wird es! Verschiedene Designs haben unterschiedliche Rabattstrukturen."
-    },
-    {
-      "type": "text",
-      "id": "quantities",
-      "label": "Verfügbare Mengen",
-      "default": "10,20,30,40,50",
-      "info": "Komma-getrennte Liste der Mengen"
-    },
-    {
-      "type": "text",
-      "id": "select_design_first",
-      "label": "Design zuerst auswählen Text",
-      "default": "Wähle zuerst ein Basketball-Design aus, um die Mengenstaffeln zu sehen."
-    },
-    {
       "type": "text",
       "id": "unit",
       "label": "Einheit",
       "default": "Stück"
+    },
+    {
+      "type": "header",
+      "content": "Farbauswahl"
+    },
+    {
+      "type": "text",
+      "id": "color_title",
+      "label": "Überschrift Farbauswahl",
+      "default": "2. Wähle die Farbe"
+    },
+    {
+      "type": "text",
+      "id": "color_description",
+      "label": "Beschreibung Farbauswahl",
+      "default": "Wähle deine gewünschte Trikotfarbe aus"
     },
     {
       "type": "header",
@@ -374,7 +474,7 @@
       "type": "text",
       "id": "sizes_description",
       "label": "Beschreibung Größen",
-      "default": "Gib an, wie viele Basketball-Trikots du in welcher Größe benötigst"
+      "default": "Gib an, wie viele Trikots du pro Größe benötigst. Die Gesamtmenge wird automatisch berechnet."
     },
     {
       "type": "text",
@@ -396,6 +496,36 @@
     },
     {
       "type": "header",
+      "content": "Team-Optionen"
+    },
+    {
+      "type": "text",
+      "id": "team_logo_text",
+      "label": "Logo hinzufügen Text",
+      "default": "Logo hinzufügen"
+    },
+    {
+      "type": "number",
+      "id": "team_logo_price",
+      "label": "Logo hinzufügen Preis (pro Stück)",
+      "default": 0,
+      "info": "Preis in Euro (z.B. 5.00 für 5,00 €)"
+    },
+    {
+      "type": "text",
+      "id": "team_name_text",
+      "label": "Teamname Text",
+      "default": "Teamname"
+    },
+    {
+      "type": "number",
+      "id": "team_name_price",
+      "label": "Teamname Preis (pro Stück)",
+      "default": 0,
+      "info": "Preis in Euro (z.B. 3.00 für 3,00 €)"
+    },
+    {
+      "type": "header",
       "content": "Personalisierung"
     },
     {
@@ -408,7 +538,7 @@
       "type": "text",
       "id": "personalization_title",
       "label": "Überschrift Personalisierung",
-      "default": "4. Personalisierung"
+      "default": "3. Personalisierung und Größen"
     },
     {
       "type": "text",
@@ -418,15 +548,48 @@
     },
     {
       "type": "text",
-      "id": "optional_text",
-      "label": "Optional-Text",
-      "default": "Optional"
+      "id": "number_chest_text",
+      "label": "Nummer Brust Text",
+      "default": "Nummer Brust"
+    },
+    {
+      "type": "number",
+      "id": "number_chest_price",
+      "label": "Nummer Brust Preis (pro Stück)",
+      "default": 0,
+      "info": "Preis in Euro (z.B. 2.50 für 2,50 €)"
     },
     {
       "type": "text",
-      "id": "personalization_toggle_text",
-      "label": "Toggle-Button Text",
-      "default": "Personalisierung hinzufügen"
+      "id": "number_back_text",
+      "label": "Nummer Rücken Text",
+      "default": "Nummer Rücken"
+    },
+    {
+      "type": "number",
+      "id": "number_back_price",
+      "label": "Nummer Rücken Preis (pro Stück)",
+      "default": 0,
+      "info": "Preis in Euro (z.B. 2.50 für 2,50 €)"
+    },
+    {
+      "type": "text",
+      "id": "player_names_text",
+      "label": "Spielernamen Text",
+      "default": "Spielernamen"
+    },
+    {
+      "type": "number",
+      "id": "player_names_price",
+      "label": "Spielernamen Preis (pro Stück)",
+      "default": 0,
+      "info": "Preis in Euro (z.B. 3.00 für 3,00 €)"
+    },
+    {
+      "type": "text",
+      "id": "optional_text",
+      "label": "Optional-Text",
+      "default": "Optional"
     },
     {
       "type": "header",

@@ -53,11 +53,18 @@
     transition: all 0.25s ease;
     border: 1px solid #f1f5f9;
     position: relative;
+    cursor: pointer;
   }
 
   #shopify-section-{{ section.id }} .mockup-item:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+  
+  #shopify-section-{{ section.id }} .mockup-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
   }
 
   #shopify-section-{{ section.id }} .mockup-image {
@@ -119,6 +126,9 @@
   <div class="mockup-grid">
     <!-- Mockup 1 -->
     <div class="mockup-item">
+      {% if section.settings.mockup_pdf_url_1 != blank %}
+        <a href="{{ section.settings.mockup_pdf_url_1 }}" target="_blank" rel="noopener noreferrer" class="mockup-link">
+      {% endif %}
       <div class="mockup-image">
         {% if section.settings.mockup_image_1 != blank %}
           <img src="{{ section.settings.mockup_image_1 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_1 }}" loading="lazy" width="600" height="300">
@@ -132,10 +142,16 @@
         <h3 class="mockup-title">{{ section.settings.mockup_title_1 }}</h3>
         <span class="mockup-label">{{ section.settings.mockup_label_1 }}</span>
       </div>
+      {% if section.settings.mockup_pdf_url_1 != blank %}
+        </a>
+      {% endif %}
     </div>
 
     <!-- Mockup 2 -->
     <div class="mockup-item">
+      {% if section.settings.mockup_pdf_url_2 != blank %}
+        <a href="{{ section.settings.mockup_pdf_url_2 }}" target="_blank" rel="noopener noreferrer" class="mockup-link">
+      {% endif %}
       <div class="mockup-image">
         {% if section.settings.mockup_image_2 != blank %}
           <img src="{{ section.settings.mockup_image_2 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_2 }}" loading="lazy" width="600" height="300">
@@ -149,10 +165,16 @@
         <h3 class="mockup-title">{{ section.settings.mockup_title_2 }}</h3>
         <span class="mockup-label">{{ section.settings.mockup_label_2 }}</span>
       </div>
+      {% if section.settings.mockup_pdf_url_2 != blank %}
+        </a>
+      {% endif %}
     </div>
 
     <!-- Mockup 3 -->
     <div class="mockup-item">
+      {% if section.settings.mockup_pdf_url_3 != blank %}
+        <a href="{{ section.settings.mockup_pdf_url_3 }}" target="_blank" rel="noopener noreferrer" class="mockup-link">
+      {% endif %}
       <div class="mockup-image">
         {% if section.settings.mockup_image_3 != blank %}
           <img src="{{ section.settings.mockup_image_3 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_3 }}" loading="lazy" width="600" height="300">
@@ -166,10 +188,16 @@
         <h3 class="mockup-title">{{ section.settings.mockup_title_3 }}</h3>
         <span class="mockup-label">{{ section.settings.mockup_label_3 }}</span>
       </div>
+      {% if section.settings.mockup_pdf_url_3 != blank %}
+        </a>
+      {% endif %}
     </div>
 
     <!-- Mockup 4 -->
     <div class="mockup-item">
+      {% if section.settings.mockup_pdf_url_4 != blank %}
+        <a href="{{ section.settings.mockup_pdf_url_4 }}" target="_blank" rel="noopener noreferrer" class="mockup-link">
+      {% endif %}
       <div class="mockup-image">
         {% if section.settings.mockup_image_4 != blank %}
           <img src="{{ section.settings.mockup_image_4 | image_url: width: 600 }}" alt="{{ section.settings.mockup_title_4 }}" loading="lazy" width="600" height="300">
@@ -183,6 +211,9 @@
         <h3 class="mockup-title">{{ section.settings.mockup_title_4 }}</h3>
         <span class="mockup-label">{{ section.settings.mockup_label_4 }}</span>
       </div>
+      {% if section.settings.mockup_pdf_url_4 != blank %}
+        </a>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -231,6 +262,12 @@
       "default": "PDF-ready"
     },
     {
+      "type": "url",
+      "id": "mockup_pdf_url_1",
+      "label": "PDF Link 1",
+      "info": "Lade die PDF unter 'Inhalte → Dateien' hoch und füge hier die URL ein. Oder füge einen externen Link ein."
+    },
+    {
       "type": "header",
       "content": "Mockup 2"
     },
@@ -250,6 +287,12 @@
       "id": "mockup_label_2",
       "label": "Mockup Label 2",
       "default": "PDF-ready"
+    },
+    {
+      "type": "url",
+      "id": "mockup_pdf_url_2",
+      "label": "PDF Link 2",
+      "info": "Lade die PDF unter 'Inhalte → Dateien' hoch und füge hier die URL ein. Oder füge einen externen Link ein."
     },
     {
       "type": "header",
@@ -273,6 +316,12 @@
       "default": "PDF-ready"
     },
     {
+      "type": "url",
+      "id": "mockup_pdf_url_3",
+      "label": "PDF Link 3",
+      "info": "Lade die PDF unter 'Inhalte → Dateien' hoch und füge hier die URL ein. Oder füge einen externen Link ein."
+    },
+    {
       "type": "header",
       "content": "Mockup 4"
     },
@@ -292,6 +341,12 @@
       "id": "mockup_label_4",
       "label": "Mockup Label 4",
       "default": "PDF-ready"
+    },
+    {
+      "type": "url",
+      "id": "mockup_pdf_url_4",
+      "label": "PDF Link 4",
+      "info": "Lade die PDF unter 'Inhalte → Dateien' hoch und füge hier die URL ein. Oder füge einen externen Link ein."
     }
   ],
   "presets": [

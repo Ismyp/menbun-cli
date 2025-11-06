@@ -190,38 +190,87 @@
       {% endif %}
 
       <div class="form-group">
-        <label for="contact-name" class="form-label">Vor- und Nachname</label>
+        <label for="contact-name" class="form-label">
+          {%- if section.settings.name_label != blank -%}
+            {{ section.settings.name_label }}
+          {%- else -%}
+            Vor- und Nachname
+          {%- endif -%}
+        </label>
         <input type="text" id="contact-name" name="contact[name]" class="form-input" required>
       </div>
 
       <div class="form-group">
-        <label for="contact-email" class="form-label">E-Mail</label>
+        <label for="contact-email" class="form-label">
+          {%- if section.settings.email_label != blank -%}
+            {{ section.settings.email_label }}
+          {%- else -%}
+            E-Mail
+          {%- endif -%}
+        </label>
         <input type="email" id="contact-email" name="contact[email]" class="form-input" required>
       </div>
 
+      {%- if section.settings.show_phone != false -%}
       <div class="form-group">
-        <label for="contact-team" class="form-label">Team/Verein (optional)</label>
-        <input type="text" id="contact-team" name="contact[team]" class="form-input">
+        <label for="contact-phone" class="form-label">
+          {%- if section.settings.phone_label != blank -%}
+            {{ section.settings.phone_label }}
+          {%- else -%}
+            Telefonnummer
+          {%- endif -%}
+        </label>
+        <input type="tel" id="contact-phone" name="contact[phone]" class="form-input" {% if section.settings.phone_required %}required{% endif %}>
       </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_team != false -%}
+      <div class="form-group">
+        <label for="contact-team" class="form-label">
+          {%- if section.settings.team_label != blank -%}
+            {{ section.settings.team_label }}
+          {%- else -%}
+            Team/Verein (optional)
+          {%- endif -%}
+        </label>
+        <input type="text" id="contact-team" name="contact[team]" class="form-input" {% if section.settings.team_required %}required{% endif %}>
+      </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_custom_field_1 == true -%}
+      <div class="form-group">
+        <label for="contact-custom1" class="form-label">{{ section.settings.custom_field_1_label }}</label>
+        <input type="text" id="contact-custom1" name="contact[{{ section.settings.custom_field_1_name }}]" class="form-input" {% if section.settings.custom_field_1_required %}required{% endif %}>
+      </div>
+      {%- endif -%}
 
       <div class="form-group">
-        <label for="contact-sport" class="form-label">Sportart (z.B. Schwarz, Weiß, Rot ODER PDF)</label>
-        <input type="text" id="contact-sport" name="contact[sport]" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label for="contact-message" class="form-label">Designwünsche / Besondere Anfrage</label>
+        <label for="contact-message" class="form-label">
+          {%- if section.settings.message_label != blank -%}
+            {{ section.settings.message_label }}
+          {%- else -%}
+            Designwünsche / Besondere Anfrage
+          {%- endif -%}
+        </label>
         <textarea id="contact-message" name="contact[body]" class="form-textarea" placeholder="Beschreibe deine Designwünsche..."></textarea>
       </div>
 
-      <input type="hidden" name="contact[subject]" value="Kostenloses Design-Beispiel Anfrage">
+      <input type="hidden" name="contact[subject]" value="{%- if section.settings.email_subject != blank -%}{{ section.settings.email_subject }}{%- else -%}Kostenloses Design-Beispiel Anfrage{%- endif -%}">
 
       <button type="submit" class="form-submit">
-        Anfrage senden
+        {%- if section.settings.submit_button_text != blank -%}
+          {{ section.settings.submit_button_text }}
+        {%- else -%}
+          Anfrage senden
+        {%- endif -%}
       </button>
 
       <p class="form-note">
-        Mit dem Senden stimmst du den AGB und der Datenschutzerklärung zu.
+        {%- if section.settings.form_note != blank -%}
+          {{ section.settings.form_note }}
+        {%- else -%}
+          Mit dem Senden stimmst du den AGB und der Datenschutzerklärung zu.
+        {%- endif -%}
       </p>
     {% endform %}
   </div>
@@ -278,6 +327,113 @@
       "id": "form_title",
       "label": "Formular Titel",
       "default": "Formular"
+    },
+    {
+      "type": "header",
+      "content": "Formular-Felder"
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name Label",
+      "default": "Vor- und Nachname"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "E-Mail Label",
+      "default": "E-Mail"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Telefonnummer anzeigen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Telefonnummer Label",
+      "default": "Telefonnummer"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_required",
+      "label": "Telefonnummer erforderlich",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_team",
+      "label": "Team/Verein anzeigen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "team_label",
+      "label": "Team/Verein Label",
+      "default": "Team/Verein (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "team_required",
+      "label": "Team/Verein erforderlich",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom_field_1",
+      "label": "Zusatzfeld 1 anzeigen",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "custom_field_1_label",
+      "label": "Zusatzfeld 1 Label",
+      "default": "Zusatzfeld"
+    },
+    {
+      "type": "text",
+      "id": "custom_field_1_name",
+      "label": "Zusatzfeld 1 Name (für E-Mail)",
+      "default": "custom1",
+      "info": "Wird in der E-Mail als Feldname verwendet"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_field_1_required",
+      "label": "Zusatzfeld 1 erforderlich",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Nachricht Label",
+      "default": "Designwünsche / Besondere Anfrage"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Nachricht Platzhalter",
+      "default": "Beschreibe deine Designwünsche..."
+    },
+    {
+      "type": "text",
+      "id": "email_subject",
+      "label": "E-Mail Betreff",
+      "default": "Kostenloses Design-Beispiel Anfrage"
+    },
+    {
+      "type": "text",
+      "id": "submit_button_text",
+      "label": "Button Text",
+      "default": "Anfrage senden"
+    },
+    {
+      "type": "text",
+      "id": "form_note",
+      "label": "Hinweis unter dem Button",
+      "default": "Mit dem Senden stimmst du den AGB und der Datenschutzerklärung zu."
     }
   ],
   "presets": [

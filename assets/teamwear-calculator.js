@@ -3,232 +3,107 @@
  * Handles all interactions and cart integration
  */
 
-/* global window */
-
 class TeamwearCalculator {
-  /**
-   * @param {string} sectionId - The section ID
-   */
   constructor(sectionId) {
     this.section = document.querySelector(`[data-section="${sectionId}"]`);
     if (!this.section) return;
     
-    this.config = (window.teamwearConfig) || {};
+    this.config = window.teamwearConfig || {};
+    this.productCache = {};
+    
     this.state = {
       selectedProduct: null,
-      selectedQuantity: 0, // wird nun aus Größenfeldern abgeleitet
+      selectedVariantId: null,
+      selectedColor: null,
+      selectedQuantity: 0,
       selectedDiscount: 0,
       basePrice: 0,
       finalPrice: 0,
       discountSettings: null,
-      sizes: {},
-      personalization: []
+      productVariants: [],
+      productImages: [],
+      availableColors: [],
+      personalization: [],
+      teamLogo: null,
+      teamName: ''
     };
     
     this.elements = {
       designs: this.section.querySelectorAll('.teamwear-design__input'),
-      quantities: this.section.querySelectorAll('.teamwear-quantity'),
-      quantitiesContainer: this.section.querySelector('.teamwear-quantities'),
-      quantitiesPlaceholder: this.section.querySelector('.teamwear-quantities__placeholder'),
-      quantitiesInfo: this.section.querySelector('.teamwear-quantities__info'),
-      sizeInputs: this.section.querySelectorAll('.teamwear-size__input'),
-      sizeTotal: this.section.querySelector('[data-total]'),
-      sizeRequired: this.section.querySelector('[data-required]'),
-      sizeValidation: this.section.querySelector('.teamwear-sizes__validation'),
-      personalizationToggle: this.section.querySelector('.teamwear-personalization__toggle'),
+      colorSelection: this.section.querySelector('.teamwear-color-selection'),
+      colorsContainer: this.section.querySelector('.teamwear-colors'),
+      colorsPlaceholder: this.section.querySelector('.teamwear-colors__placeholder'),
+      colorPreviewImage: this.section.querySelector('[data-color-preview]'),
+      teamSection: this.section.querySelector('.teamwear-team-section'),
+      teamLogoInput: this.section.querySelector('[data-team-logo]'),
+      teamNameInput: this.section.querySelector('[data-team-name]'),
+      quantitySection: this.section.querySelector('.teamwear-quantity-section'),
+      quantityInput: this.section.querySelector('[data-quantity-input]'),
       personalizationContent: this.section.querySelector('.teamwear-personalization__content'),
-      personalizationList: this.section.querySelector('.teamwear-personalization__list'),
-      sizeChartToggle: this.section.querySelector('.teamwear-size-chart-toggle'),
-      sizeChart: this.section.querySelector('.teamwear-size-chart'),
+      personalizationList: this.section.querySelector('[data-players-body]'),
       totalPrice: this.section.querySelector('[data-total-price]'),
       priceDetails: this.section.querySelector('[data-price-details]'),
       submitButton: this.section.querySelector('.teamwear-submit'),
       messages: this.section.querySelector('.teamwear-messages')
     };
     
-    // Debug output
-    console.log('TeamwearCalculator initialized:', {
-      designs: this.elements.designs.length,
-      quantities: this.elements.quantities.length,
-      sectionId: this.config.sectionId,
-      hasQuantitiesContainer: !!this.elements.quantitiesContainer,
-      hasQuantitiesPlaceholder: !!this.elements.quantitiesPlaceholder,
-      state: this.state
-    });
-    
-    // Log all design inputs and their data
-    this.elements.designs.forEach((input, index) => {
-      console.log(`Design ${index}:`, {
-        id: input.id,
-        checked: input.checked,
-        dataset: input.dataset
-      });
-    });
-    
     this.init();
   }
   
   init() {
-    console.log('Init called - Design elements found:', {
-      designInputs: this.elements.designs.length,
-      designContainers: this.section.querySelectorAll('.teamwear-design').length,
-      allInputs: this.section.querySelectorAll('input[type="radio"]').length,
-      sectionHTML: this.section.innerHTML.substring(0, 500) + '...'
-    });
-    
+    this.preloadAllProducts();
     this.attachEventListeners();
     this.initializeDynamicDiscounts();
     
-    // Check if fallback design is pre-selected
     const checkedDesign = this.section.querySelector('.teamwear-design__input:checked');
     if (checkedDesign) {
-      console.log('Found pre-selected design, triggering change event:', {
-        id: checkedDesign.id,
-        dataset: checkedDesign.dataset
-      });
-      checkedDesign.dispatchEvent(new Event('change'));
-    } else {
-      console.log('No pre-selected design found');
-      
-      // Try to find any design and select the first one
-      if (this.elements.designs.length > 0) {
-        console.log('Auto-selecting first design');
+      setTimeout(() => checkedDesign.dispatchEvent(new Event('change')), 100);
+    } else if (this.elements.designs.length > 0) {
         this.elements.designs[0].checked = true;
-        this.elements.designs[0].dispatchEvent(new Event('change'));
-      } else {
-        console.log('No designs available - checking section content');
-        console.log('Section selectors found:', {
-          '.teamwear-designs': !!this.section.querySelector('.teamwear-designs'),
-          '.teamwear-design': this.section.querySelectorAll('.teamwear-design').length,
-          '.teamwear-design__input': this.section.querySelectorAll('.teamwear-design__input').length,
-          'input[name="teamwear-design"]': this.section.querySelectorAll('input[name="teamwear-design"]').length
-        });
-      }
+      setTimeout(() => this.elements.designs[0].dispatchEvent(new Event('change')), 100);
     }
     
     this.updateUI();
   }
   
   initializeDynamicDiscounts() {
-    // Read dynamic discount settings from DOM
     this.state.useDynamicDiscounts = this.section.dataset.useDynamicDiscounts === 'true';
     this.state.maxDiscountLimit = parseInt(this.section.dataset.maxDiscountLimit) || 25;
     
-    console.log('🔧 Reading discount settings from DOM:', {
-      'data-use-dynamic-discounts': this.section.dataset.useDynamicDiscounts,
-      'data-discount-tiers': this.section.dataset.discountTiers,
-      'data-max-discount-limit': this.section.dataset.maxDiscountLimit,
-      parsed: {
-        useDynamicDiscounts: this.state.useDynamicDiscounts,
-        maxDiscountLimit: this.state.maxDiscountLimit
-      }
-    });
-    
-    // Parse discount tiers JSON
     try {
       const tiersData = this.section.dataset.discountTiers;
       if (tiersData) {
-        // Clean up the JSON string (remove any escaping issues)
-        const cleanedTiersData = tiersData.trim().replace(/&quot;/g, '"');
-        console.log('🧹 Cleaning JSON data:', {
-          original: tiersData,
-          cleaned: cleanedTiersData
-        });
-        
-        this.state.discountTiers = JSON.parse(cleanedTiersData);
-        
-        // Validate that we have an array
-        if (!Array.isArray(this.state.discountTiers)) {
-          throw new Error('Discount tiers must be an array');
-        }
-        
-        // Sort tiers by quantity in descending order for easier lookup
+        this.state.discountTiers = JSON.parse(tiersData.trim().replace(/&quot;/g, '"'));
+        if (!Array.isArray(this.state.discountTiers)) throw new Error('Invalid tiers');
         this.state.discountTiers.sort((a, b) => b.quantity - a.quantity);
-        
-        console.log('🎯 Dynamic discounts initialized:', {
-          enabled: this.state.useDynamicDiscounts,
-          rawTiersData: tiersData,
-          cleanedTiersData: cleanedTiersData,
-          parsedTiers: this.state.discountTiers,
-          maxLimit: this.state.maxDiscountLimit
-        });
-        
-        // FORCE ENABLE for testing - remove this later
         if (!this.state.useDynamicDiscounts && this.state.discountTiers.length > 0) {
-          console.log('🚨 FORCING dynamic discounts ON for testing');
           this.state.useDynamicDiscounts = true;
         }
-      } else {
-        console.log('💡 No tiers data found, using legacy discount system');
       }
     } catch (error) {
-      console.error('❌ Error parsing discount tiers:', error, 'Raw data:', this.section.dataset.discountTiers);
+      console.error('Error parsing discount tiers:', error);
       this.state.useDynamicDiscounts = false;
       this.state.discountTiers = [];
     }
   }
   
-  // Debug helper method
-  debugState() {
-    console.log('=== TEAMWEAR CALCULATOR DEBUG ===');
-    console.log('State:', this.state);
-    console.log('Elements found:');
-    console.log('- Designs:', this.elements.designs.length);
-    console.log('- Quantities:', this.elements.quantities.length);
-    console.log('- Size inputs:', this.elements.sizeInputs.length);
-    console.log('Current validation:', this.validateForm());
-    console.log('=== END DEBUG ===');
-  }
-  
-  // Test method to manually trigger design selection
-  testSelectFirstDesign() {
-    if (this.elements.designs.length > 0) {
-      const firstDesign = this.elements.designs[0];
-      console.log('Manually selecting first design:', firstDesign);
-      firstDesign.checked = true;
-      firstDesign.dispatchEvent(new Event('change'));
-    }
-  }
-  
   attachEventListeners() {
-    // Design (Product) selection
-    if (this.elements.designs) {
+    this.initDesignImageSliders();
+    
+    // Design selection - SOFORTIGES visuelles Feedback!
       this.elements.designs.forEach(input => {
         input.addEventListener('change', (e) => {
           const target = e.target;
-          if (target instanceof HTMLInputElement && target.checked) {
-            const designElement = target.closest('.teamwear-design');
-            const nameElement = designElement ? designElement.querySelector('.teamwear-design__name') : null;
-            const designName = nameElement ? nameElement.textContent : '';
-            
-            // Debug: Log all dataset attributes
-            console.log('Design selected, dataset:', target.dataset);
-            
-            // Get product and discount data from input attributes
-            console.log('🔍 Raw dataset values:', {
-              productId: target.dataset.productId,
-              productHandle: target.dataset.productHandle,
-              basePrice: target.dataset.basePrice,
-              discountPerTier: target.dataset.discountPerTier,
-              tierSize: target.dataset.tierSize,
-              maxDiscount: target.dataset.maxDiscount
-            });
-            
-            console.log('🏷️ Complete dataset object:', target.dataset);
-            
-            this.state.selectedProduct = {
-              id: target.dataset.productId,
-              handle: target.dataset.productHandle,
-              name: designName || ''
-            };
-            
-            // Validate that we have required data
-            if (!this.state.selectedProduct.id) {
-              console.error('❌ Product ID is missing from dataset!', target.dataset);
-              this.showMessage('Fehler: Produkt-ID fehlt. Bitte lade die Seite neu.', 'error');
-              return;
-            }
-            
+        if (!(target instanceof HTMLInputElement && target.checked)) return;
+        
+        // NUR State-Update - KEINE DOM-Operationen! Radio-Button wird durch CSS sofort visuell angezeigt
+        const productId = target.dataset.productId;
+        const productHandle = target.dataset.productHandle;
+        if (!productId || !productHandle) return;
+        
+        this.state.selectedProduct = { id: productId, handle: productHandle, name: '' };
+        this.state.selectedColor = null;
+        this.state.selectedVariantId = null;
             this.state.basePrice = parseFloat(target.dataset.basePrice) || 0;
             this.state.discountSettings = {
               discountPerTier: parseInt(target.dataset.discountPerTier) || 5,
@@ -236,354 +111,641 @@ class TeamwearCalculator {
               maxDiscount: parseInt(target.dataset.maxDiscount) || 50
             };
             
-            console.log('State after design selection:', {
-              selectedProduct: this.state.selectedProduct,
-              basePrice: this.state.basePrice,
-              discountSettings: this.state.discountSettings
-            });
-            
-            // Bei Wegfall der manuellen Mengenwahl: Preise nach Größenänderungen aktualisieren
-            this.updateQuantityFromSizes();
-            this.updateQuantityPrices();
-            
-            this.updateUI();
+        // SOFORT Ladezeichen anzeigen - ohne Verzögerung!
+        this.showColorLoading();
+        
+        // Alle DOM-Operationen komplett asynchron - Event-Handler ist fertig!
+        Promise.resolve().then(() => {
+          const designElement = target.closest('.teamwear-design');
+          if (designElement) {
+            const firstImage = designElement.querySelector('.teamwear-design__image');
+            if (firstImage && this.elements.colorPreviewImage) {
+              this.elements.colorPreviewImage.src = firstImage.src;
+              this.elements.colorPreviewImage.alt = firstImage.alt;
+            }
+            const nameElement = designElement.querySelector('.teamwear-design__name');
+            if (nameElement) this.state.selectedProduct.name = nameElement.textContent;
           }
-        });
-      });
-    }
-    
-    // Entfernt: Manuelle Mengenwahl. Menge wird dynamisch aus Größen berechnet.
-    
-    // Size inputs
-    if (this.elements.sizeInputs) {
-      this.elements.sizeInputs.forEach(input => {
-        input.addEventListener('input', () => {
-          // Menge aus Größen neu berechnen
-          this.updateQuantityFromSizes();
-          this.updateSizeValidation();
-          // Preis neu kalkulieren
-          this.calculateDiscountAndPrice();
-          // Personalisierungsliste neu aufbauen (abhängig von Gesamtmenge)
-          this.buildPersonalizationList();
+          
+          if (this.productCache[productHandle]) {
+            this.applyProductDataFromCache(productHandle);
+          } else {
+            this.loadProductVariants(productHandle).catch(err => console.error('Error:', err));
+          }
           this.updateUI();
         });
       });
+    });
+    
+    // Team section
+    if (this.elements.teamSection) {
+      const logoCheckbox = this.elements.teamSection.querySelector('[data-team-option="logo"]');
+      const logoUpload = this.elements.teamSection.querySelector('.teamwear-team-section__logo-upload');
+      if (logoCheckbox && logoUpload) {
+        logoCheckbox.addEventListener('change', (e) => {
+          logoUpload.style.display = e.target.checked ? 'block' : 'none';
+          this.calculateDiscountAndPrice();
+          this.updateUI();
+        });
+      }
+      
+      const teamnameCheckbox = this.elements.teamSection.querySelector('[data-team-option="teamname"]');
+      const teamnameInput = this.elements.teamSection.querySelector('.teamwear-team-section__teamname-input');
+      if (teamnameCheckbox && teamnameInput) {
+        teamnameCheckbox.addEventListener('change', (e) => {
+          teamnameInput.style.display = e.target.checked ? 'block' : 'none';
+          this.calculateDiscountAndPrice();
+          this.updateUI();
+        });
+      }
+      
+      if (this.elements.teamLogoInput) {
+        this.elements.teamLogoInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            this.state.teamLogo = file;
+            const fileName = this.elements.teamSection.querySelector('.teamwear-team-section__file-name');
+            if (fileName) fileName.textContent = file.name;
+          }
+        });
+      }
+      
+      if (this.elements.teamNameInput) {
+        this.elements.teamNameInput.addEventListener('input', (e) => {
+          this.state.teamName = e.target.value;
+        });
+      }
     }
     
-    // Size chart toggle
-    if (this.elements.sizeChartToggle && this.elements.sizeChart) {
-      this.elements.sizeChartToggle.addEventListener('click', () => {
-        const isVisible = this.elements.sizeChart.style.display === 'block';
-        this.elements.sizeChart.style.display = isVisible ? 'none' : 'block';
-        this.elements.sizeChartToggle.textContent = isVisible 
-          ? this.elements.sizeChartToggle.textContent.replace('ausblenden', 'anzeigen')
-          : this.elements.sizeChartToggle.textContent.replace('anzeigen', 'ausblenden');
-      });
-    }
-    
-    // Personalization toggle
-    if (this.elements.personalizationToggle && this.elements.personalizationContent) {
-      this.elements.personalizationToggle.addEventListener('click', () => {
-        const isExpanded = this.elements.personalizationToggle.getAttribute('aria-expanded') === 'true';
-        this.elements.personalizationToggle.setAttribute('aria-expanded', !isExpanded);
-        this.elements.personalizationContent.style.display = isExpanded ? 'none' : 'block';
-        
-        if (!isExpanded) {
+    // Quantity input
+    if (this.elements.quantitySection && this.elements.quantityInput) {
+      if (this.elements.teamSection && this.elements.teamSection.style.display !== 'none') {
+        this.elements.quantitySection.style.display = 'block';
+      }
+      
+      this.elements.quantityInput.addEventListener('input', (e) => {
+        this.state.selectedQuantity = parseInt(e.target.value) || 10;
+        this.calculateDiscountAndPrice();
+          this.updateUI();
           this.buildPersonalizationList();
+        });
+      
+      this.state.selectedQuantity = parseInt(this.elements.quantityInput.value) || 10;
+      this.buildPersonalizationList();
+    }
+    
+    // Personalization checkboxes
+    this.section.querySelectorAll('[data-personalization-option]').forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+          this.buildPersonalizationList();
+        this.calculateDiscountAndPrice();
+        this.updateUI();
+      });
+    });
+    
+    // Color selection
+    if (this.elements.colorsContainer) {
+      this.elements.colorsContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('teamwear-color__input')) {
+          const color = this.state.availableColors.find(c => 
+            c.name.toLowerCase().trim() === e.target.dataset.colorName.toLowerCase().trim() ||
+            c.variantId.toString() === e.target.dataset.variantId
+          );
+          if (color) {
+            this.selectColor(color);
+          } else {
+            const variant = this.state.productVariants.find(v => v.id.toString() === e.target.dataset.variantId);
+            this.selectColor({ name: e.target.dataset.colorName, value: e.target.dataset.colorValue, variantId: e.target.dataset.variantId, variant });
+          }
         }
       });
     }
     
     // Submit button
     if (this.elements.submitButton) {
-      this.elements.submitButton.addEventListener('click', () => {
-        this.handleSubmit();
-      });
+      this.elements.submitButton.addEventListener('click', () => this.handleSubmit());
     }
-  }
-  
-  showQuantityOptions() {
-    // Deaktiviert: keine manuelle Mengenanzeige mehr
-    if (this.elements.quantitiesContainer) {
-      this.elements.quantitiesContainer.style.display = 'none';
-    }
-    if (this.elements.quantitiesPlaceholder) {
-      this.elements.quantitiesPlaceholder.style.display = 'none';
-    }
-    if (this.elements.quantitiesInfo) {
-      this.elements.quantitiesInfo.style.display = 'block';
-    }
-  }
-  
-  updateQuantityPrices() {
-    if (!this.state.basePrice || !this.state.discountSettings) return;
-    
-    this.elements.quantities.forEach(button => {
-      const quantity = parseInt(button.dataset.quantity || '0');
-      const discount = this.calculateDiscount(quantity);
-      const discountedPrice = this.state.basePrice * (1 - discount / 100);
-      
-      const discountElement = button.querySelector('[data-discount-info]');
-      const priceElement = button.querySelector('[data-price-display]');
-      
-      if (discountElement) {
-        if (discount > 0) {
-          discountElement.textContent = `-${discount}% ${this.config.translations.discount}`;
-        } else {
-          discountElement.textContent = this.config.translations.basePrice;
-        }
-      }
-      
-      if (priceElement) {
-        priceElement.textContent = `${this.formatMoney(discountedPrice * 100)} ${this.config.translations.perPiece}`;
-      }
-    });
-  }
-  
-  selectDefaultQuantity() {
-    // Nicht mehr erforderlich, Menge kommt aus Größenfeldern
   }
   
   calculateDiscount(quantity) {
-    console.log('🔢 Calculating discount for quantity:', quantity, {
-      useDynamicDiscounts: this.state.useDynamicDiscounts,
-      hasTiers: !!this.state.discountTiers,
-      discountTiers: this.state.discountTiers,
-      hasDiscountSettings: !!this.state.discountSettings
-    });
-    
-    // Check if dynamic discounts are enabled
-    if (this.state.useDynamicDiscounts && this.state.discountTiers && this.state.discountTiers.length > 0) {
-      const dynamicDiscount = this.calculateDynamicDiscount(quantity);
-      console.log('💰 Using dynamic discount:', dynamicDiscount, '% for quantity:', quantity);
-      return dynamicDiscount;
+    if (this.state.useDynamicDiscounts && this.state.discountTiers?.length > 0) {
+      return this.calculateDynamicDiscount(quantity);
     }
-    
-    // Fallback to legacy tier-based system
-    if (!this.state.discountSettings) {
-      console.log('⚠️ No discount settings available, returning 0');
-      return 0;
-    }
-    
+    if (!this.state.discountSettings) return 0;
     const { discountPerTier, tierSize, maxDiscount } = this.state.discountSettings;
-    const tiers = Math.floor(quantity / tierSize);
-    const discount = Math.min(tiers * discountPerTier, maxDiscount);
-    
-    console.log('🔄 Using legacy discount system:', discount, '% for quantity:', quantity);
-    return discount;
+    return Math.min(Math.floor(quantity / tierSize) * discountPerTier, maxDiscount);
   }
   
   calculateDynamicDiscount(quantity) {
     let applicableDiscount = 0;
-    let applicableTier = null;
-    
-    console.log('🎯 Finding dynamic discount for quantity:', quantity, 'in tiers:', this.state.discountTiers);
-    
-    // Find the highest applicable discount for the given quantity
     for (const tier of this.state.discountTiers) {
-      console.log('   Checking tier:', tier, 'quantity>=', tier.quantity, '?', quantity >= tier.quantity);
       if (quantity >= tier.quantity && tier.discount > applicableDiscount) {
         applicableDiscount = tier.discount;
-        applicableTier = tier;
-        console.log('   ✅ New best discount:', applicableDiscount, '% from tier:', tier);
       }
     }
+    return Math.min(applicableDiscount, this.state.maxDiscountLimit || 25);
+  }
+  
+  calculateAdditionalPrices() {
+    let additionalPricePerPiece = 0;
     
-    // Apply maximum discount limit
-    const maxLimit = this.state.maxDiscountLimit || 25;
-    const finalDiscount = Math.min(applicableDiscount, maxLimit);
+    // Team-Logo Preis pro Stück
+    const teamLogoCheckbox = this.section.querySelector('[data-team-option="logo"]');
+    if (teamLogoCheckbox && teamLogoCheckbox.checked) {
+      const price = parseFloat(teamLogoCheckbox.dataset.price) || 0;
+      additionalPricePerPiece += price;
+    }
     
-    console.log('🎉 Final dynamic discount result:', {
-      quantity: quantity,
-      applicableTier: applicableTier,
-      applicableDiscount: applicableDiscount,
-      maxLimit: maxLimit,
-      finalDiscount: finalDiscount
-    });
+    // Teamname Preis pro Stück
+    const teamNameCheckbox = this.section.querySelector('[data-team-option="teamname"]');
+    if (teamNameCheckbox && teamNameCheckbox.checked) {
+      const price = parseFloat(teamNameCheckbox.dataset.price) || 0;
+      additionalPricePerPiece += price;
+    }
     
-    return finalDiscount;
+    // Personalisierungs-Preise pro Stück
+    const numberChestCheckbox = this.section.querySelector('[data-personalization-option="number-chest"]');
+    if (numberChestCheckbox && numberChestCheckbox.checked) {
+      const price = parseFloat(numberChestCheckbox.dataset.price) || 0;
+      additionalPricePerPiece += price;
+    }
+    
+    const numberBackCheckbox = this.section.querySelector('[data-personalization-option="number-back"]');
+    if (numberBackCheckbox && numberBackCheckbox.checked) {
+      const price = parseFloat(numberBackCheckbox.dataset.price) || 0;
+      additionalPricePerPiece += price;
+    }
+    
+    const playerNamesCheckbox = this.section.querySelector('[data-personalization-option="playernames"]');
+    if (playerNamesCheckbox && playerNamesCheckbox.checked) {
+      const price = parseFloat(playerNamesCheckbox.dataset.price) || 0;
+      additionalPricePerPiece += price;
+    }
+    
+    return additionalPricePerPiece;
   }
   
   calculateDiscountAndPrice() {
-    if (!this.state.basePrice || !this.state.selectedQuantity) {
-      console.log('Cannot calculate price:', {
-        basePrice: this.state.basePrice,
-        selectedQuantity: this.state.selectedQuantity
-      });
+    if (!this.state.basePrice || !this.state.selectedQuantity) return;
+    this.state.selectedDiscount = this.calculateDiscount(this.state.selectedQuantity);
+    this.state.finalPrice = this.state.basePrice * (1 - this.state.selectedDiscount / 100);
+    
+    // Zusätzliche Preise pro Stück hinzufügen
+    const additionalPricePerPiece = this.calculateAdditionalPrices();
+    this.state.finalPrice += additionalPricePerPiece;
+  }
+  
+  showColorLoading() {
+    // Zeige Ladezeichen SOFORT - ohne Verzögerung!
+    if (this.elements.colorSelection) this.elements.colorSelection.style.display = 'none';
+    if (this.elements.colorsPlaceholder) {
+      this.elements.colorsPlaceholder.style.display = 'block';
+      this.elements.colorsPlaceholder.classList.add('loading');
+      const placeholderText = this.elements.colorsPlaceholder.querySelector('.teamwear-placeholder-text');
+      if (placeholderText) placeholderText.textContent = 'Farben werden geladen...';
+    }
+    if (this.elements.colorsContainer) this.elements.colorsContainer.innerHTML = '';
+  }
+  
+  applyProductDataFromCache(productHandle) {
+    const product = this.productCache[productHandle];
+    if (!product) return;
+    
+    this.state.productVariants = product.variants || [];
+    this.state.productImages = product.images || [];
+    this.state.availableColors = this.extractColorsFromVariants(product.variants, product.images);
+    
+    // Farben geladen - verstecke Ladezeichen, zeige Farben
+    if (this.elements.colorSelection) this.elements.colorSelection.style.display = 'grid';
+    if (this.elements.colorsPlaceholder) {
+      this.elements.colorsPlaceholder.style.display = 'none';
+      this.elements.colorsPlaceholder.classList.remove('loading');
+    }
+    
+    this.renderColorOptions(this.state.availableColors);
+    
+    if (this.elements.quantitySection) {
+      this.elements.quantitySection.style.display = 'block';
+      if (this.state.selectedQuantity === 0 && this.elements.quantityInput) {
+        this.state.selectedQuantity = parseInt(this.elements.quantityInput.value) || 10;
+      }
+    }
+    
+    if (this.elements.teamSection) this.elements.teamSection.style.display = 'block';
+    
+    // Personalisierung-Sektion anzeigen und initialisieren
+    if (this.elements.personalizationContent) {
+      this.elements.personalizationContent.style.display = 'block';
+      if (this.state.selectedQuantity > 0) {
+        this.buildPersonalizationList();
+      }
+    }
+    
+    if (this.state.availableColors.length > 0) {
+      const firstColor = this.state.availableColors[0];
+      this.selectColor(firstColor);
+      const firstColorInput = this.elements.colorsContainer.querySelector('.teamwear-color__input');
+      if (firstColorInput) firstColorInput.checked = true;
+    }
+    
+  }
+  
+  async preloadAllProducts() {
+    const productHandles = new Set();
+    this.elements.designs.forEach(input => {
+      if (input.dataset.productHandle) productHandles.add(input.dataset.productHandle);
+    });
+    
+    Promise.all(Array.from(productHandles).map(async (handle) => {
+      try {
+        const response = await fetch(`/products/${handle}.js`);
+        if (response.ok) this.productCache[handle] = await response.json();
+      } catch (error) {
+        console.error(`Failed to preload ${handle}:`, error);
+      }
+    }));
+  }
+  
+  async loadProductVariants(productHandle) {
+    if (!productHandle) return;
+    if (this.productCache[productHandle]) {
+      this.applyProductDataFromCache(productHandle);
       return;
     }
     
-    this.state.selectedDiscount = this.calculateDiscount(this.state.selectedQuantity);
-    const discountMultiplier = 1 - (this.state.selectedDiscount / 100);
-    this.state.finalPrice = this.state.basePrice * discountMultiplier;
-    
-    console.log('Price calculated:', {
-      basePrice: this.state.basePrice,
-      quantity: this.state.selectedQuantity,
-      discount: this.state.selectedDiscount,
-      finalPrice: this.state.finalPrice
-    });
+    try {
+      const response = await fetch(`/products/${productHandle}.js`);
+      if (!response.ok) throw new Error(`Failed: ${response.status}`);
+      const product = await response.json();
+      this.productCache[productHandle] = product;
+      this.applyProductDataFromCache(productHandle);
+      this.updateUI();
+    } catch (error) {
+      console.error('Error loading variants:', error);
+      // Zeige Fehler im Placeholder
+      if (this.elements.colorsPlaceholder) {
+        this.elements.colorsPlaceholder.style.display = 'block';
+        const placeholderText = this.elements.colorsPlaceholder.querySelector('.teamwear-placeholder-text');
+        if (placeholderText) placeholderText.textContent = 'Fehler beim Laden der Farboptionen';
+      }
+      this.showMessage('Fehler beim Laden der Farboptionen', 'error');
+    }
   }
   
-  updateSizeValidation() {
-    const total = Array.from(this.elements.sizeInputs).reduce((sum, input) => {
-      const value = parseInt(input.value) || 0;
-      this.state.sizes[input.dataset.size] = value;
-      return sum + value;
-    }, 0);
+  selectColor(color) {
+    this.state.selectedColor = color;
     
-    if (this.elements.sizeTotal) {
-      this.elements.sizeTotal.textContent = total;
+    const colorVariants = this.state.productVariants.filter(v => {
+      const normalizedColor = color.name.toLowerCase().trim();
+      return [v.option1, v.option2, v.option3].some(opt => 
+        opt && opt.toLowerCase().trim() === normalizedColor
+      );
+    });
+    
+    const variant = colorVariants[0] || color.variant;
+    if (!variant) {
+      console.error('Keine Variante gefunden für Farbe:', color);
+      return;
     }
     
-    const isValid = total > 0; // Menge ergibt sich aus Summe, daher nur > 0 prüfen
-    
-    // Update validation styling
-    if (this.elements.sizeValidation) {
-      this.elements.sizeValidation.classList.toggle('valid', isValid);
-      this.elements.sizeValidation.classList.toggle('invalid', !isValid && total > 0);
+    if (!variant.id) {
+      console.error('Variante hat keine ID:', variant);
+      return;
     }
     
-    // Update input styling
-    if (this.elements.sizeInputs) {
-      this.elements.sizeInputs.forEach(input => {
-        input.classList.toggle('error', !isValid && total > 0);
+    this.state.selectedVariantId = variant.id.toString();
+    this.state.basePrice = variant.price / 100.0;
+    
+    console.log('Farbe ausgewählt:', color.name, 'Variant ID:', this.state.selectedVariantId);
+    
+    let foundImage = null;
+    for (const v of colorVariants) {
+      if (v.featured_image) {
+        foundImage = typeof v.featured_image === 'string' ? v.featured_image : (v.featured_image.src || v.featured_image);
+        break;
+      }
+      if (v.image_id) {
+        const variantImage = this.state.productImages.find(img => {
+          const imgObj = typeof img === 'string' ? { id: null } : img;
+          return imgObj.id === v.image_id;
+        });
+        if (variantImage) {
+          foundImage = typeof variantImage === 'string' ? variantImage : (variantImage.src || variantImage);
+          break;
+        }
+      }
+      if (this.state.productImages?.length > 0) {
+        for (const img of this.state.productImages) {
+          const imgObj = typeof img === 'string' ? { variant_ids: [], src: img } : img;
+          if (imgObj.variant_ids?.includes(v.id)) {
+            foundImage = imgObj.src || imgObj.url || (typeof img === 'string' ? img : null);
+            break;
+          }
+        }
+        if (foundImage) break;
+      }
+    }
+    
+    if (foundImage && this.elements.colorPreviewImage) {
+      const imageUrl = typeof foundImage === 'object' ? (foundImage.src || foundImage.url || foundImage) : foundImage;
+      this.elements.colorPreviewImage.src = imageUrl;
+      this.elements.colorPreviewImage.alt = color.name;
+      this.elements.colorPreviewImage.style.opacity = '0';
+      setTimeout(() => this.elements.colorPreviewImage.style.opacity = '1', 50);
+    } else {
+      const colorImage = this.findImageByColor(color.name);
+      if (colorImage && this.elements.colorPreviewImage) {
+        this.elements.colorPreviewImage.src = colorImage.src;
+        this.elements.colorPreviewImage.alt = colorImage.alt || color.name;
+        this.elements.colorPreviewImage.style.opacity = '0';
+        setTimeout(() => this.elements.colorPreviewImage.style.opacity = '1', 50);
+      }
+    }
+    
+    this.calculateDiscountAndPrice();
+    this.updateUI();
+  }
+  
+  findImageByColor(colorName) {
+    if (!this.state.productImages?.length) return null;
+    
+    const normalizedColor = colorName.toLowerCase().trim();
+    for (const image of this.state.productImages) {
+      const imageObj = typeof image === 'string' ? { src: image } : image;
+      const altText = imageObj.alt || '';
+      if (altText && (altText.toLowerCase().trim() === normalizedColor || altText.toLowerCase().includes(normalizedColor))) {
+        return { src: imageObj.src || image, alt: altText };
+      }
+    }
+    
+    const firstImage = this.state.productImages[0];
+    const firstImageObj = typeof firstImage === 'string' ? { src: firstImage } : firstImage;
+    return { src: firstImageObj.src || firstImage, alt: firstImageObj.alt || colorName };
+  }
+  
+  extractColorsFromVariants(variants, images) {
+    if (!variants?.length) return [];
+    
+    const colorMap = new Map();
+    const sizeKeywords = ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl', 'größe', 'size'];
+    
+    const optionSet1 = new Set();
+    const optionSet2 = new Set();
+    const optionSet3 = new Set();
+    
+    variants.forEach(v => {
+      if (v.option1) optionSet1.add(v.option1.toLowerCase().trim());
+      if (v.option2) optionSet2.add(v.option2.toLowerCase().trim());
+      if (v.option3) optionSet3.add(v.option3.toLowerCase().trim());
+    });
+    
+    let colorOptionIndex = 1;
+    if (optionSet1.size > 1 && !Array.from(optionSet1).some(v => sizeKeywords.includes(v))) {
+      colorOptionIndex = 1;
+    } else if (optionSet2.size > 1 && !Array.from(optionSet2).some(v => sizeKeywords.includes(v))) {
+      colorOptionIndex = 2;
+    } else if (optionSet3.size > 1 && !Array.from(optionSet3).some(v => sizeKeywords.includes(v))) {
+      colorOptionIndex = 3;
+    }
+    
+    variants.forEach(variant => {
+      let colorOption = colorOptionIndex === 1 ? variant.option1 : 
+                       (colorOptionIndex === 2 ? variant.option2 : variant.option3);
+      
+      if (colorOption && !sizeKeywords.includes(colorOption.toLowerCase().trim())) {
+        const normalizedColor = colorOption.toLowerCase().trim();
+        if (!colorMap.has(normalizedColor)) {
+          colorMap.set(normalizedColor, {
+            name: colorOption,
+            value: this.getColorValue(colorOption),
+            variantId: variant.id,
+            variant: variant
+          });
+        }
+      }
+    });
+    
+    let colors = Array.from(colorMap.values());
+    
+    if (colors.length === 0 && variants.length > 0) {
+      const uniqueOptions = new Set();
+      variants.forEach(v => {
+        if (v.option1 && !sizeKeywords.includes(v.option1.toLowerCase().trim())) {
+          uniqueOptions.add(v.option1);
+        }
+      });
+      colors = Array.from(uniqueOptions).map(option => {
+        const variant = variants.find(v => v.option1 === option) || variants[0];
+        return {
+          name: option,
+          value: this.getColorValue(option),
+          variantId: variant.id,
+          variant: variant
+        };
       });
     }
     
-    return isValid;
+    return colors;
   }
-
-  updateQuantityFromSizes() {
-    // Summe der Größen als aktuelle Menge setzen
-    const total = Array.from(this.elements.sizeInputs || []).reduce((sum, input) => {
-      const value = parseInt(input.value) || 0;
-      return sum + value;
-    }, 0);
-    this.state.selectedQuantity = total;
-    if (this.elements.sizeRequired) {
-      this.elements.sizeRequired.textContent = total.toString();
+  
+  getColorValue(colorName) {
+    const colorMap = {
+      'schwarz': '#000000', 'weiß': '#ffffff', 'rot': '#ef4444', 'blau': '#3b82f6',
+      'grün': '#22c55e', 'gelb': '#eab308', 'orange': '#f97316', 'lila': '#a855f7',
+      'grau': '#6b7280', 'pink': '#ec4899', 'türkis': '#14b8a6', 'braun': '#a16207',
+      'navy': '#1e3a8a', 'maroon': '#7f1d1d'
+    };
+    return colorMap[colorName.toLowerCase().trim()] || '#f3f4f6';
+  }
+  
+  renderColorOptions(colors) {
+    if (!this.elements.colorsContainer) return;
+    
+    this.elements.colorsContainer.innerHTML = '';
+    
+    if (colors.length === 0) {
+      if (this.elements.colorsPlaceholder) {
+        this.elements.colorsPlaceholder.style.display = 'block';
+        this.elements.colorsContainer.style.display = 'none';
+      }
+      return;
     }
+    
+    if (this.elements.colorsPlaceholder) this.elements.colorsPlaceholder.style.display = 'none';
+    this.elements.colorsContainer.style.display = 'flex';
+    
+    colors.forEach((color, index) => {
+      const colorId = `color-${color.variantId}-${index}`;
+      const colorElement = document.createElement('div');
+      colorElement.className = 'teamwear-color';
+      colorElement.innerHTML = `
+        <input type="radio" name="teamwear-color" id="${colorId}" class="teamwear-color__input"
+               data-variant-id="${color.variantId}" data-color-name="${color.name}" data-color-value="${color.value}"
+               ${index === 0 ? 'checked' : ''}>
+        <label for="${colorId}" class="teamwear-color__label">
+          <div class="teamwear-color__swatch" style="--color-value: ${color.value}; background-color: ${color.value};"></div>
+          <span class="teamwear-color__name">${color.name}</span>
+        </label>
+      `;
+      this.elements.colorsContainer.appendChild(colorElement);
+    });
   }
   
   buildPersonalizationList() {
     if (!this.elements.personalizationList) return;
     
+    // Hole aktuelle Menge
+    const count = Math.max(this.state.selectedQuantity || 0, 1);
+    const availableSizes = this.getAvailableSizes();
+    
+    // Leere Tabelle
     this.elements.personalizationList.innerHTML = '';
     this.state.personalization = [];
     
-    for (let i = 1; i <= this.state.selectedQuantity; i++) {
-      const item = document.createElement('div');
-      item.className = 'teamwear-personalization__item';
-      item.innerHTML = `
-        <span class="teamwear-personalization__number">${i}.</span>
-        <input type="text" 
-               class="teamwear-personalization__input" 
-               placeholder="Name"
-               data-index="${i - 1}"
-               data-type="name">
-        <input type="text" 
-               class="teamwear-personalization__input" 
-               placeholder="Nummer"
-               data-index="${i - 1}"
-               data-type="number">
+    // Erstelle Zeilen
+    for (let i = 1; i <= count; i++) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i}</td>
+        <td data-cell-name><input type="text" placeholder="Name" data-index="${i - 1}" data-type="name"></td>
+        <td data-cell-number><input type="text" placeholder="Nr." data-index="${i - 1}" data-type="number"></td>
+        <td><select data-index="${i - 1}" data-type="size">${availableSizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></td>
       `;
-      
-      this.elements.personalizationList.appendChild(item);
-      
-      // Add to state
-      this.state.personalization.push({ name: '', number: '' });
+      this.elements.personalizationList.appendChild(tr);
+      this.state.personalization.push({ name: '', number: '', size: '' });
     }
     
-    // Attach event listeners to new inputs
-    this.elements.personalizationList.querySelectorAll('input').forEach(input => {
+    // Spalten-Sichtbarkeit basierend auf Checkboxen
+    const showName = !!this.section.querySelector('[data-personalization-option="playernames"]')?.checked;
+    const showNumber = !!this.section.querySelector('[data-personalization-option="number-chest"]')?.checked || 
+                      !!this.section.querySelector('[data-personalization-option="number-back"]')?.checked;
+    
+    const nameCol = this.section.querySelector('[data-col-name]');
+    const numberCol = this.section.querySelector('[data-col-number]');
+    
+    if (nameCol) nameCol.style.display = showName ? '' : 'none';
+    if (numberCol) numberCol.style.display = showNumber ? '' : 'none';
+    
+    this.elements.personalizationList.querySelectorAll('[data-cell-name]').forEach(td => {
+      td.style.display = showName ? '' : 'none';
+    });
+    
+    this.elements.personalizationList.querySelectorAll('[data-cell-number]').forEach(td => {
+      td.style.display = showNumber ? '' : 'none';
+    });
+    
+    // Event-Listener für Inputs
+    this.elements.personalizationList.querySelectorAll('input, select').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        const type = e.target.dataset.type;
+        if (this.state.personalization[index]) {
+        this.state.personalization[index][type] = e.target.value;
+        }
+      });
+      
       input.addEventListener('input', (e) => {
         const index = parseInt(e.target.dataset.index);
         const type = e.target.dataset.type;
+        if (this.state.personalization[index]) {
         this.state.personalization[index][type] = e.target.value;
+        }
       });
+    });
+  }
+  
+  getAvailableSizes() {
+    const sizes = new Set();
+    const sizeKeywords = ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'];
+    
+    if (this.state.productVariants?.length > 0) {
+      this.state.productVariants.forEach(variant => {
+        [variant.option1, variant.option2, variant.option3].forEach(option => {
+          if (option) {
+            const normalized = option.toLowerCase().trim();
+            if (sizeKeywords.includes(normalized) || /^\d+$/.test(normalized)) {
+              sizes.add(option);
+            }
+          }
+        });
+      });
+    }
+    
+    if (sizes.size === 0) return ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    
+    const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+    return Array.from(sizes).sort((a, b) => {
+      const aIndex = sizeOrder.indexOf(a.toUpperCase());
+      const bIndex = sizeOrder.indexOf(b.toUpperCase());
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return a.localeCompare(b);
     });
   }
   
   updateUI() {
     const isValid = this.validateForm();
     
-    console.log('UpdateUI called:', {
-      isValid,
-      selectedQuantity: this.state.selectedQuantity,
-      finalPrice: this.state.finalPrice,
-      basePrice: this.state.basePrice,
-      selectedProduct: this.state.selectedProduct,
-      totalPriceElement: !!this.elements.totalPrice,
-      condition1: this.state.selectedQuantity > 0,
-      condition2: this.state.finalPrice > 0
-    });
-    
-    // Update price display
     if (this.state.selectedQuantity > 0 && this.state.finalPrice > 0) {
-      const totalPrice = this.state.selectedQuantity * this.state.finalPrice * 100; // Convert to cents
-      console.log('Updating price display:', {
-        totalPrice,
-        formattedPrice: this.formatMoney(totalPrice)
-      });
+      // finalPrice ist bereits der Preis pro Stück (inklusive Zusatzoptionen)
+      const totalPrice = this.state.finalPrice * this.state.selectedQuantity * 100;
       
       if (this.elements.totalPrice) {
         this.elements.totalPrice.textContent = this.formatMoney(totalPrice);
       }
       if (this.elements.priceDetails) {
-        const detailsText = this.state.selectedDiscount > 0
-          ? `(${this.state.selectedQuantity} × ${this.formatMoney(this.state.finalPrice * 100)} mit ${this.state.selectedDiscount}% Rabatt)`
-          : `(${this.state.selectedQuantity} × ${this.formatMoney(this.state.finalPrice * 100)})`;
+        const basePriceWithoutAddons = this.state.basePrice * (1 - this.state.selectedDiscount / 100);
+        const additionalPricePerPiece = this.calculateAdditionalPrices();
+        let detailsText = `(${this.state.selectedQuantity} × ${this.formatMoney(basePriceWithoutAddons * 100)}`;
+        if (this.state.selectedDiscount > 0) {
+          detailsText += ` mit ${this.state.selectedDiscount}% Rabatt`;
+        }
+        if (additionalPricePerPiece > 0) {
+          detailsText += ` + ${this.formatMoney(additionalPricePerPiece * 100)} Zusatzoptionen pro Stück`;
+        }
+        detailsText += ')';
         this.elements.priceDetails.textContent = detailsText;
       }
-    } else {
-      console.log('Not updating price display - conditions not met');
     }
     
-    // Enable/disable submit button
     if (this.elements.submitButton) {
       this.elements.submitButton.disabled = !isValid;
+    }
+    
+    // Personalisierungs-Tabelle aktualisieren
+    if (this.elements.personalizationList && this.state.selectedQuantity > 0) {
+      this.buildPersonalizationList();
     }
   }
   
   validateForm() {
     const hasProduct = this.state.selectedProduct !== null;
+    const hasColor = this.state.selectedColor !== null && this.state.selectedVariantId !== null;
     const hasQuantity = this.state.selectedQuantity > 0;
-    const sizesValid = this.updateSizeValidation();
-    
-    return hasProduct && hasQuantity && sizesValid;
+    return hasProduct && hasColor && hasQuantity;
   }
   
   formatMoney(cents) {
-    // Use Shopify's money format if available
-    if (window.Shopify && window.Shopify.formatMoney) {
+    if (window.Shopify?.formatMoney) {
       return window.Shopify.formatMoney(cents, this.config.moneyFormat);
     }
-    
-    // Fallback formatting
-    const amount = (cents / 100).toFixed(2);
-    return `€${amount}`;
+    return `€${(cents / 100).toFixed(2)}`;
   }
   
   async handleSubmit() {
-    console.log('🛒 HandleSubmit called, current state:', this.state);
-    
-    // Enhanced validation with detailed error messages
     if (!this.state.selectedProduct) {
-      console.error('❌ No product selected');
       this.showMessage(this.config.translations.selectDesign || 'Bitte wähle ein Design aus', 'error');
       return;
     }
     
-    if (!this.state.selectedProduct.id) {
-      console.error('❌ Product ID missing:', this.state.selectedProduct);
-      this.showMessage('Produkt-ID fehlt. Bitte wähle ein Design neu aus.', 'error');
+    if (!this.state.selectedVariantId) {
+      this.showMessage(this.config.translations.selectColor || 'Bitte wähle eine Farbe aus', 'error');
       return;
     }
     
     if (!this.state.selectedQuantity || this.state.selectedQuantity <= 0) {
-      console.error('❌ No quantity selected');
-      this.showMessage(this.config.translations.selectQuantity || 'Bitte wähle eine Menge aus', 'error');
+      this.showMessage(this.config.translations.correctSizes || 'Bitte gib mindestens eine Größe an', 'error');
       return;
     }
     
@@ -592,202 +754,368 @@ class TeamwearCalculator {
       return;
     }
     
-    // Disable button and show loading state
     this.elements.submitButton.disabled = true;
     this.elements.submitButton.classList.add('loading');
     this.elements.submitButton.textContent = this.config.translations.addingToCart || 'Wird hinzugefügt...';
     
     try {
-      // Prepare cart item properties
-      const properties = {
+      // Sammle Personalisierungsdaten
+      const personalProps = this.formatPersonalizationProperties();
+      
+      let properties = {
         '_teamwear_set': 'true',
         'Design': this.state.selectedProduct.name || 'Unbekanntes Design',
-        'Gesamtmenge': this.state.selectedQuantity.toString(),
-        'Preis pro Stück': this.formatMoney(this.state.finalPrice * 100),
+        'Farbe': this.state.selectedColor ? this.state.selectedColor.name : 'Nicht ausgewählt',
+        'Menge': this.state.selectedQuantity.toString(),
+        'Basispreis pro Stück': this.formatMoney(this.state.basePrice * 100),
         'Rabatt': this.state.selectedDiscount > 0 ? `${this.state.selectedDiscount}%` : 'Kein Rabatt',
-        'Basispreis': this.formatMoney(this.state.basePrice * 100),
-        ...this.formatSizeProperties(),
-        ...this.formatPersonalizationProperties()
+        'Preis pro Stück (nach Rabatt)': this.formatMoney((this.state.basePrice * (1 - this.state.selectedDiscount / 100)) * 100),
+        ...personalProps
       };
       
-      console.log('📦 Adding to cart:', {
-        id: this.state.selectedProduct.id,
-        quantity: this.state.selectedQuantity,
-        properties: properties
+      // Zusätzliche Preise hinzufügen (nur wenn aktiviert)
+      const additionalPricePerPiece = this.calculateAdditionalPrices();
+      if (additionalPricePerPiece > 0) {
+        properties['Zusatzoptionen pro Stück'] = this.formatMoney(additionalPricePerPiece * 100);
+        properties['Zusatzoptionen gesamt'] = this.formatMoney(additionalPricePerPiece * this.state.selectedQuantity * 100);
+        
+        // Einzelne aktivierte Optionen mit Preisen auflisten
+        const teamLogoCheckbox = this.section.querySelector('[data-team-option="logo"]');
+        if (teamLogoCheckbox && teamLogoCheckbox.checked) {
+          const price = parseFloat(teamLogoCheckbox.dataset.price) || 0;
+          if (price > 0) {
+            properties['Logo hinzufügen Preis'] = `${this.formatMoney(price * 100)} pro Stück`;
+          }
+        }
+        
+        const teamNameCheckbox = this.section.querySelector('[data-team-option="teamname"]');
+        if (teamNameCheckbox && teamNameCheckbox.checked) {
+          const price = parseFloat(teamNameCheckbox.dataset.price) || 0;
+          if (price > 0) {
+            properties['Teamname Preis'] = `${this.formatMoney(price * 100)} pro Stück`;
+          }
+        }
+        
+        const numberChestCheckbox = this.section.querySelector('[data-personalization-option="number-chest"]');
+        if (numberChestCheckbox && numberChestCheckbox.checked) {
+          const price = parseFloat(numberChestCheckbox.dataset.price) || 0;
+          if (price > 0) {
+            properties['Nummer Brust Preis'] = `${this.formatMoney(price * 100)} pro Stück`;
+          }
+        }
+        
+        const numberBackCheckbox = this.section.querySelector('[data-personalization-option="number-back"]');
+        if (numberBackCheckbox && numberBackCheckbox.checked) {
+          const price = parseFloat(numberBackCheckbox.dataset.price) || 0;
+          if (price > 0) {
+            properties['Nummer Rücken Preis'] = `${this.formatMoney(price * 100)} pro Stück`;
+          }
+        }
+        
+        const playerNamesCheckbox = this.section.querySelector('[data-personalization-option="playernames"]');
+        if (playerNamesCheckbox && playerNamesCheckbox.checked) {
+          const price = parseFloat(playerNamesCheckbox.dataset.price) || 0;
+          if (price > 0) {
+            properties['Spielernamen Preis'] = `${this.formatMoney(price * 100)} pro Stück`;
+          }
+        }
+      }
+      
+      properties['Gesamtpreis pro Stück'] = this.formatMoney(this.state.finalPrice * 100);
+      properties['Gesamtpreis'] = this.formatMoney(this.state.finalPrice * this.state.selectedQuantity * 100);
+      
+      // Varianten-ID validieren
+      const variantId = parseInt(this.state.selectedVariantId);
+      if (!variantId || isNaN(variantId)) {
+        throw new Error(`Ungültige Varianten-ID: ${this.state.selectedVariantId}`);
+      }
+      
+      // Menge validieren
+      const quantity = parseInt(this.state.selectedQuantity);
+      if (!quantity || quantity <= 0 || isNaN(quantity)) {
+        throw new Error(`Ungültige Menge: ${this.state.selectedQuantity}`);
+      }
+      
+      // Properties validieren (Shopify Limits: max 100 Properties, max 100 Zeichen pro Property-Wert)
+      const propertyKeys = Object.keys(properties);
+      if (propertyKeys.length > 100) {
+        console.warn('Zu viele Properties:', propertyKeys.length);
+        // Reduziere auf die wichtigsten Properties
+        const importantKeys = ['_teamwear_set', 'Design', 'Farbe', 'Menge', 'Team Logo', 'Teamname', ...propertyKeys.filter(k => k.startsWith('Trikot'))];
+        const limitedProperties = {};
+        importantKeys.forEach(key => {
+          if (properties[key]) {
+            const value = String(properties[key]);
+            limitedProperties[key] = value.length > 100 ? value.substring(0, 97) + '...' : value;
+          }
+        });
+        properties = limitedProperties;
+      }
+      
+      // Validiere Property-Werte Länge
+      Object.keys(properties).forEach(key => {
+        const value = String(properties[key]);
+        if (value.length > 100) {
+          console.warn(`Property "${key}" ist zu lang (${value.length} Zeichen), wird gekürzt`);
+          properties[key] = value.substring(0, 97) + '...';
+        }
       });
       
-      console.log('🔢 Validating ID type:', {
-        id: this.state.selectedProduct.id,
-        idType: typeof this.state.selectedProduct.id,
-        idAsNumber: Number(this.state.selectedProduct.id),
-        isNaN: isNaN(this.state.selectedProduct.id)
-      });
+      // Debug: Logge alle wichtigen Daten vor dem Request
+      console.log('=== Warenkorb Request Debug ===');
+      console.log('Variant ID:', variantId);
+      console.log('Variant ID Type:', typeof variantId);
+      console.log('Menge:', quantity);
+      console.log('Menge Type:', typeof quantity);
+      console.log('Properties:', properties);
+      console.log('Properties Count:', Object.keys(properties).length);
+      console.log('Properties Size (approx):', JSON.stringify(properties).length, 'bytes');
       
-      // Add to cart using Shopify Cart API
+      const requestBody = { id: variantId, quantity: quantity, properties };
+      console.log('Request Body:', requestBody);
+      
       const response = await fetch('/cart/add.js', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          id: Number(this.state.selectedProduct.id), // Ensure ID is a number
-          quantity: this.state.selectedQuantity,
-          properties: properties
-        })
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(requestBody)
       });
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Cart API error:', response.status, errorText);
-        throw new Error(`Failed to add to cart: ${response.status} - ${errorText}`);
+        console.error('Shopify Error Response:', errorText);
+        console.error('Response Status:', response.status);
+        console.error('Request Body that failed:', requestBody);
+        
+        // Versuche, die Fehlermeldung zu parsen
+        let errorMessage = 'Ungültige Produktkonfiguration.';
+        try {
+          const errorData = JSON.parse(errorText);
+          if (errorData.message) {
+            errorMessage = errorData.message;
+            // Übersetze häufige Shopify-Fehlermeldungen
+            if (errorData.message.includes('sold out') || errorData.message.includes('already sold out')) {
+              errorMessage = 'Dieses Produkt ist leider ausverkauft. Bitte wähle eine andere Farbe oder Variante.';
+            } else if (errorData.message.includes('not available')) {
+              errorMessage = 'Dieses Produkt ist derzeit nicht verfügbar.';
+            } else if (errorData.message.includes('quantity')) {
+              errorMessage = 'Die gewünschte Menge ist nicht verfügbar.';
+            }
+          } else if (errorData.description) {
+            errorMessage = errorData.description;
+          }
+        } catch (e) {
+          // Wenn Parsing fehlschlägt, verwende Standard-Fehlermeldung
+          if (response.status === 422) {
+            errorMessage = 'Ungültige Produktkonfiguration. Bitte überprüfe deine Auswahl.';
+          } else if (response.status === 404) {
+            errorMessage = 'Produkt nicht gefunden.';
+          }
+        }
+        
+        throw new Error(`Failed: ${response.status} - ${errorMessage}`);
       }
       
-      const data = await response.json();
-      console.log('✅ Successfully added to cart:', data);
-      
-      // Success
+      await response.json();
       this.showMessage(this.config.translations.addedToCart || 'Erfolgreich hinzugefügt!', 'success');
-      
-      // Update cart bubble/count if exists
       this.updateCartCount();
-      
-      // Reset form after short delay
-      setTimeout(() => {
-        this.resetForm();
-      }, 2000);
+      setTimeout(() => this.resetForm(), 2000);
       
     } catch (error) {
-      console.error('❌ Error adding to cart:', error);
-      
-      // More specific error messages
+      console.error('Error adding to cart:', error);
       let errorMessage = this.config.translations.error || 'Es ist ein Fehler aufgetreten.';
       
-      if (error.message.includes('404')) {
-        errorMessage = 'Produkt nicht gefunden. Bitte wähle ein anderes Design.';
-      } else if (error.message.includes('422')) {
-        errorMessage = 'Ungültige Produktkonfiguration. Bitte überprüfe deine Auswahl.';
-      } else if (error.message.includes('Failed to fetch')) {
-        errorMessage = 'Netzwerkfehler. Bitte überprüfe deine Internetverbindung.';
+      // Extrahiere die benutzerfreundliche Fehlermeldung aus dem Error-Objekt
+      if (error.message && error.message.includes('Failed: 422')) {
+        // Die Fehlermeldung wurde bereits in der Response-Behandlung formatiert
+        const messageMatch = error.message.match(/Failed: \d+ - (.+)/);
+        if (messageMatch && messageMatch[1]) {
+          errorMessage = messageMatch[1];
+        } else {
+          errorMessage = 'Ungültige Produktkonfiguration. Bitte überprüfe deine Auswahl.';
+        }
+      } else if (error.message && error.message.includes('404')) {
+        errorMessage = 'Produkt nicht gefunden.';
+      } else if (error.message && error.message.includes('Failed to fetch')) {
+        errorMessage = 'Netzwerkfehler. Bitte versuche es erneut.';
+      } else if (error.message && error.message.includes('Ungültige Varianten-ID')) {
+        errorMessage = 'Bitte wähle eine Farbe aus.';
+      } else if (error.message && error.message.includes('Ungültige Menge')) {
+        errorMessage = 'Bitte gib eine gültige Menge ein.';
       }
       
       this.showMessage(errorMessage, 'error');
     } finally {
-      // Reset button state
       this.elements.submitButton.disabled = false;
       this.elements.submitButton.classList.remove('loading');
       this.elements.submitButton.textContent = this.elements.submitButton.getAttribute('data-original-text') || 'In den Warenkorb';
     }
   }
   
-  formatSizeProperties() {
-    const sizeProps = {};
-    Object.entries(this.state.sizes).forEach(([size, quantity]) => {
-      if (quantity > 0) {
-        sizeProps[`Größe ${size}`] = quantity.toString();
-      }
-    });
-    return sizeProps;
+  collectPersonalizationData() {
+    // Sammle Daten direkt aus den Input-Feldern, um sicherzustellen, dass alle aktuellen Werte erfasst werden
+    const personalData = [];
+    
+    if (this.elements.personalizationList) {
+      const rows = this.elements.personalizationList.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        const nameInput = row.querySelector('[data-type="name"]');
+        const numberInput = row.querySelector('[data-type="number"]');
+        const sizeSelect = row.querySelector('[data-type="size"]');
+        
+        const item = {
+          name: nameInput ? nameInput.value.trim() : '',
+          number: numberInput ? numberInput.value.trim() : '',
+          size: sizeSelect ? sizeSelect.value.trim() : ''
+        };
+        
+        personalData.push(item);
+      });
+    }
+    
+    return personalData;
   }
   
   formatPersonalizationProperties() {
     const personalProps = {};
-    this.state.personalization.forEach((item, index) => {
-      if (item.name || item.number) {
+    
+    // Team-Optionen nur hinzufügen, wenn Checkboxen aktiviert sind
+    const teamLogoCheckbox = this.section.querySelector('[data-team-option="logo"]');
+    if (teamLogoCheckbox && teamLogoCheckbox.checked && this.state.teamLogo) {
+      personalProps['Team Logo'] = this.state.teamLogo.name || 'Logo hochgeladen';
+    }
+    
+    const teamNameCheckbox = this.section.querySelector('[data-team-option="teamname"]');
+    if (teamNameCheckbox && teamNameCheckbox.checked && this.state.teamName?.trim()) {
+      personalProps['Teamname'] = this.state.teamName.trim();
+    }
+    
+    // Personalisierungsdaten direkt aus den Input-Feldern sammeln
+    const personalData = this.collectPersonalizationData();
+    
+    // Prüfe, ob überhaupt Personalisierungsdaten vorhanden sind
+    const hasPersonalizationData = personalData.some(item => 
+      item.name || item.number || item.size
+    );
+    
+    if (hasPersonalizationData) {
+      personalData.forEach((item, index) => {
         const num = index + 1;
-        if (item.name) personalProps[`Trikot ${num} - Name`] = item.name;
-        if (item.number) personalProps[`Trikot ${num} - Nummer`] = item.number;
-      }
-    });
+        const itemProps = [];
+        
+        if (item.name) {
+          itemProps.push(`Name: ${item.name}`);
+        }
+        if (item.number) {
+          itemProps.push(`Nummer: ${item.number}`);
+        }
+        if (item.size) {
+          itemProps.push(`Größe: ${item.size}`);
+        }
+        
+        // Nur hinzufügen, wenn mindestens ein Wert vorhanden ist
+        if (itemProps.length > 0) {
+          personalProps[`Trikot ${num}`] = itemProps.join(', ');
+        }
+      });
+    }
+    
     return personalProps;
   }
   
   updateCartCount() {
-    // Update cart count in header if it exists
-    fetch('/cart.js')
-      .then(response => response.json())
-      .then(cart => {
-        const cartCounts = document.querySelectorAll('.cart-count, .cart-icon__count');
-        cartCounts.forEach(count => {
+    fetch('/cart.js').then(response => response.json()).then(cart => {
+      document.querySelectorAll('.cart-count, .cart-icon__count').forEach(count => {
           count.textContent = cart.item_count;
         });
-        
-        // Trigger cart drawer if exists
         const cartDrawer = document.querySelector('cart-drawer');
-        if (cartDrawer && cartDrawer.renderCart) {
-          cartDrawer.renderCart(cart);
-        }
+      if (cartDrawer?.renderCart) cartDrawer.renderCart(cart);
       });
   }
   
   showMessage(text, type = 'info') {
     if (!this.elements.messages) return;
-    
     this.elements.messages.textContent = text;
     this.elements.messages.className = `teamwear-messages show ${type}`;
-    
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      this.elements.messages.classList.remove('show');
-    }, 5000);
+    setTimeout(() => this.elements.messages.classList.remove('show'), 5000);
+  }
+  
+  initDesignImageSliders() {
+    this.section.querySelectorAll('.teamwear-design__image-wrapper').forEach(wrapper => {
+      const slider = wrapper.querySelector('.teamwear-design__image-slider');
+      if (!slider) return;
+      
+      const images = slider.querySelectorAll('.teamwear-design__image');
+      if (images.length <= 1) return;
+      
+      const prevBtn = slider.querySelector('.teamwear-design__slider-btn--prev');
+      const nextBtn = slider.querySelector('.teamwear-design__slider-btn--next');
+      let currentIndex = 0;
+      
+      const showImage = (index) => {
+        images.forEach((img, i) => {
+          img.classList.toggle('visually-hidden', i !== index);
+        });
+        if (prevBtn) prevBtn.style.display = index === 0 ? 'none' : 'flex';
+        if (nextBtn) nextBtn.style.display = index === images.length - 1 ? 'none' : 'flex';
+      };
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          currentIndex = Math.max(0, currentIndex - 1);
+          showImage(currentIndex);
+        });
+      }
+      
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          currentIndex = Math.min(images.length - 1, currentIndex + 1);
+          showImage(currentIndex);
+        });
+      }
+      
+      showImage(0);
+    });
   }
   
   resetForm() {
-    // Reset state
     this.state = {
       selectedProduct: null,
+      selectedVariantId: null,
+      selectedColor: null,
       selectedQuantity: 0,
       selectedDiscount: 0,
       basePrice: 0,
       finalPrice: 0,
       discountSettings: null,
-      sizes: {},
-      personalization: []
+      productVariants: [],
+      productImages: [],
+      availableColors: [],
+      personalization: [],
+      teamLogo: null,
+      teamName: ''
     };
     
-    // Reset UI
     if (this.elements.designs) {
       this.elements.designs.forEach(input => input.checked = false);
     }
-    if (this.elements.quantities) {
-      this.elements.quantities.forEach(btn => btn.classList.remove('active'));
-    }
-    if (this.elements.sizeInputs) {
-      this.elements.sizeInputs.forEach(input => {
-        input.value = '0';
-        input.classList.remove('error');
-      });
-    }
     
-    // Hide quantities and show placeholder
-    if (this.elements.quantitiesContainer && this.elements.quantitiesPlaceholder) {
-      this.elements.quantitiesContainer.style.display = 'none';
-      this.elements.quantitiesPlaceholder.style.display = 'block';
-    }
-    
-    // Clear quantity displays
-    this.elements.quantities.forEach(button => {
-      const discountElement = button.querySelector('[data-discount-info]');
-      const priceElement = button.querySelector('[data-price-display]');
-      if (discountElement) discountElement.textContent = '';
-      if (priceElement) priceElement.textContent = '';
-    });
-    
-    if (this.elements.personalizationToggle) {
-      this.elements.personalizationToggle.setAttribute('aria-expanded', 'false');
-    }
-    if (this.elements.personalizationContent) {
-      this.elements.personalizationContent.style.display = 'none';
-    }
-    if (this.elements.personalizationList) {
-      this.elements.personalizationList.innerHTML = '';
+    if (this.elements.colorSelection) this.elements.colorSelection.style.display = 'none';
+    if (this.elements.colorsPlaceholder) this.elements.colorsPlaceholder.style.display = 'block';
+    if (this.elements.colorsContainer) this.elements.colorsContainer.innerHTML = '';
+    if (this.elements.colorPreviewImage) {
+      this.elements.colorPreviewImage.src = '';
+      this.elements.colorPreviewImage.alt = '';
     }
     
     this.updateUI();
   }
 }
 
-// Initialize when DOM is ready (with protection against double loading)
+// Initialize
 if (typeof window.teamwearCalculatorInitialized === 'undefined') {
   window.teamwearCalculatorInitialized = false;
 }
@@ -795,37 +1123,19 @@ if (typeof window.teamwearCalculatorInitialized === 'undefined') {
 if (!window.teamwearCalculatorInitialized) {
   window.teamwearCalculatorInitialized = true;
   
-  // Use setTimeout to ensure DOM is fully loaded
   const initCalculator = () => {
-    console.log('🚀 TeamwearCalculator initialization started');
-    console.log('Config check:', window.teamwearConfig);
-    
-    if (window.teamwearConfig && window.teamwearConfig.sectionId) {
-      // Double-check if calculator already exists
-      if (!window.teamwearCalculator) {
-        try {
-          const calculator = new TeamwearCalculator(window.teamwearConfig.sectionId);
-          
-          // Add to global scope for debugging
-          window.teamwearCalculator = calculator;
-          console.log('✅ TeamwearCalculator successfully initialized');
+    if (window.teamwearConfig?.sectionId && !window.teamwearCalculator) {
+      try {
+        window.teamwearCalculator = new TeamwearCalculator(window.teamwearConfig.sectionId);
         } catch (error) {
-          console.error('❌ TeamwearCalculator initialization failed:', error);
+        console.error('TeamwearCalculator initialization failed:', error);
         }
-      } else {
-        console.log('⏭️  TeamwearCalculator already exists, skipping');
-      }
-    } else {
-      console.error('❌ TeamwearCalculator config missing or invalid');
     }
   };
   
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCalculator);
   } else {
-    // DOM already loaded
-    setTimeout(initCalculator, 100);
+    initCalculator();
   }
 }
-
-console.log('🚀 DYNAMIC DISCOUNTS FIX - Version 20250107-185300 - Fixed JSON parsing with proper escaping!');
