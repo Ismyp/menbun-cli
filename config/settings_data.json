@@ -142,6 +142,73 @@
           "discount_tiers": "[{\"quantity\": 10, \"discount\": 5}, {\"quantity\": 20, \"discount\": 10}, {\"quantity\": 50, \"discount\": 15}]",
           "max_discount_limit": 25
         }
+      },
+      "design-landing-hero": {
+        "type": "design-landing-hero",
+        "settings": {
+          "title": "Teamwear mit individuellem Design",
+          "subtitle": "Sende uns Logo, Farben und Wünsche. Wir erstellen dir kostenlose Mockups vorab und liefern Premium-Qualität schnell und zuverlässig.",
+          "feature1": "Eigenes, modernes Design",
+          "feature2": "Sublimation in Profi-Qualität",
+          "feature3": "Schnelle Lieferzeiten",
+          "primary_button_text": "Kostenloses Design anfordern",
+          "primary_button_link": "",
+          "secondary_button_text": "Zur Preisliste/Shop",
+          "secondary_button_link": "",
+          "hero_image": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.47.14.png"
+        }
+      },
+      "mockup-gallery": {
+        "type": "mockup-gallery",
+        "settings": {
+          "title": "Mockups wie im PDF – in Szene gesetzt",
+          "subtitle": "Hier zeigen wir Beispiele – deine PDF-Mockups können wir direkt einsetzen.",
+          "mockup_image_1": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.49.06.png",
+          "mockup_title_1": "Alfeld",
+          "mockup_label_1": "Mockup öffnen 👇",
+          "mockup_pdf_url_1": "",
+          "mockup_image_2": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.50.03.png",
+          "mockup_title_2": "Dragons",
+          "mockup_label_2": "Mockup öffnen 👇",
+          "mockup_pdf_url_2": "",
+          "mockup_image_3": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.51.07.png",
+          "mockup_title_3": "SV Neustadt",
+          "mockup_label_3": "Mockup öffnen 👇",
+          "mockup_pdf_url_3": "",
+          "mockup_image_4": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.52.00.png",
+          "mockup_title_4": "SV Bavenstedt",
+          "mockup_label_4": "Mockup öffnen 👇",
+          "mockup_pdf_url_4": ""
+        }
+      },
+      "design-contact-form": {
+        "type": "design-contact-form",
+        "settings": {
+          "title": "Kostenloses Design-Beispiel anfordern",
+          "description": "Lade dein Logo hoch, teile Farben und Wünsche – wir schicken dir vorab Mockups als PDF. Unverbindlich & kostenlos.",
+          "feature1": "Logo (Datei) Upload",
+          "feature2": "Farbwünsche (z. Vereinsfarben, Hex-Codes)",
+          "feature3": "Designwünsche / Beispiele",
+          "feature4": "Kontaktdaten",
+          "form_title": "Formular",
+          "name_label": "Vor- und Nachname",
+          "email_label": "E-Mail",
+          "show_phone": true,
+          "phone_label": "Telefonnummer",
+          "phone_required": false,
+          "show_team": true,
+          "team_label": "Team/Verein (optional)",
+          "team_required": false,
+          "show_custom_field_1": false,
+          "custom_field_1_label": "Zusatzfeld",
+          "custom_field_1_name": "custom1",
+          "custom_field_1_required": false,
+          "message_label": "Designwünsche / Besondere Anfrage",
+          "message_placeholder": "Beschreibe deine Designwünsche...",
+          "email_subject": "Kostenloses Design-Beispiel Anfrage",
+          "submit_button_text": "Anfrage senden",
+          "form_note": "Mit dem Senden stimmst du den AGB und der Datenschutzerklärung zu."
+        }
       }
     },
     "content_for_index": [],
