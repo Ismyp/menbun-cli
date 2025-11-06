@@ -12,8 +12,9 @@
     "new_hero": {
       "type": "new-hero-redesign",
       "settings": {
-        "overlay_color": "#000000",
-        "overlay_opacity": 30,
+        "background_image": "shopify://shop_images/hero-teamwear-CiN_DqHD.jpg",
+        "overlay_color": "#ffffff",
+        "overlay_opacity": 95,
         "badge_text": "🏆 Profi-Qualität direkt vom Hersteller",
         "main_title": "Teamwear, die begeistert",
         "subtitle": "Individuelle Sportbekleidung für Basketball, Fußball, Handball und Volleyball - mit professionellem Custom Design und Vereins-Fanshops. Gestalte deine Trikots, Trainingsanzüge und komplette Teamsportbekleidung ganz nach deinen Wünschen.",
