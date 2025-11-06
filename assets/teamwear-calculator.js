@@ -3,6 +3,9 @@
  * Handles all interactions and cart integration
  */
 
+// Import CartAddEvent für Cart Drawer Integration
+import { CartAddEvent } from './events.js';
+
 class TeamwearCalculator {
   constructor(sectionId) {
     this.section = document.querySelector(`[data-section="${sectionId}"]`);
@@ -915,9 +918,24 @@ class TeamwearCalculator {
         throw new Error(`Failed: ${response.status} - ${errorMessage}`);
       }
       
-      await response.json();
+      const cartData = await response.json();
+      
+      // Dispatche CartAddEvent für automatisches Öffnen des Cart Drawers
+      document.dispatchEvent(
+        new CartAddEvent({}, this.state.selectedVariantId, {
+          source: 'teamwear-calculator',
+          itemCount: this.state.selectedQuantity,
+          productId: this.state.selectedProduct?.id,
+          sections: cartData.sections
+        })
+      );
+      
       this.showMessage(this.config.translations.addedToCart || 'Erfolgreich hinzugefügt!', 'success');
       this.updateCartCount();
+      
+      // Optional: Automatisch zum Warenkorb scrollen oder Drawer öffnen
+      // Der CartAddEvent öffnet automatisch den Cart Drawer (wenn auto-open aktiviert ist)
+      
       setTimeout(() => this.resetForm(), 2000);
       
     } catch (error) {
@@ -1023,12 +1041,22 @@ class TeamwearCalculator {
   }
   
   updateCartCount() {
-    fetch('/cart.js').then(response => response.json()).then(cart => {
-      document.querySelectorAll('.cart-count, .cart-icon__count').forEach(count => {
-          count.textContent = cart.item_count;
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        // Update Cart Count in allen Cart-Icon Elementen
+        document.querySelectorAll('.cart-count, .cart-icon__count, [data-cart-count]').forEach(element => {
+          element.textContent = cart.item_count;
         });
-        const cartDrawer = document.querySelector('cart-drawer');
-      if (cartDrawer?.renderCart) cartDrawer.renderCart(cart);
+        
+        // Update Cart Drawer, falls vorhanden
+        const cartDrawer = document.querySelector('cart-drawer-component');
+        if (cartDrawer && typeof cartDrawer.renderCart === 'function') {
+          cartDrawer.renderCart(cart);
+        }
+      })
+      .catch(error => {
+        console.error('Error updating cart count:', error);
       });
   }
   
