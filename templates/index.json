@@ -80,7 +80,13 @@
         "feature2": "Unbegrenzte Revisionen",
         "feature3": "Schnelle Lieferzeiten",
         "button_text": "JETZT UMFRAGEN",
-        "button_link": "/pages/design-anfrage"
+        "button_link": "/pages/design-anfrage",
+        "design_image_1": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.50.03.png",
+        "design_image_2": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.52.00.png",
+        "design_image_3": "shopify://shop_images/Bildschirmfoto_2025-11-06_um_22.49.06.png",
+        "design_image_4": "shopify://shop_images/Bildschirmfoto_2025-11-07_um_00.44.34.png",
+        "design_image_5": "shopify://shop_images/Bildschirmfoto_2025-11-07_um_00.45.01.png",
+        "design_image_6": "shopify://shop_images/Bildschirmfoto_2025-11-07_um_00.46.01.png"
       }
     },
     "fanshop_section": {
