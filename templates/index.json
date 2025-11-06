@@ -1,23 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "new_hero": {
       "type": "new-hero-redesign",
-          "settings": {
-        "badge_text": "Druck-Qualität direkt vom Hersteller",
+      "settings": {
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "badge_text": "🏆 Profi-Qualität direkt vom Hersteller",
         "main_title": "Teamwear, die begeistert",
         "subtitle": "Individuelle Sportbekleidung für Basketball, Fußball, Handball und Volleyball - mit professionellem Custom Design und Vereins-Fanshops. Gestalte deine Trikots, Trainingsanzüge und komplette Teamsportbekleidung ganz nach deinen Wünschen.",
         "primary_button_text": "Konfiguration starten",
         "primary_button_link": "#sport-selection",
-        "secondary_button_text": "Design umfragen",
+        "secondary_button_text": "Design anfragen",
         "secondary_button_link": "/pages/design-anfrage",
         "padding_top": 120,
         "padding_bottom": 120
       }
     },
-    
     "stats_section": {
       "type": "stats-section",
-          "settings": {
+      "settings": {
         "stat1_number": "5000+",
         "stat1_label": "Zufriedene Kunden",
         "stat2_number": "4.9/5",
@@ -26,7 +36,6 @@
         "stat3_label": "Jahre Erfahrung"
       }
     },
-    
     "features_section": {
       "type": "features-section",
       "settings": {
@@ -40,12 +49,11 @@
         "feature4_description": "Materialien und Verarbeitung auf höchstem Niveau"
       }
     },
-    
     "sports_selector": {
       "type": "sports-redesign",
       "settings": {
         "title": "Wähle deine Sportart",
-        "subtitle": "Spezialisierte Lösungen für jede Sportart mit individuellen Designs. Über 500 Logo-Designs und personalisierte Trikots für Basketball, Fußball, Handball und Volleyball.",
+        "subtitle": "Mit unseren Konfiguratoren stellst du dir deine Teamwear individuell zusammen. Wähle aus verschiedenen Designs, füge dein Logo hinzu und personalisiere Trikots mit Namen und Nummern.",
         "basketball_title": "Basketball",
         "basketball_description": "Tank Tops & Shorts",
         "basketball_link": "/pages/basketball",
@@ -62,12 +70,11 @@
         "padding_bottom": 80
       }
     },
-    
     "custom_design_section": {
       "type": "custom-design-section",
-          "settings": {
+      "settings": {
         "title": "Individuelles Design gewünscht?",
-        "description": "Unsere Design-Experten erstellen individuelle Konzepte für Ihr Team. Von Logo-Integration bis hin zu komplett neuen Designs - wir setzen Ihre Vorstellungen um.",
+        "description": "Du hast eine genaue Vorstellung, wie deine Teamwear aussehen soll? Perfekt! Schicke uns einfach dein Logo, deine Wunschfarben und weitere Design-Ideen. Unser Designteam erstellt dir kostenlos und unverbindlich professionelle Mockups, damit du genau siehst, wie deine Trikots aussehen werden – bevor du bestellst.",
         "feature1": "Kostenlose Design-Mockups",
         "feature2": "Unbegrenzte Revisionen",
         "feature3": "Schnelle Lieferzeiten",
@@ -75,12 +82,11 @@
         "button_link": "/pages/design-anfrage"
       }
     },
-    
     "fanshop_section": {
       "type": "fanshop-section",
       "settings": {
         "title": "Vereins-Fanshops",
-        "subtitle": "Du bist Vereinsmitglied oder Supporter? Entdecke die offiziellen Fanshops deiner Teams. Bestelle Trikots und Fan-Artikel direkt von deinem Lieblingsteam.",
+        "subtitle": "Du hast bereits bei uns bestellt? Perfekt! Für unsere Kunden erstellen wir kostenlose, personalisierte Fanshops. So können Spieler und Fans jederzeit Trikots, Trainingsanzüge und weitere Teamwear nachbestellen – mit individueller Beflockung (Name & Nummer) und in allen Größen.\n\n\nEigener Shop für deinen Verein – ohne zusätzliche Kosten\nSpieler und Fans können selbst bestellen und personalisieren\nNachbestellungen ohne Mindestmenge möglich",
         "basketball_title": "Basketball Team Fanshop",
         "basketball_subtitle": "Trikots, Merchandise & Accessoires",
         "basketball_link": "/collections/basketball-fanshop",
@@ -92,7 +98,6 @@
         "handball_link": "/collections/handball-fanshop"
       }
     },
-    
     "testimonials_section": {
       "type": "testimonials-section",
       "settings": {
@@ -109,5 +114,13 @@
       }
     }
   },
-  "order": ["new_hero", "stats_section", "features_section", "sports_selector", "custom_design_section", "fanshop_section", "testimonials_section"]
+  "order": [
+    "new_hero",
+    "stats_section",
+    "features_section",
+    "sports_selector",
+    "custom_design_section",
+    "fanshop_section",
+    "testimonials_section"
+  ]
 }
