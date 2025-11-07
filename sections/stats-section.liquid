@@ -6,36 +6,14 @@
 
 {%- style -%}
   #shopify-section-{{ section.id }} {
-    background: #000000;
-    padding: 80px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  #shopify-section-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(163, 230, 53, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.06) 0%, transparent 50%);
-    animation: pulse 8s ease-in-out infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+    background: #ffffff;
+    padding: 60px 0;
   }
 
   #shopify-section-{{ section.id }} .stats-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
-    position: relative;
-    z-index: 1;
   }
 
   #shopify-section-{{ section.id }} .stats-grid {
@@ -49,41 +27,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-  }
-  
-  #shopify-section-{{ section.id }} .stat-item:hover {
-    transform: translateY(-8px);
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(163, 230, 53, 0.3);
-    box-shadow: 0 20px 60px rgba(163, 230, 53, 0.15);
   }
 
   #shopify-section-{{ section.id }} .stat-number {
-    font-size: 48px;
+    font-size: 42px;
     font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 0%, #a3e635 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #000000;
     line-height: 1;
-    margin-bottom: 12px;
-    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+    letter-spacing: -0.025em;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   #shopify-section-{{ section.id }} .stat-label {
     font-size: 14px;
-    color: #9ca3af;
-    font-weight: 500;
+    color: #64748b;
+    font-weight: 400;
     line-height: 1.3;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
