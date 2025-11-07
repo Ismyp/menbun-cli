@@ -5,8 +5,19 @@
 
 {%- style -%}
   #shopify-section-{{ section.id }} {
-    background: #ffffff;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     padding: 80px 0;
+    position: relative;
+  }
+  
+  #shopify-section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(163, 230, 53, 0.3) 50%, transparent 100%);
   }
 
   #shopify-section-{{ section.id }} .custom-design-container {
