@@ -913,17 +913,22 @@ class TeamwearCalculator {
       
       const cartData = await response.json();
       
-      // Dispatche CustomEvent für Cart Drawer (ohne Import)
-      const cartAddEvent = new CustomEvent('theme:cart:update', {
+      // Hole Cart-Sections für Drawer Update
+      const sectionsToRender = ['cart-drawer', 'cart-icon-bubble'];
+      const sectionsResponse = await fetch(`${window.Shopify.routes.root}?sections=${sectionsToRender.join(',')}`);
+      const sectionsData = await sectionsResponse.json();
+      
+      // Dispatche korrektes CartAddEvent (richtiger Event-Name!)
+      const cartAddEvent = new CustomEvent('cart:update', {
         bubbles: true,
         detail: {
-          resource: {},
-          sourceId: this.state.selectedVariantId,
+          resource: cartData,
+          sourceId: this.state.selectedVariantId.toString(),
           data: {
             source: 'teamwear-calculator',
             itemCount: this.state.selectedQuantity,
-            productId: this.state.selectedProduct?.id,
-            sections: cartData.sections
+            productId: this.state.selectedProduct?.id.toString(),
+            sections: sectionsData
           }
         }
       });
@@ -932,10 +937,10 @@ class TeamwearCalculator {
       this.showMessage(this.config.translations.addedToCart || 'Erfolgreich hinzugefügt!', 'success');
       this.updateCartCount();
       
-      // Öffne Cart Drawer manuell
+      // Öffne Cart Drawer nach Update
       const cartDrawer = document.querySelector('cart-drawer-component');
       if (cartDrawer && typeof cartDrawer.open === 'function') {
-        setTimeout(() => cartDrawer.open(), 300);
+        setTimeout(() => cartDrawer.open(), 500);
       }
       
       setTimeout(() => this.resetForm(), 2000);
