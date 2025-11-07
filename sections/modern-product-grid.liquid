@@ -1,0 +1,158 @@
+{%- comment -%}
+  MODERNE PRODUCT GRID SECTION
+  Verwendet moderne Cards für Product Display
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding: 60px 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  }
+
+  #shopify-section-{{ section.id }} .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  #shopify-section-{{ section.id }} .section-title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 12px 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .product-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{%- endstyle -%}
+
+<div class="container">
+  {% if section.settings.title != blank %}
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+    </div>
+  {% endif %}
+
+  <div class="product-grid">
+    {% if section.settings.collection != blank %}
+      {% assign collection = section.settings.collection %}
+      {% for product in collection.products %}
+        {% if forloop.index > section.settings.products_to_show %}
+          {% break %}
+        {% endif %}
+        {% render 'modern-card',
+          title: product.title,
+          description: product.description | strip_html | truncate: 100,
+          image: product.featured_image,
+          url: product.url,
+          style: section.settings.card_style,
+          hover_effect: section.settings.hover_effect
+        %}
+      {% endfor %}
+    {% else %}
+      {% comment %} Placeholder cards when no collection is selected {% endcomment %}
+      {% for i in (1..3) %}
+        {% render 'modern-card',
+          title: 'Product Title',
+          description: 'This is a beautiful product description that showcases the modern card component.',
+          style: section.settings.card_style,
+          hover_effect: section.settings.hover_effect
+        %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Modern Product Grid",
+  "tag": "section",
+  "class": "modern-product-grid-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card Style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "glass",
+          "label": "Glassmorphism"
+        },
+        {
+          "value": "elevated",
+          "label": "Elevated"
+        }
+      ],
+      "default": "glass"
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover Effect",
+      "options": [
+        {
+          "value": "lift",
+          "label": "Lift"
+        },
+        {
+          "value": "glow",
+          "label": "Glow"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        }
+      ],
+      "default": "lift"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Modern Product Grid",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
+

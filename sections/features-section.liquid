@@ -5,20 +5,34 @@
 
 {%- style -%}
   #shopify-section-{{ section.id }} {
-    background: #ffffff;
-    padding: 80px 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle Background Pattern */
+  #shopify-section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20px 20px, rgba(163, 230, 53, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
   }
 
   #shopify-section-{{ section.id }} .features-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
+    position: relative;
+    z-index: 1;
   }
 
   #shopify-section-{{ section.id }} .features-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 60px;
+    gap: 40px;
     text-align: center;
   }
 
@@ -26,59 +40,112 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    padding: 40px 24px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(30px);
   }
 
+  #shopify-section-{{ section.id }} .feature-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #shopify-section-{{ section.id }} .feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px 0 rgba(31, 38, 135, 0.2);
+    border-color: rgba(163, 230, 53, 0.3);
+  }
+
+  /* Icon Container mit Gradient */
   #shopify-section-{{ section.id }} .feature-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    color: #666666;
+    font-size: 32px;
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    border-radius: 20px;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(163, 230, 53, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .feature-item:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 30px rgba(163, 230, 53, 0.5);
   }
 
   #shopify-section-{{ section.id }} .feature-icon svg {
-    width: 100%;
-    height: 100%;
+    width: 36px;
+    height: 36px;
     fill: currentColor;
   }
 
   #shopify-section-{{ section.id }} .feature-title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     color: #000000;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     line-height: 1.3;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   #shopify-section-{{ section.id }} .feature-description {
-    font-size: 14px;
+    font-size: 15px;
     color: #64748b;
-    line-height: 1.4;
+    line-height: 1.6;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Staggered Animation Delays */
+  #shopify-section-{{ section.id }} .feature-item:nth-child(1) {
+    transition-delay: 0s;
+  }
+  #shopify-section-{{ section.id }} .feature-item:nth-child(2) {
+    transition-delay: 0.1s;
+  }
+  #shopify-section-{{ section.id }} .feature-item:nth-child(3) {
+    transition-delay: 0.2s;
+  }
+  #shopify-section-{{ section.id }} .feature-item:nth-child(4) {
+    transition-delay: 0.3s;
   }
 
   @media (max-width: 1024px) {
     #shopify-section-{{ section.id }} .features-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 40px;
+      gap: 32px;
     }
   }
 
   @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} {
+      padding: 60px 0;
+    }
+    
     #shopify-section-{{ section.id }} .features-grid {
       grid-template-columns: 1fr;
-      gap: 32px;
+      gap: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .feature-item {
+      padding: 32px 20px;
     }
   }
 {%- endstyle -%}
 
 <section class="features-container">
   <div class="features-grid">
-    <div class="feature-item">
+    <div class="feature-item" data-animate>
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
@@ -88,7 +155,7 @@
       <div class="feature-description">{{ section.settings.feature1_description }}</div>
     </div>
     
-    <div class="feature-item">
+    <div class="feature-item" data-animate>
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V21C3 22.1 3.9 23 5 23H19C20.1 23 21 22.1 21 21V9Z" fill="currentColor"/>
@@ -98,7 +165,7 @@
       <div class="feature-description">{{ section.settings.feature2_description }}</div>
     </div>
     
-    <div class="feature-item">
+    <div class="feature-item" data-animate>
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M13 3C9.23 3 6.19 5.95 6 9.66L4.1 12.5C3.71 13.19 4.21 14 5 14H6V16C6 18.21 7.79 20 10 20H13C15.21 20 17 18.21 17 16V14H18C18.79 14 19.29 13.19 18.9 12.5L17 9.66C16.81 5.95 13.77 3 13 3Z" fill="currentColor"/>
@@ -108,7 +175,7 @@
       <div class="feature-description">{{ section.settings.feature3_description }}</div>
     </div>
     
-    <div class="feature-item">
+    <div class="feature-item" data-animate>
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" fill="currentColor"/>

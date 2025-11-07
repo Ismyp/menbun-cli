@@ -1,0 +1,56 @@
+{%- comment -%}
+  MODERNE ASSETS LOADER
+  Lädt alle modernen Styles, Animationen und Scripts
+{%- endcomment -%}
+
+{% comment %} Moderne CSS Styles {% endcomment %}
+<link rel="stylesheet" href="{{ 'modern-styles-output.css' | asset_url }}" media="all">
+
+{% comment %} AOS (Animate On Scroll) CSS {% endcomment %}
+<link rel="stylesheet" href="{{ 'aos.css' | asset_url }}" media="all">
+
+{% comment %} Animations JavaScript {% endcomment %}
+<script src="{{ 'modern-animations.js' | asset_url }}" defer></script>
+
+{% comment %} AOS Library JavaScript {% endcomment %}
+<script src="{{ 'aos.js' | asset_url }}" defer></script>
+
+<script>
+  // AOS Initialisierung
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof AOS !== 'undefined') {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out',
+        once: true,
+        offset: 100,
+        disable: 'mobile'
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Smooth Scroll für das gesamte Theme */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Baseline Transitions für alle interaktiven Elemente */
+  a, button, input, select, textarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Reduzierte Motion für Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+

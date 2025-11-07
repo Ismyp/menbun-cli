@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================
+   MODERNE UTILITY KLASSEN
+   =================================== */
+
+@layer components {
+  /* Glassmorphism Effekte */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-lg border border-black/20;
+  }
+  
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-glass;
+  }
+
+  /* Moderne Buttons */
+  .btn-modern-primary {
+    @apply bg-gradient-to-br from-lime-400 to-lime-600 text-white font-semibold px-6 py-3 rounded-lg
+           shadow-soft hover:shadow-glow hover:scale-105 transform transition-all duration-300
+           hover:-translate-y-0.5;
+  }
+
+  .btn-modern-secondary {
+    @apply bg-gradient-to-br from-gray-800 to-gray-900 text-white font-semibold px-6 py-3 rounded-lg
+           shadow-soft hover:shadow-soft-lg hover:scale-105 transform transition-all duration-300
+           hover:-translate-y-0.5;
+  }
+
+  .btn-glass {
+    @apply bg-white/20 backdrop-blur-md text-white font-semibold px-6 py-3 rounded-lg
+           border border-white/30 hover:bg-white/30 transform transition-all duration-300
+           hover:-translate-y-0.5;
+  }
+
+  /* Moderne Cards */
+  .card-modern {
+    @apply bg-white rounded-3xl p-8 shadow-soft hover:shadow-soft-lg 
+           transform hover:-translate-y-2 transition-all duration-500;
+  }
+
+  .card-glass {
+    @apply bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20
+           shadow-glass hover:bg-white/20 transform hover:-translate-y-2 
+           transition-all duration-500;
+  }
+
+  /* Overlay Effekte */
+  .overlay-dark {
+    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent;
+  }
+
+  .overlay-light {
+    @apply absolute inset-0 bg-gradient-to-t from-white/80 via-white/40 to-transparent;
+  }
+
+  .overlay-gradient {
+    @apply absolute inset-0 bg-gradient-to-br from-lime-500/20 via-transparent to-lime-700/20;
+  }
+}
+
+/* ===================================
+   SCROLL ANIMATIONEN
+   =================================== */
+
+@layer utilities {
+  /* Fade In Animationen */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Parallax Effekte */
+  .parallax-slow {
+    transform: translateY(var(--parallax-offset, 0));
+    transition: transform 0.1s linear;
+  }
+
+  /* Glow Effekte */
+  .glow-on-hover {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .glow-on-hover:hover {
+    filter: drop-shadow(0 0 20px rgba(163, 230, 53, 0.6));
+  }
+
+  /* Blur Hintergrund */
+  .blur-background {
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+  }
+}
+
+/* ===================================
+   BLOB ANIMATIONEN
+   =================================== */
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: blob 7s infinite;
+  pointer-events: none;
+}
+
+.blob-1 {
+  background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+  width: 400px;
+  height: 400px;
+  top: -200px;
+  left: -100px;
+}
+
+.blob-2 {
+  background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+  width: 350px;
+  height: 350px;
+  bottom: -150px;
+  right: -100px;
+  animation-delay: 2s;
+}
+
+.blob-3 {
+  background: linear-gradient(135deg, #65a30d 0%, #3f6212 100%);
+  width: 300px;
+  height: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 4s;
+}
+
+/* ===================================
+   GRADIENT TEXT
+   =================================== */
+
+.gradient-text {
+  background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===================================
+   MODERNE HOVER EFFEKTE
+   =================================== */
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================
+   RESPONSIVE GLASSMORPHISM SECTIONS
+   =================================== */
+
+.section-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+@media (max-width: 768px) {
+  .section-glass {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+}
+
+/* ===================================
+   SMOOTH TRANSITIONS
+   =================================== */
+
+* {
+  scroll-behavior: smooth;
+}
+
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

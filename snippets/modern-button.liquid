@@ -1,0 +1,169 @@
+{%- comment -%}
+  MODERNE BUTTON KOMPONENTE
+  Vercel / Apple / Lovable Style
+  
+  VERWENDUNG: {% render 'modern-button', text: 'Button', url: '/link', style: 'primary' %}
+  
+  Wird verwendet in:
+  - sections/modern-hero.liquid
+  - Wiederverwendbare Komponente für alle Templates
+  
+  Parameter:
+  - text: Button Text
+  - url: Link URL
+  - style: 'primary' | 'secondary' | 'glass'
+  - size: 'sm' | 'md' | 'lg'
+  - animate: true | false
+  - gradient: true | false (für gradient hover effect)
+{%- endcomment -%}
+
+{% liquid
+  assign button_text = text | default: 'Button'
+  assign button_url = url | default: '#'
+  assign button_style = style | default: 'primary'
+  assign button_size = size | default: 'md'
+  assign button_animate = animate | default: true
+  assign button_gradient = gradient | default: true
+%}
+
+{%- style -%}
+  .modern-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Größen */
+  .modern-button--sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .modern-button--md {
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .modern-button--lg {
+    padding: 16px 32px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  /* Primary Button - Gradient Green */
+  .modern-button--primary {
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgba(163, 230, 53, 0.3);
+  }
+
+  .modern-button--primary:hover {
+    background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(163, 230, 53, 0.5);
+    color: #ffffff;
+  }
+
+  .modern-button--primary:active {
+    transform: translateY(0);
+  }
+
+  /* Secondary Button - Dark */
+  .modern-button--secondary {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-button--secondary:hover {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+  }
+
+  /* Glass Button - Glassmorphism */
+  .modern-button--glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  }
+
+  .modern-button--glass:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: #ffffff;
+  }
+
+  /* Ripple Effect */
+  .modern-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .modern-button:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Animation */
+  @keyframes buttonPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .modern-button--animate {
+    animation: buttonPulse 2s ease-in-out infinite;
+  }
+
+  .modern-button--animate:hover {
+    animation: none;
+  }
+
+  /* Gradient Hover Effect */
+  .modern-button--gradient-hover {
+    background-size: 200% 100%;
+    background-position: left center;
+    transition: background-position 0.5s ease;
+  }
+
+  .modern-button--gradient-hover:hover {
+    background-position: right center;
+  }
+{%- endstyle -%}
+
+<a 
+  href="{{ button_url }}" 
+  class="modern-button modern-button--{{ button_style }} modern-button--{{ button_size }}{% if button_animate %} modern-button--animate{% endif %}{% if button_gradient %} modern-button--gradient-hover{% endif %}"
+  {% if button_url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}
+>
+  {{ button_text }}
+</a>
+

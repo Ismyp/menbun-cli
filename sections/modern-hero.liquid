@@ -1,0 +1,603 @@
+{%- comment -%}
+  ULTRA-MODERNE HERO SECTION
+  Lovable.ai / Vercel / Apple Style
+  - Blob Animationen im Hintergrund
+  - Glassmorphism Effekte
+  - Gradient Overlays
+  - Smooth Scroll Animations
+  - Parallax Background
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    position: relative;
+    min-height: {{ section.settings.section_height }}vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: {{ section.settings.background_color }};
+  }
+
+  /* Hintergrundbild mit Parallax */
+  #shopify-section-{{ section.id }} .modern-hero__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .modern-hero__background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+  }
+
+  /* Gradient Overlay */
+  #shopify-section-{{ section.id }} .modern-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      {{ section.settings.gradient_direction }},
+      {{ section.settings.overlay_color_start }} 0%,
+      {{ section.settings.overlay_color_end }} 100%
+    );
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+
+  /* Blob Animationen Container */
+  #shopify-section-{{ section.id }} .modern-hero__blobs {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur({{ section.settings.blob_blur }}px);
+    opacity: {{ section.settings.blob_opacity | divided_by: 100.0 }};
+    animation: blob 7s infinite ease-in-out;
+  }
+
+  .blob-1 {
+    background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+    width: 500px;
+    height: 500px;
+    top: -200px;
+    left: -100px;
+  }
+
+  .blob-2 {
+    background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+    width: 450px;
+    height: 450px;
+    bottom: -150px;
+    right: -100px;
+    animation-delay: 2s;
+  }
+
+  .blob-3 {
+    background: linear-gradient(135deg, #65a30d 0%, #3f6212 100%);
+    width: 350px;
+    height: 350px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 4s;
+  }
+
+  @keyframes blob {
+    0%, 100% { 
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    33% { 
+      transform: translate(30px, -50px) scale(1.1) rotate(120deg);
+    }
+    66% { 
+      transform: translate(-20px, 20px) scale(0.9) rotate(240deg);
+    }
+  }
+
+  /* Hero Content Container */
+  #shopify-section-{{ section.id }} .modern-hero__container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  /* Badge */
+  #shopify-section-{{ section.id }} .modern-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: {{ section.settings.badge_color }};
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Title */
+  #shopify-section-{{ section.id }} .modern-hero__title {
+    font-size: clamp(40px, 6vw, {{ section.settings.title_size }}px);
+    font-weight: 800;
+    color: {{ section.settings.title_color }};
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.03em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    {% if section.settings.title_gradient %}
+      background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% endif %}
+  }
+
+  /* Subtitle */
+  #shopify-section-{{ section.id }} .modern-hero__subtitle {
+    font-size: clamp(16px, 2vw, 20px);
+    color: {{ section.settings.subtitle_color }};
+    line-height: 1.6;
+    margin: 0 auto 40px auto;
+    max-width: 700px;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Buttons Container */
+  #shopify-section-{{ section.id }} .modern-hero__buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: {{ section.settings.text_alignment }};
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* Glassmorphism Container (optional) */
+  #shopify-section-{{ section.id }} .modern-hero__glass-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 32px;
+    padding: 60px 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Scroll Indicator */
+  #shopify-section-{{ section.id }} .modern-hero__scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    animation: bounce 2s infinite;
+  }
+
+  #shopify-section-{{ section.id }} .modern-hero__scroll-indicator svg {
+    width: 30px;
+    height: 30px;
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(10px);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      min-height: {{ section.settings.section_height_mobile }}vh;
+    }
+
+    #shopify-section-{{ section.id }} .modern-hero__buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    #shopify-section-{{ section.id }} .modern-hero__glass-container {
+      padding: 40px 24px;
+      border-radius: 24px;
+    }
+
+    .blob-1, .blob-2, .blob-3 {
+      width: 300px;
+      height: 300px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="modern-hero__background" {% if section.settings.enable_parallax %}data-parallax="{{ section.settings.parallax_speed }}"{% endif %}>
+  {% if section.settings.background_image != blank %}
+    {{ section.settings.background_image | image_url: width: 2400 | image_tag: loading: 'eager', width: 2400, height: 1200 }}
+  {% endif %}
+</div>
+
+<div class="modern-hero__overlay"></div>
+
+{% if section.settings.enable_blobs %}
+  <div class="modern-hero__blobs" data-blob-container>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+{% endif %}
+
+<div class="modern-hero__container">
+  {% if section.settings.enable_glass_container %}
+    <div class="modern-hero__glass-container" data-glass>
+  {% endif %}
+
+    {% if section.settings.badge_text != blank %}
+      <div class="modern-hero__badge" data-animate>
+        {{ section.settings.badge_text }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.title != blank %}
+      <h1 class="modern-hero__title" data-animate {% if section.settings.enable_text_reveal %}data-reveal-text{% endif %}>
+        {{ section.settings.title }}
+      </h1>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="modern-hero__subtitle" data-animate>
+        {{ section.settings.subtitle }}
+      </p>
+    {% endif %}
+
+    <div class="modern-hero__buttons" data-animate>
+      {% if section.settings.primary_button_text != blank %}
+        {% render 'modern-button',
+          text: section.settings.primary_button_text,
+          url: section.settings.primary_button_link,
+          style: 'primary',
+          size: 'lg',
+          animate: section.settings.button_animate,
+          gradient: true
+        %}
+      {% endif %}
+
+      {% if section.settings.secondary_button_text != blank %}
+        {% render 'modern-button',
+          text: section.settings.secondary_button_text,
+          url: section.settings.secondary_button_link,
+          style: section.settings.secondary_button_style,
+          size: 'lg',
+          animate: false,
+          gradient: false
+        %}
+      {% endif %}
+    </div>
+
+  {% if section.settings.enable_glass_container %}
+    </div>
+  {% endif %}
+</div>
+
+{% if section.settings.show_scroll_indicator %}
+  <div class="modern-hero__scroll-indicator">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    </svg>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Modern Hero",
+  "tag": "section",
+  "class": "modern-hero-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎨 Hintergrund"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Hintergrundbild"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Hintergrundfarbe",
+      "default": "#0f172a"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_parallax",
+      "label": "Parallax Effekt aktivieren",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "parallax_speed",
+      "label": "Parallax Geschwindigkeit",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "🌊 Blob Animationen"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blobs",
+      "label": "Blob Animationen aktivieren",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "blob_blur",
+      "label": "Blob Blur",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "blob_opacity",
+      "label": "Blob Transparenz",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "🎭 Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_start",
+      "label": "Overlay Start Farbe",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_end",
+      "label": "Overlay End Farbe",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient Richtung",
+      "options": [
+        {
+          "value": "to top",
+          "label": "Nach oben"
+        },
+        {
+          "value": "to bottom",
+          "label": "Nach unten"
+        },
+        {
+          "value": "to left",
+          "label": "Nach links"
+        },
+        {
+          "value": "to right",
+          "label": "Nach rechts"
+        }
+      ],
+      "default": "to top"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Transparenz",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "📝 Inhalt"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "NEU"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge Farbe",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titel",
+      "default": "Teamwear, die begeistert"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Titel Größe (Desktop)",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Titel Farbe",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_gradient",
+      "label": "Titel mit Gradient",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_reveal",
+      "label": "Text Reveal Animation",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Individuelle Sportbekleidung für Basketball, Fußball, Handball und Volleyball"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Untertitel Farbe",
+      "default": "#94a3b8"
+    },
+    {
+      "type": "header",
+      "content": "🔘 Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primärer Button Text",
+      "default": "Konfiguration starten"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primärer Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_animate",
+      "label": "Button Animation",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Sekundärer Button Text",
+      "default": "Mehr erfahren"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Sekundärer Button Link"
+    },
+    {
+      "type": "select",
+      "id": "secondary_button_style",
+      "label": "Sekundärer Button Style",
+      "options": [
+        {
+          "value": "secondary",
+          "label": "Dark"
+        },
+        {
+          "value": "glass",
+          "label": "Glass"
+        }
+      ],
+      "default": "glass"
+    },
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Ausrichtung",
+      "options": [
+        {
+          "value": "left",
+          "label": "Links"
+        },
+        {
+          "value": "center",
+          "label": "Zentriert"
+        },
+        {
+          "value": "right",
+          "label": "Rechts"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section Höhe (Desktop)",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "vh"
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Section Höhe (Mobile)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 80,
+      "unit": "vh"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_glass_container",
+      "label": "Glassmorphism Container",
+      "default": false,
+      "info": "Fügt einen Glaseffekt um den Content hinzu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Scroll Indikator anzeigen",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Modern Hero",
+      "category": "Hero Sections"
+    }
+  ]
+}
+{% endschema %}
+
