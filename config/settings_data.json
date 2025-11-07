@@ -84,7 +84,15 @@
           "design_q6mkyJ": {
             "type": "design",
             "settings": {
-              "product": "test-produkt-4",
+              "product": "design-simple",
+              "name": "",
+              "discount_per_10": 5
+            }
+          },
+          "design_WiheYe": {
+            "type": "design",
+            "settings": {
+              "product": "design-menbun",
               "name": "",
               "discount_per_10": 5
             }
@@ -92,7 +100,7 @@
           "design_kfJmWz": {
             "type": "design",
             "settings": {
-              "product": "menbun-double-face-shirt",
+              "product": "design-fusion",
               "name": "",
               "discount_per_10": 5
             }
@@ -100,6 +108,7 @@
         },
         "block_order": [
           "design_q6mkyJ",
+          "design_WiheYe",
           "design_kfJmWz"
         ],
         "settings": {
