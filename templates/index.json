@@ -55,6 +55,7 @@
       "settings": {
         "title": "Wähle deine Sportart",
         "subtitle": "Mit unseren Konfiguratoren stellst du dir deine Teamwear individuell zusammen. Wähle aus verschiedenen Designs, füge dein Logo hinzu und personalisiere Trikots mit Namen und Nummern.",
+        "basketball_image": "shopify://shop_images/Basketball.png",
         "basketball_title": "Basketball",
         "basketball_description": "Tank Tops & Shorts",
         "basketball_link": "/pages/basketball",
