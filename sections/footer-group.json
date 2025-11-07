@@ -110,7 +110,7 @@
                   "type": "text",
                   "name": "Heading",
                   "settings": {
-                    "text": "<p>Buche unsere Newsletter und erhalte exklusivste Deals.</p>",
+                    "text": "<p>Buche unseren Newsletter und erhalte exklusivste Deals.</p>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
