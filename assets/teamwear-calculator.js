@@ -546,10 +546,48 @@ class TeamwearCalculator {
   
   getColorValue(colorName) {
     const colorMap = {
-      'schwarz': '#000000', 'weiß': '#ffffff', 'rot': '#ef4444', 'blau': '#3b82f6',
-      'grün': '#22c55e', 'gelb': '#eab308', 'orange': '#f97316', 'lila': '#a855f7',
-      'grau': '#6b7280', 'pink': '#ec4899', 'türkis': '#14b8a6', 'braun': '#a16207',
-      'navy': '#1e3a8a', 'maroon': '#7f1d1d'
+      // Basis-Farben
+      'schwarz': '#000000',
+      'weiß': '#ffffff',
+      'weiss': '#ffffff',
+      
+      // Rot-Töne
+      'rot': '#ef4444',
+      'dunkelrot': '#dc2626',
+      'hellrot': '#f87171',
+      
+      // Blau-Töne
+      'blau': '#3b82f6',
+      'hellblau': '#60a5fa',
+      'dunkelblau': '#1e3a8a',
+      'marineblau': '#1e40af',
+      'navy': '#1e3a8a',
+      
+      // Grün-Töne
+      'grün': '#22c55e',
+      'gruen': '#22c55e',
+      'hellgrün': '#4ade80',
+      'hellgruen': '#4ade80',
+      'dunkelgrün': '#15803d',
+      'dunkelgruen': '#15803d',
+      
+      // Gelb/Orange-Töne
+      'gelb': '#eab308',
+      'orange': '#f97316',
+      
+      // Lila/Pink-Töne
+      'lila': '#a855f7',
+      'pink': '#ec4899',
+      'rosa': '#f9a8d4',
+      
+      // Grau-Töne
+      'grau': '#6b7280',
+      
+      // Sonstige
+      'türkis': '#14b8a6',
+      'turkis': '#14b8a6',
+      'braun': '#a16207',
+      'maroon': '#7f1d1d'
     };
     return colorMap[colorName.toLowerCase().trim()] || '#f3f4f6';
   }
