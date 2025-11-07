@@ -22,7 +22,7 @@
         "primary_button_link": "#sport-selection",
         "secondary_button_text": "Design anfragen",
         "secondary_button_link": "/pages/design-anfrage",
-        "padding_top": 90,
+        "padding_top": 60,
         "padding_bottom": 200
       }
     },
