@@ -270,10 +270,112 @@
   </div>
 </div>
 
+<!-- Lightbox Modal -->
+<div class="tf-lightbox" id="tf-lightbox-{{ section.id }}">
+  <div class="tf-lightbox__container">
+    <button class="tf-lightbox__close" aria-label="Schließen">×</button>
+    <button class="tf-lightbox__nav tf-lightbox__nav--prev" aria-label="Zurück">‹</button>
+    <img class="tf-lightbox__image" src="" alt="">
+    <button class="tf-lightbox__nav tf-lightbox__nav--next" aria-label="Weiter">›</button>
+    <div class="tf-lightbox__counter"><span class="current">1</span> / <span class="total">1</span></div>
+  </div>
+</div>
+
+<style>
+  .tf-lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; display:none; align-items:center; justify-content:center; }
+  .tf-lightbox.active { display:flex; }
+  .tf-lightbox__container { position:relative; width:90%; max-width:1200px; height:90vh; display:flex; align-items:center; justify-content:center; }
+  .tf-lightbox__image { max-width:100%; max-height:90vh; object-fit:contain; border-radius:12px; }
+  .tf-lightbox__close { position:absolute; top:20px; right:20px; width:50px; height:50px; background:rgba(255,255,255,0.2); border:none; border-radius:50%; color:#fff; font-size:32px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .tf-lightbox__close:hover { background:rgba(239,68,68,0.9); transform:scale(1.1); }
+  .tf-lightbox__nav { position:absolute; top:50%; transform:translateY(-50%); width:60px; height:60px; background:rgba(255,255,255,0.2); border:none; border-radius:50%; color:#fff; font-size:40px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .tf-lightbox__nav:hover { background:rgba(163,230,53,0.9); transform:translateY(-50%) scale(1.1); }
+  .tf-lightbox__nav--prev { left:20px; }
+  .tf-lightbox__nav--next { right:20px; }
+  .tf-lightbox__counter { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:#fff; padding:8px 16px; border-radius:20px; font-size:14px; }
+</style>
+
 <script>
   (function(){
     const root = document.querySelector('#shopify-section-{{ section.id }}');
     if (!root) return;
+    
+    // LIGHTBOX FUNCTIONALITY
+    const lightbox = document.querySelector('#tf-lightbox-{{ section.id }}');
+    let currentImages = [];
+    let currentIndex = 0;
+    
+    const updateLightbox = () => {
+      if (!currentImages[currentIndex]) return;
+      lightbox.querySelector('.tf-lightbox__image').src = currentImages[currentIndex].src;
+      lightbox.querySelector('.tf-lightbox__image').alt = currentImages[currentIndex].alt;
+      lightbox.querySelector('.current').textContent = currentIndex + 1;
+      lightbox.querySelector('.total').textContent = currentImages.length;
+      
+      lightbox.querySelector('.tf-lightbox__nav--prev').style.display = currentImages.length > 1 ? 'flex' : 'none';
+      lightbox.querySelector('.tf-lightbox__nav--next').style.display = currentImages.length > 1 ? 'flex' : 'none';
+    };
+    
+    const openLightbox = (images, startIndex) => {
+      currentImages = images;
+      currentIndex = startIndex;
+      updateLightbox();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    
+    // Zoom Button Clicks
+    root.addEventListener('click', (e) => {
+      const zoomBtn = e.target.closest('[data-zoom-trigger]');
+      if (zoomBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = zoomBtn.closest('.tf-card');
+        if (!card) return;
+        
+        const imgs = Array.from(card.querySelectorAll('.tf-image'));
+        const images = imgs.map(img => ({
+          src: img.src.replace('width=800', 'width=1200'),
+          alt: img.alt
+        }));
+        const visibleImg = imgs.find(img => !img.classList.contains('hidden'));
+        const startIndex = visibleImg ? parseInt(visibleImg.dataset.imageIndex) || 0 : 0;
+        
+        openLightbox(images, startIndex);
+      }
+    });
+    
+    // Lightbox Controls
+    lightbox.querySelector('.tf-lightbox__close').addEventListener('click', closeLightbox);
+    lightbox.querySelector('.tf-lightbox__nav--prev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+      updateLightbox();
+    });
+    lightbox.querySelector('.tf-lightbox__nav--next').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % currentImages.length;
+      updateLightbox();
+    });
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') {
+        currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+        updateLightbox();
+      }
+      if (e.key === 'ArrowRight') {
+        currentIndex = (currentIndex + 1) % currentImages.length;
+        updateLightbox();
+      }
+    });
     
     // Image Slider Functionality
     root.querySelectorAll('.tf-card').forEach(card => {
