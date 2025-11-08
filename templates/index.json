@@ -29,11 +29,11 @@
     "stats_section": {
       "type": "stats-section",
       "settings": {
-        "stat1_number": "5000+",
+        "stat1_number": "500+",
         "stat1_label": "Zufriedene Kunden",
         "stat2_number": "4.9/5",
         "stat2_label": "Kundenbewertung",
-        "stat3_number": "10+",
+        "stat3_number": "3+",
         "stat3_label": "Jahre Erfahrung"
       }
     },
