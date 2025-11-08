@@ -381,22 +381,22 @@
 
 .teamwear-calculator[data-columns="3"] {
   --designs-per-row: 3;
-  --designs-max-width: 1200px;
+  --designs-max-width: 1350px;
 }
 
 .teamwear-calculator[data-columns="4"] {
   --designs-per-row: 4;
-  --designs-max-width: 1400px;
+  --designs-max-width: 1800px;
 }
 
 .teamwear-calculator[data-columns="5"] {
   --designs-per-row: 5;
-  --designs-max-width: 1600px;
+  --designs-max-width: 2250px;
 }
 
 .teamwear-calculator[data-columns="6"] {
   --designs-per-row: 6;
-  --designs-max-width: 1800px;
+  --designs-max-width: 2700px;
 }
 
 @media screen and (max-width: 1200px) {
