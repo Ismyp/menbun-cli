@@ -104,12 +104,21 @@
               "name": "",
               "discount_per_10": 5
             }
+          },
+          "design_8JD3ea": {
+            "type": "design",
+            "settings": {
+              "product": "t-shirt-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
           }
         },
         "block_order": [
           "design_q6mkyJ",
           "design_WiheYe",
-          "design_kfJmWz"
+          "design_kfJmWz",
+          "design_8JD3ea"
         ],
         "settings": {
           "fallback_product": "",
