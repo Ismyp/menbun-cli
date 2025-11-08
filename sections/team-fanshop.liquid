@@ -231,8 +231,9 @@
             <div class="tf-price">{{ product.selected_or_first_available_variant.price | money }}</div>
             {%- comment -%} Prüfe ERST Metafelder, dann Product Options {%- endcomment -%}
             
-            {%- comment -%} GRÖSSE aus Metafeld {%- endcomment -%}
-            {%- assign metafield_sizes = product.metafields.custom.groesse | default: product.metafields.custom.size -%}
+            {%- comment -%} GRÖSSE aus Metafeld - alle Varianten probieren {%- endcomment -%}
+            <!-- DEBUG Größe: {{ product.metafields.custom | json }} -->
+            {%- assign metafield_sizes = product.metafields.kategorie_metafelder.grosse | default: product.metafields.custom.groesse | default: product.metafields.custom.grosse | default: product.metafields.custom.size -%}
             {%- if metafield_sizes != blank -%}
               {%- assign sizes_array = metafield_sizes | split: ',' -%}
               <div class="tf-row">
