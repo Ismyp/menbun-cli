@@ -1368,16 +1368,19 @@ class TeamwearLightbox {
   }
 
   openLightbox(button) {
-    const wrapper = button.closest('.teamwear-design__image-wrapper');
+    // Unterstützt sowohl Teamwear Calculator als auch Fanshop
+    const wrapper = button.closest('.teamwear-design__image-wrapper') || button.closest('.tf-card__media');
     if (!wrapper) return;
 
-    const images = Array.from(wrapper.querySelectorAll('.teamwear-design__image'));
+    // Finde Bilder (verschiedene Klassen)
+    const images = Array.from(wrapper.querySelectorAll('.teamwear-design__image, .tf-image'));
     this.currentImages = images.map(img => ({
-      src: img.src.replace('width=400', 'width=1200'),
+      src: img.src.replace('width=400', 'width=1200').replace('width=800', 'width=1200'),
       alt: img.alt
     }));
 
-    const visibleImage = images.find(img => !img.classList.contains('visually-hidden'));
+    // Finde aktuelles Bild (verschiedene "hidden" Klassen)
+    const visibleImage = images.find(img => !img.classList.contains('visually-hidden') && !img.classList.contains('hidden'));
     this.currentIndex = visibleImage ? parseInt(visibleImage.dataset.imageIndex) || 0 : 0;
 
     this.lightbox.classList.add('active');
