@@ -112,13 +112,31 @@
               "name": "",
               "discount_per_10": 5
             }
+          },
+          "design_jFCFGd": {
+            "type": "design",
+            "settings": {
+              "product": "longsleeve-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
+          },
+          "design_HqwQaP": {
+            "type": "design",
+            "settings": {
+              "product": "menbun-hoodie-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
           }
         },
         "block_order": [
           "design_q6mkyJ",
           "design_WiheYe",
           "design_kfJmWz",
-          "design_8JD3ea"
+          "design_8JD3ea",
+          "design_jFCFGd",
+          "design_HqwQaP"
         ],
         "settings": {
           "fallback_product": "",
