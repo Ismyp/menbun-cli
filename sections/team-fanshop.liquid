@@ -232,7 +232,7 @@
             {%- comment -%} Prüfe ERST Metafelder, dann Product Options {%- endcomment -%}
             
             {%- comment -%} GRÖSSE aus Metafeld {%- endcomment -%}
-            {%- assign metafield_sizes = product.metafields.custom.größe | default: product.metafields.custom.grosse | default: product.metafields.custom.size -%}
+            {%- assign metafield_sizes = product.metafields.custom.groesse | default: product.metafields.custom.size -%}
             {%- if metafield_sizes != blank -%}
               {%- assign sizes_array = metafield_sizes | split: ',' -%}
               <div class="tf-row">
@@ -262,7 +262,7 @@
             {%- endif -%}
             
             {%- comment -%} FARBE aus Metafeld {%- endcomment -%}
-            {%- assign metafield_colors = product.metafields.custom.farbe | default: product.metafields.custom.color -%}
+            {%- assign metafield_colors = product.metafields.custom.farbe_optionen | default: product.metafields.custom.color -%}
             {%- if metafield_colors != blank -%}
               {%- assign colors_array = metafield_colors | split: ',' -%}
               <div class="tf-row">
