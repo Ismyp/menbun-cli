@@ -323,6 +323,82 @@
           "discount_tiers": "[{\"quantity\": 11, \"discount\": 8}, {\"quantity\": 22, \"discount\": 12}, {\"quantity\": 33, \"discount\": 18}]",
           "max_discount_limit": 25
         }
+      },
+      "teamwear-calculator-handball": {
+        "type": "teamwear-calculator-handball",
+        "blocks": {
+          "design_XmQFCm": {
+            "type": "design",
+            "settings": {
+              "product": "t-shirt-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
+          },
+          "design_qJMK7F": {
+            "type": "design",
+            "settings": {
+              "product": "longsleeve-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
+          },
+          "design_tbCHFa": {
+            "type": "design",
+            "settings": {
+              "product": "menbun-hoodie-classic-set",
+              "name": "",
+              "discount_per_10": 5
+            }
+          }
+        },
+        "block_order": [
+          "design_XmQFCm",
+          "design_qJMK7F",
+          "design_tbCHFa"
+        ],
+        "settings": {
+          "fallback_product": "",
+          "fallback_discount_per_tier": 5,
+          "designs_per_row": 3,
+          "design_title": "1. Wähle dein Handball-Design",
+          "design_description": "Wähle aus unseren verfügbaren Handball-Designs",
+          "price_note": "Stückpreis",
+          "unit": "Stück",
+          "color_title": "2. Wähle die Farbe",
+          "color_description": "Wähle deine gewünschte Trikotfarbe aus",
+          "sizes_title": "3. Größenverteilung angeben",
+          "sizes_description": "Gib an, wie viele Trikots du pro Größe benötigst. Die Gesamtmenge wird automatisch berechnet.",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "size_chart_button_text": "Handball Größentabelle anzeigen",
+          "team_logo_text": "Logo hinzufügen",
+          "team_logo_price": 0,
+          "team_name_text": "Teamname",
+          "team_name_price": 0,
+          "enable_personalization": true,
+          "personalization_title": "3. Personalisierung und Größen",
+          "personalization_description": "Füge Namen und Rückennummern hinzu",
+          "number_chest_text": "Nummer Brust",
+          "number_chest_price": 0,
+          "number_back_text": "Nummer Rücken",
+          "number_back_price": 0,
+          "player_names_text": "Spielernamen",
+          "player_names_price": 0,
+          "optional_text": "Optional",
+          "total_price_label": "Gesamtpreis:",
+          "add_to_cart_text": "In den Warenkorb",
+          "adding_to_cart_text": "Wird hinzugefügt...",
+          "added_to_cart_text": "Erfolgreich hinzugefügt!",
+          "error_select_design": "Bitte wähle ein Handball-Design aus",
+          "error_select_quantity": "Bitte wähle eine Menge aus",
+          "error_correct_sizes": "Die Summe der Größen muss der gewählten Menge entsprechen",
+          "error_general": "Es ist ein Fehler aufgetreten.",
+          "padding_top": 0,
+          "padding_bottom": 0,
+          "use_dynamic_discounts": false,
+          "discount_tiers": "[{\"quantity\": 7, \"discount\": 12}, {\"quantity\": 14, \"discount\": 18}, {\"quantity\": 21, \"discount\": 25}]",
+          "max_discount_limit": 25
+        }
       }
     },
     "content_for_index": [],
