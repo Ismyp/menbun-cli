@@ -363,21 +363,21 @@
    Bis zum Logo, nicht darüber hinaus, symmetrisch
    ================================================ */
 
-.teamwear-calculator--basketball,
-.teamwear-calculator--fussball,
-.teamwear-calculator--handball,
-.teamwear-calculator--volleyball,
-.teamwear-calculator--tischtennis {
+.teamwear-calculator-basketball,
+.teamwear-calculator-fussball,
+.teamwear-calculator-handball,
+.teamwear-calculator-volleyball,
+.teamwear-calculator-tischtennis {
   --page-width: 85vw !important;
   --page-content-width: 82vw !important;
   --page-margin: 1.5vw !important;
 }
 
-.teamwear-calculator--basketball .page-width,
-.teamwear-calculator--fussball .page-width,
-.teamwear-calculator--handball .page-width,
-.teamwear-calculator--volleyball .page-width,
-.teamwear-calculator--tischtennis .page-width {
+.teamwear-calculator-basketball .page-width,
+.teamwear-calculator-fussball .page-width,
+.teamwear-calculator-handball .page-width,
+.teamwear-calculator-volleyball .page-width,
+.teamwear-calculator-tischtennis .page-width {
   max-width: var(--page-width) !important;
 }
 
@@ -403,29 +403,57 @@
    SPALTEN-KONFIGURATION via Theme Editor
    ================================================ */
 
-.teamwear-calculator[data-columns="2"] {
+.teamwear-calculator-basketball[data-columns="2"],
+.teamwear-calculator-fussball[data-columns="2"],
+.teamwear-calculator-handball[data-columns="2"],
+.teamwear-calculator-volleyball[data-columns="2"],
+.teamwear-calculator-tischtennis[data-columns="2"] {
   --designs-per-row: 2;
 }
 
-.teamwear-calculator[data-columns="3"] {
+.teamwear-calculator-basketball[data-columns="3"],
+.teamwear-calculator-fussball[data-columns="3"],
+.teamwear-calculator-handball[data-columns="3"],
+.teamwear-calculator-volleyball[data-columns="3"],
+.teamwear-calculator-tischtennis[data-columns="3"] {
   --designs-per-row: 3;
 }
 
-.teamwear-calculator[data-columns="4"] {
+.teamwear-calculator-basketball[data-columns="4"],
+.teamwear-calculator-fussball[data-columns="4"],
+.teamwear-calculator-handball[data-columns="4"],
+.teamwear-calculator-volleyball[data-columns="4"],
+.teamwear-calculator-tischtennis[data-columns="4"] {
   --designs-per-row: 4;
 }
 
-.teamwear-calculator[data-columns="5"] {
+.teamwear-calculator-basketball[data-columns="5"],
+.teamwear-calculator-fussball[data-columns="5"],
+.teamwear-calculator-handball[data-columns="5"],
+.teamwear-calculator-volleyball[data-columns="5"],
+.teamwear-calculator-tischtennis[data-columns="5"] {
   --designs-per-row: 5;
 }
 
-.teamwear-calculator[data-columns="6"] {
+.teamwear-calculator-basketball[data-columns="6"],
+.teamwear-calculator-fussball[data-columns="6"],
+.teamwear-calculator-handball[data-columns="6"],
+.teamwear-calculator-volleyball[data-columns="6"],
+.teamwear-calculator-tischtennis[data-columns="6"] {
   --designs-per-row: 6;
 }
 
 @media screen and (max-width: 1200px) {
-  .teamwear-calculator[data-columns="5"],
-  .teamwear-calculator[data-columns="6"] {
+  .teamwear-calculator-basketball[data-columns="5"],
+  .teamwear-calculator-basketball[data-columns="6"],
+  .teamwear-calculator-fussball[data-columns="5"],
+  .teamwear-calculator-fussball[data-columns="6"],
+  .teamwear-calculator-handball[data-columns="5"],
+  .teamwear-calculator-handball[data-columns="6"],
+  .teamwear-calculator-volleyball[data-columns="5"],
+  .teamwear-calculator-volleyball[data-columns="6"],
+  .teamwear-calculator-tischtennis[data-columns="5"],
+  .teamwear-calculator-tischtennis[data-columns="6"] {
     --designs-per-row: 4;
   }
 }
