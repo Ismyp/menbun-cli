@@ -231,37 +231,17 @@
             <div class="tf-price">{{ product.selected_or_first_available_variant.price | money }}</div>
             {%- comment -%} Prüfe ERST Metafelder, dann Product Options {%- endcomment -%}
             
-            {%- comment -%} Größe - ERST Metafeld versuchen, dann Product Options {%- endcomment -%}
-            {%- assign groesse_metafeld = product.metafields['kategorie-metafelder'].grosse -%}
-            {%- if groesse_metafeld == blank -%}
-              {%- assign groesse_metafeld = product.metafields.kategorie_metafelder.grosse -%}
-            {%- endif -%}
-            {%- if groesse_metafeld != blank -%}
-              {%- assign sizes_array = groesse_metafeld.value | split: ',' -%}
-              <div class="tf-row">
-                <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Größe</label>
-                <select class="tf-input" data-size-select style="flex: 1;">
-                  {%- for size in sizes_array -%}
-                    <option value="{{ size | strip }}">{{ size | strip }}</option>
-                  {%- endfor -%}
-                </select>
-              </div>
-            {%- else -%}
-              {%- assign size_opt = product.options_with_values | where: 'name', 'Größe' -%}
-              {%- if size_opt.size == 0 -%}
-                {%- assign size_opt = product.options_with_values | where: 'name', 'Size' -%}
-              {%- endif -%}
-              {%- if size_opt.size > 0 -%}
-                <div class="tf-row">
-                  <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Größe</label>
-                  <select class="tf-input" data-variant-size style="flex: 1;">
-                    {%- for opt in size_opt.first.values -%}
-                      <option value="{{ opt }}">{{ opt }}</option>
-                    {%- endfor -%}
-                  </select>
-                </div>
-              {%- endif -%}
-            {%- endif -%}
+            <div class="tf-row">
+              <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Größe</label>
+              <select class="tf-input" data-size-select style="flex: 1;">
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M" selected>M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
             
             {%- assign color_opt = product.options_with_values | where: 'name', 'Farbe' -%}
             {%- if color_opt.size == 0 -%}
@@ -473,6 +453,8 @@
       const productId = Number(card.getAttribute('data-product-id'));
       if (!productId) return;
       const properties = {};
+      const sizeSelect = card.querySelector('[data-size-select]');
+      if (sizeSelect) properties['Größe'] = sizeSelect.value;
       const nameOn = card.querySelector('[data-opt-name]')?.checked;
       const numberOn = card.querySelector('[data-opt-number]')?.checked;
       if (nameOn) properties['Name'] = card.querySelector('[data-input-name]')?.value || '';
