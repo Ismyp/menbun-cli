@@ -104,7 +104,7 @@
         "basketball_link": "shopify://pages/sv-neustadt",
         "fussball_title": "Fußballverein Fanshop",
         "fussball_subtitle": "Trikots, Merchandise & Accessoires",
-        "fussball_link": "/collections/fussball-fanshop",
+        "fussball_link": "shopify://pages/testverein",
         "handball_title": "Handballclub Fanshop",
         "handball_subtitle": "Trikots, Merchandise & Accessoires",
         "handball_link": "/collections/handball-fanshop"
