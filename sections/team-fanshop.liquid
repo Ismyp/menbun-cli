@@ -27,16 +27,17 @@
 {%- endstyle -%}
 
 {%- liquid
-  assign team_logo = page.metafields.custom.team_logo | default: section.settings.logo
-  assign team_name = page.metafields.custom.team_name | default: section.settings.team_name | default: page.title
-  assign team_sub = page.metafields.custom.team_subtitle | default: section.settings.team_sub
-  assign intro_text = page.metafields.custom.intro_text | default: section.settings.intro
-  assign collection_handle = page.metafields.custom.collection | default: section.settings.collection
-  if collection_handle.handle
-    assign fanshop_collection = collection_handle
-  elsif collection_handle != blank
-    assign fanshop_collection = collections[collection_handle]
+  if collection
+    assign team_logo = collection.image
+    assign team_name = collection.title
+    assign team_sub = ''
+    assign intro_text = collection.description
+    assign fanshop_collection = collection
   else
+    assign team_logo = section.settings.logo
+    assign team_name = section.settings.team_name
+    assign team_sub = section.settings.team_sub
+    assign intro_text = section.settings.intro
     assign fanshop_collection = section.settings.collection
   endif
 -%}

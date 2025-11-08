@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "team-fanshop",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
