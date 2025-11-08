@@ -193,7 +193,8 @@
 
   <div class="tf-grid" data-product-grid>
     {%- if fanshop_collection != blank -%}
-      {%- for product in fanshop_collection.products -%}
+      {%- paginate fanshop_collection.products by 50 -%}
+      {%- for product in paginate.collection.products -%}
         <article class="tf-card" data-product-id="{{ product.selected_or_first_available_variant.id }}" data-tags="{{ product.tags | join: ',' | escape }}">
           <div class="tf-card__media">
             <button type="button" class="tf-zoom-btn" aria-label="Bild vergrößern" data-zoom-trigger data-product-handle="{{ product.handle }}">
@@ -264,6 +265,7 @@
           </div>
         </article>
       {%- endfor -%}
+      {%- endpaginate -%}
     {%- else -%}
       <div style="grid-column:1/-1; border:1px dashed #e5e7eb; border-radius: 10px; padding: 12px; background:#fafafa;">Bitte Kollektion auswählen.</div>
     {%- endif -%}
