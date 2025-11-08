@@ -329,12 +329,12 @@
       document.body.style.overflow = '';
     };
     
-    // Zoom Button Clicks
+    // Zoom Button Clicks - NUR preventDefault, kein stopPropagation!
     root.addEventListener('click', (e) => {
       const zoomBtn = e.target.closest('[data-zoom-trigger]');
       if (zoomBtn) {
         e.preventDefault();
-        e.stopPropagation();
+        // KEIN e.stopPropagation() - damit andere Handler funktionieren!
         const card = zoomBtn.closest('.tf-card');
         if (!card) return;
         
@@ -347,6 +347,7 @@
         const startIndex = visibleImg ? parseInt(visibleImg.dataset.imageIndex) || 0 : 0;
         
         openLightbox(images, startIndex);
+        return; // Früh beenden aber Propagation erlauben
       }
     });
     
