@@ -18,9 +18,9 @@
 .teamwear-calculator--handball .teamwear-calculator__inner,
 .teamwear-calculator--volleyball .teamwear-calculator__inner,
 .teamwear-calculator--tischtennis .teamwear-calculator__inner {
-  max-width: 1000px;
+  max-width: none;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
 }
 
 /* Schritt-Layout für alle Kalkulatoren */
