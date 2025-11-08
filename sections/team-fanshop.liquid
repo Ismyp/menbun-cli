@@ -11,8 +11,16 @@
   #shopify-section-{{ section.id }} .tf-hero__logo img{ width:100%; height:100%; object-fit:contain; padding: 8px; }
   
   @media (max-width: 640px) {
-    #shopify-section-{{ section.id }} .tf-hero { padding: 12px; gap: 12px; }
-    #shopify-section-{{ section.id }} .tf-hero__logo { width: 60px; height: 60px; padding: 6px; }
+    #shopify-section-{{ section.id }} .tf-hero { 
+      flex-direction: column; 
+      text-align: center; 
+      padding: 24px 16px; 
+      gap: 16px; 
+    }
+    #shopify-section-{{ section.id }} .tf-hero__logo { 
+      width: 100px; 
+      height: 100px; 
+    }
   }
   #shopify-section-{{ section.id }} .tf-hero__title { margin:0 0 2px; font-weight:800; font-size: clamp(1.25rem, 1rem + .8vw, 1.75rem); }
   #shopify-section-{{ section.id }} .tf-hero__meta { color:#64748b; }
