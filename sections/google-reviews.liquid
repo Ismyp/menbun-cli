@@ -1,0 +1,495 @@
+{%- comment -%}
+  Google-Style Reviews Section
+  Mit echtem Google-Design
+{%- endcomment -%}
+
+{%- assign initials1 = section.settings.testimonial1_author | slice: 0 -%}
+{%- assign initials2 = section.settings.testimonial2_author | slice: 0 -%}
+{%- assign initials3 = section.settings.testimonial3_author | slice: 0 -%}
+{%- assign initials4 = section.settings.testimonial4_author | slice: 0 -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: #f8f9fa;
+    padding: 80px 0;
+  }
+
+  #shopify-section-{{ section.id }} .reviews-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} .reviews-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  #shopify-section-{{ section.id }} .google-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5f6368;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .reviews-title {
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 12px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .reviews-subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  #shopify-section-{{ section.id }} .review-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .review-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  #shopify-section-{{ section.id }} .review-header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4285f4, #34a853);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .review-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .review-author {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #shopify-section-{{ section.id }} .review-role {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #shopify-section-{{ section.id }} .review-stars {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .star {
+    width: 16px;
+    height: 16px;
+    color: #fbbc04;
+  }
+
+  #shopify-section-{{ section.id }} .review-text {
+    font-size: 14px;
+    color: #3c4043;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .google-timestamp {
+    font-size: 12px;
+    color: #80868b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .google-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Footer Section */
+  #shopify-section-{{ section.id }} .reviews-footer {
+    text-align: center;
+    padding: 40px 32px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating {
+    margin-bottom: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__number {
+    font-size: 56px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__stars {
+    display: flex;
+    gap: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__stars .star {
+    width: 24px;
+    height: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__text {
+    font-size: 16px;
+    color: #5f6368;
+    margin-bottom: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .average-rating__count {
+    font-size: 14px;
+    color: #80868b;
+  }
+
+  #shopify-section-{{ section.id }} .google-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: #4285f4;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .google-button:hover {
+    background: #357ae8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+    color: #ffffff;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .reviews-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} {
+      padding: 60px 0;
+    }
+    
+    #shopify-section-{{ section.id }} .reviews-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{%- endstyle -%}
+
+<section class="reviews-container">
+  <div class="reviews-header">
+    <div class="google-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      ⭐ {{ section.settings.average_rating }}/5 Google Bewertungen
+    </div>
+    <h2 class="reviews-title">{{ section.settings.title }}</h2>
+    <p class="reviews-subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="reviews-grid">
+    {%- for i in (1..4) -%}
+      {%- capture testimonial_text -%}testimonial{{ i }}_text{%- endcapture -%}
+      {%- capture testimonial_author -%}testimonial{{ i }}_author{%- endcapture -%}
+      {%- capture testimonial_role -%}testimonial{{ i }}_role{%- endcapture -%}
+      {%- capture testimonial_months -%}testimonial{{ i }}_months{%- endcapture -%}
+      
+      {%- if section.settings[testimonial_text] != blank -%}
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">{{ section.settings[testimonial_author] | slice: 0 }}</div>
+            <div class="review-info">
+              <div class="review-author">{{ section.settings[testimonial_author] }}</div>
+              <div class="review-role">{{ section.settings[testimonial_role] }}</div>
+            </div>
+          </div>
+          
+          <div class="review-stars">
+            {%- for star in (1..5) -%}
+              <svg class="star" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            {%- endfor -%}
+          </div>
+          
+          <p class="review-text">{{ section.settings[testimonial_text] }}</p>
+          
+          <div class="google-timestamp">
+            <svg class="google-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Google Bewertung vor {{ section.settings[testimonial_months] | default: 7 }} Monaten
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="reviews-footer">
+    <div class="average-rating">
+      <div class="average-rating__text">Durchschnittliche Bewertung unserer Vereins-Services</div>
+      <div class="average-rating__score">
+        <div class="average-rating__stars">
+          {%- for star in (1..5) -%}
+            <svg class="star" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          {%- endfor -%}
+        </div>
+        <div class="average-rating__number">{{ section.settings.average_rating }}</div>
+      </div>
+      <div class="average-rating__count">({{ section.settings.review_count }} Bewertungen)</div>
+    </div>
+    
+    <a href="{{ section.settings.google_link | default: '#' }}" class="google-button" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <rect fill="#ffffff" width="24" height="24" rx="4"/>
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Alle Google Bewertungen ansehen ({{ section.settings.total_reviews | default: 19 }} Bewertungen)
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Google Reviews",
+  "tag": "section",
+  "class": "google-reviews-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Überschrift"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titel",
+      "default": "Was unsere Kunden sagen"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Untertitel",
+      "default": "Über 200+ zufriedene Kunden vertrauen bereits auf MENBUN. Lesen Sie echte Erfahrungsberichte von Sportbegeisterten und Vereinen"
+    },
+    {
+      "type": "header",
+      "content": "Durchschnittsbewertung"
+    },
+    {
+      "type": "text",
+      "id": "average_rating",
+      "label": "Durchschnitt",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Anzahl Bewertungen",
+      "default": "27"
+    },
+    {
+      "type": "text",
+      "id": "total_reviews",
+      "label": "Gesamt-Bewertungen (für Button)",
+      "default": "19"
+    },
+    {
+      "type": "url",
+      "id": "google_link",
+      "label": "Google Bewertungen Link"
+    },
+    {
+      "type": "header",
+      "content": "Bewertung 1"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial1_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "testimonial1_author",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "testimonial1_role",
+      "label": "Position"
+    },
+    {
+      "type": "range",
+      "id": "testimonial1_months",
+      "label": "Vor wie vielen Monaten",
+      "min": 1,
+      "max": 24,
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Bewertung 2"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial2_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "testimonial2_author",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "testimonial2_role",
+      "label": "Position"
+    },
+    {
+      "type": "range",
+      "id": "testimonial2_months",
+      "label": "Vor wie vielen Monaten",
+      "min": 1,
+      "max": 24,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Bewertung 3"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial3_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "testimonial3_author",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "testimonial3_role",
+      "label": "Position"
+    },
+    {
+      "type": "range",
+      "id": "testimonial3_months",
+      "label": "Vor wie vielen Monaten",
+      "min": 1,
+      "max": 24,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Bewertung 4"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial4_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "testimonial4_author",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "testimonial4_role",
+      "label": "Position"
+    },
+    {
+      "type": "range",
+      "id": "testimonial4_months",
+      "label": "Vor wie vielen Monaten",
+      "min": 1,
+      "max": 24,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Google Reviews"
+    }
+  ]
+}
+{% endschema %}
+
