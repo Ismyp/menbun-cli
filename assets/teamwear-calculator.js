@@ -1425,7 +1425,28 @@ class TeamwearLightbox {
   }
 }
 
-// Initialize
+// Initialize Lightbox IMMER (auch ohne Calculator!)
+if (typeof window.teamwearLightboxInitialized === 'undefined') {
+  window.teamwearLightboxInitialized = false;
+}
+
+if (!window.teamwearLightboxInitialized) {
+  window.teamwearLightboxInitialized = true;
+  
+  const initLightbox = () => {
+    if (!window.teamwearLightbox) {
+      window.teamwearLightbox = new TeamwearLightbox();
+    }
+  };
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLightbox);
+  } else {
+    initLightbox();
+  }
+}
+
+// Initialize Calculator (nur wenn Config existiert)
 if (typeof window.teamwearCalculatorInitialized === 'undefined') {
   window.teamwearCalculatorInitialized = false;
 }
@@ -1437,7 +1458,6 @@ if (!window.teamwearCalculatorInitialized) {
     if (window.teamwearConfig?.sectionId && !window.teamwearCalculator) {
       try {
         window.teamwearCalculator = new TeamwearCalculator(window.teamwearConfig.sectionId);
-        new TeamwearLightbox();
       } catch (error) {
         console.error('TeamwearCalculator initialization failed:', error);
       }
