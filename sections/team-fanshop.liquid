@@ -454,8 +454,34 @@
           body: JSON.stringify({ id: productId, quantity: 1, properties })
         });
         if (!res.ok) throw new Error('Cart add failed');
+        
+        const cartData = await res.json();
+        
+        // Trigger Cart Update Event
+        document.dispatchEvent(new CustomEvent('cart:update', {
+          bubbles: true,
+          detail: {
+            resource: cartData,
+            sourceId: productId.toString(),
+            data: {
+              source: 'fanshop',
+              itemCount: 1,
+              productId: productId.toString()
+            }
+          }
+        }));
+        
+        // Öffne Cart Drawer
+        const cartDrawer = document.querySelector('cart-drawer-component');
+        if (cartDrawer && typeof cartDrawer.open === 'function') {
+          setTimeout(() => cartDrawer.open(), 300);
+        }
+        
         btn.removeAttribute('disabled');
-      } catch(err) { btn.removeAttribute('disabled'); }
+      } catch(err) { 
+        console.error('Add to cart failed:', err);
+        btn.removeAttribute('disabled'); 
+      }
     });
   })();
 </script>
