@@ -1369,11 +1369,22 @@ class TeamwearLightbox {
 
   openLightbox(button) {
     // Unterstützt sowohl Teamwear Calculator als auch Fanshop
-    const wrapper = button.closest('.teamwear-design__image-wrapper') || button.closest('.tf-card__media');
+    const wrapper = button.closest('.teamwear-design__image-wrapper') || button.closest('.tf-image-slider') || button.closest('.tf-card__media');
     if (!wrapper) return;
 
-    // Finde Bilder (verschiedene Klassen)
-    const images = Array.from(wrapper.querySelectorAll('.teamwear-design__image, .tf-image'));
+    // Finde Bilder (verschiedene Klassen) - suche tiefer in Kindernodes
+    let images = Array.from(wrapper.querySelectorAll('.teamwear-design__image, .tf-image'));
+    
+    // Falls keine gefunden, suche im Parent
+    if (images.length === 0) {
+      const parent = wrapper.closest('.tf-card__media');
+      if (parent) {
+        images = Array.from(parent.querySelectorAll('.tf-image'));
+      }
+    }
+    
+    if (images.length === 0) return;
+    
     this.currentImages = images.map(img => ({
       src: img.src.replace('width=400', 'width=1200').replace('width=800', 'width=1200'),
       alt: img.alt
