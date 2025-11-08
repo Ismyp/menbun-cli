@@ -11,8 +11,23 @@
   "sections": {
     "main": {
       "type": "team-fanshop",
-      "settings": {}
+      "settings": {
+        "logo": "shopify://shop_images/aufkleber_rund_9-5_x_9-5-98091f79-1920w.webp",
+        "team_name": "SV Neustadt",
+        "team_sub": "",
+        "intro": "",
+        "collection": "",
+        "show_filters": true,
+        "filter1_label": "Trikots",
+        "filter1_tag": "trikot",
+        "filter2_label": "Fanwear",
+        "filter2_tag": "fanwear",
+        "filter3_label": "Trainingskleidung",
+        "filter3_tag": "training"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
