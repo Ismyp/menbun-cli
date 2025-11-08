@@ -368,9 +368,9 @@
 .teamwear-calculator--handball,
 .teamwear-calculator--volleyball,
 .teamwear-calculator--tischtennis {
-  --page-width: 1600px !important;
-  --page-content-width: 1520px !important;
-  --page-margin: 40px !important;
+  --page-width: 85vw !important;
+  --page-content-width: 82vw !important;
+  --page-margin: 1.5vw !important;
 }
 
 .teamwear-calculator--basketball .page-width,
