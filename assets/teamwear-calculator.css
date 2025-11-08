@@ -458,18 +458,7 @@
   }
 }
 
-@media screen and (max-width: 1000px) {
-  .teamwear-designs,
-  .teamwear-calculator--basketball .teamwear-designs,
-  .teamwear-calculator--fussball .teamwear-designs,
-  .teamwear-calculator--handball .teamwear-designs,
-  .teamwear-calculator--volleyball .teamwear-designs,
-  .teamwear-calculator--tischtennis .teamwear-designs {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1.5rem;
-    --designs-per-row: 2;
-  }
-}
+/* Entfernt - Theme Editor soll volle Kontrolle haben auf Desktop */
 
 @media screen and (max-width: 749px) {
   .teamwear-designs,
