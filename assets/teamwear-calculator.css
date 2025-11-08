@@ -1045,6 +1045,8 @@
 .teamwear-personalization__table-wrapper {
   overflow-x: auto;
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   -webkit-overflow-scrolling: touch;
 }
 
