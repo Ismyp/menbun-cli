@@ -229,33 +229,66 @@
           <div class="tf-card__body">
             <div class="tf-card__title" style="font-weight:700;">{{ product.title }}</div>
             <div class="tf-price">{{ product.selected_or_first_available_variant.price | money }}</div>
-            {%- assign size_opt = product.options_with_values | where: 'name', 'Größe' -%}
-            {%- if size_opt.size == 0 -%}
-              {%- assign size_opt = product.options_with_values | where: 'name', 'Size' -%}
-            {%- endif -%}
-            {%- if size_opt.size > 0 -%}
+            {%- comment -%} Prüfe ERST Metafelder, dann Product Options {%- endcomment -%}
+            
+            {%- comment -%} GRÖSSE aus Metafeld {%- endcomment -%}
+            {%- assign metafield_sizes = product.metafields.custom.größe | default: product.metafields.custom.grosse | default: product.metafields.custom.size -%}
+            {%- if metafield_sizes != blank -%}
+              {%- assign sizes_array = metafield_sizes | split: ',' -%}
               <div class="tf-row">
-                <label style="font-weight: 600; font-size: 14px; color: #374151;">Größe</label>
-                <select class="tf-input" data-variant-size style="flex: 1;">
-                  {%- for opt in size_opt.first.values -%}
-                    <option value="{{ opt }}">{{ opt }}</option>
+                <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Größe</label>
+                <select class="tf-input" data-size-select style="flex: 1;">
+                  {%- for size in sizes_array -%}
+                    <option value="{{ size | strip }}">{{ size | strip }}</option>
                   {%- endfor -%}
                 </select>
               </div>
+            {%- else -%}
+              {%- comment -%} Fallback: Shopify Product Options {%- endcomment -%}
+              {%- assign size_opt = product.options_with_values | where: 'name', 'Größe' -%}
+              {%- if size_opt.size == 0 -%}
+                {%- assign size_opt = product.options_with_values | where: 'name', 'Size' -%}
+              {%- endif -%}
+              {%- if size_opt.size > 0 -%}
+                <div class="tf-row">
+                  <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Größe</label>
+                  <select class="tf-input" data-variant-size style="flex: 1;">
+                    {%- for opt in size_opt.first.values -%}
+                      <option value="{{ opt }}">{{ opt }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endif -%}
             {%- endif -%}
-            {%- assign color_opt = product.options_with_values | where: 'name', 'Farbe' -%}
-            {%- if color_opt.size == 0 -%}
-              {%- assign color_opt = product.options_with_values | where: 'name', 'Color' -%}
-            {%- endif -%}
-            {%- if color_opt.size > 0 -%}
+            
+            {%- comment -%} FARBE aus Metafeld {%- endcomment -%}
+            {%- assign metafield_colors = product.metafields.custom.farbe | default: product.metafields.custom.color -%}
+            {%- if metafield_colors != blank -%}
+              {%- assign colors_array = metafield_colors | split: ',' -%}
               <div class="tf-row">
-                <label style="font-weight: 600; font-size: 14px; color: #374151;">Farbe</label>
-                <select class="tf-input" data-variant-color style="flex: 1;">
-                  {%- for opt in color_opt.first.values -%}
-                    <option value="{{ opt }}">{{ opt }}</option>
+                <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Farbe</label>
+                <select class="tf-input" data-color-select style="flex: 1;">
+                  {%- for color in colors_array -%}
+                    <option value="{{ color | strip }}">{{ color | strip }}</option>
                   {%- endfor -%}
                 </select>
               </div>
+            {%- else -%}
+              {%- comment -%} Fallback: Shopify Product Options {%- endcomment -%}
+              {%- assign color_opt = product.options_with_values | where: 'name', 'Farbe' -%}
+              {%- if color_opt.size == 0 -%}
+                {%- assign color_opt = product.options_with_values | where: 'name', 'Color' -%}
+              {%- endif -%}
+              {%- if color_opt.size > 0 -%}
+                <div class="tf-row">
+                  <label style="font-weight: 600; font-size: 14px; color: #374151; min-width: 60px;">Farbe</label>
+                  <select class="tf-input" data-variant-color style="flex: 1;">
+                    {%- for opt in color_opt.first.values -%}
+                      <option value="{{ opt }}">{{ opt }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endif -%}
             {%- endif -%}
             <div class="tf-row">
               <label><input type="checkbox" data-opt-name> Namen hinzufügen</label>
