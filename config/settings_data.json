@@ -141,6 +141,7 @@
         "settings": {
           "fallback_product": "",
           "fallback_discount_per_tier": 5,
+          "designs_per_row": 3,
           "design_title": "1. Wähle dein Basketball-Design",
           "design_description": "Wähle aus unseren verfügbaren Basketball-Designs",
           "price_note": "Stückpreis",
