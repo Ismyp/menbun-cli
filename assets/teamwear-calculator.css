@@ -358,26 +358,21 @@
 }
 
 
-/* Erweitere page-width für Teamwear Calculators - Mehr Platz nutzen! */
+/* ================================================
+   CONTAINER BREITE - Nutzt viel mehr Bildschirm
+   ================================================ */
+
 .teamwear-calculator .page-width {
-  max-width: 95%;
-  padding-left: 40px;
-  padding-right: 40px;
+  max-width: none !important;
+  width: 100%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
-@media screen and (min-width: 1400px) {
-  .teamwear-calculator .page-width {
-    max-width: 90%;
-  }
-}
+/* ================================================
+   DESIGN GRID - Responsive & Flexibel
+   ================================================ */
 
-@media screen and (min-width: 1800px) {
-  .teamwear-calculator .page-width {
-    max-width: 85%;
-  }
-}
-
-/* Design Selection - Zentraler und übersichtlicher für alle Kalkulatoren */
 .teamwear-designs,
 .teamwear-calculator--basketball .teamwear-designs,
 .teamwear-calculator--fussball .teamwear-designs,
@@ -387,12 +382,15 @@
   display: grid;
   grid-template-columns: repeat(var(--designs-per-row, 2), 1fr);
   gap: 2rem;
-  max-width: 100%;
-  margin: 0 auto;
-  justify-content: center;
+  max-width: none;
+  width: 100%;
+  margin: 0;
 }
 
-/* Grid-Spalten Optionen - Nutzt jetzt volle Breite! */
+/* ================================================
+   SPALTEN-KONFIGURATION via Theme Editor
+   ================================================ */
+
 .teamwear-calculator[data-columns="2"] {
   --designs-per-row: 2;
 }
