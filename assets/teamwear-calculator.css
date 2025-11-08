@@ -359,14 +359,39 @@
 
 
 /* ================================================
-   BREITE - DIREKT UND KLAR!
+   BREITE - ALLE SECTIONS AUF GLEICHE BREITE!
    ================================================ */
 
 .teamwear-calculator--basketball .teamwear-designs,
 .teamwear-calculator--fussball .teamwear-designs,
 .teamwear-calculator--handball .teamwear-designs,
 .teamwear-calculator--volleyball .teamwear-designs,
-.teamwear-calculator--tischtennis .teamwear-designs {
+.teamwear-calculator--tischtennis .teamwear-designs,
+.teamwear-calculator--basketball .teamwear-sizes,
+.teamwear-calculator--fussball .teamwear-sizes,
+.teamwear-calculator--handball .teamwear-sizes,
+.teamwear-calculator--volleyball .teamwear-sizes,
+.teamwear-calculator--tischtennis .teamwear-sizes,
+.teamwear-calculator--basketball .teamwear-personalization,
+.teamwear-calculator--fussball .teamwear-personalization,
+.teamwear-calculator--handball .teamwear-personalization,
+.teamwear-calculator--volleyball .teamwear-personalization,
+.teamwear-calculator--tischtennis .teamwear-personalization,
+.teamwear-calculator--basketball .teamwear-team-section,
+.teamwear-calculator--fussball .teamwear-team-section,
+.teamwear-calculator--handball .teamwear-team-section,
+.teamwear-calculator--volleyball .teamwear-team-section,
+.teamwear-calculator--tischtennis .teamwear-team-section,
+.teamwear-calculator--basketball .teamwear-quantity-section,
+.teamwear-calculator--fussball .teamwear-quantity-section,
+.teamwear-calculator--handball .teamwear-quantity-section,
+.teamwear-calculator--volleyball .teamwear-quantity-section,
+.teamwear-calculator--tischtennis .teamwear-quantity-section,
+.teamwear-calculator--basketball .teamwear-summary,
+.teamwear-calculator--fussball .teamwear-summary,
+.teamwear-calculator--handball .teamwear-summary,
+.teamwear-calculator--volleyball .teamwear-summary,
+.teamwear-calculator--tischtennis .teamwear-summary {
   max-width: 1400px !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
