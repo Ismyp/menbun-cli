@@ -1294,6 +1294,134 @@ class TeamwearCalculator {
   }
 }
 
+/**
+ * IMAGE LIGHTBOX / ZOOM FUNCTIONALITY
+ */
+class TeamwearLightbox {
+  constructor() {
+    this.currentImages = [];
+    this.currentIndex = 0;
+    this.lightbox = null;
+    this.init();
+  }
+
+  init() {
+    this.createLightboxModal();
+    
+    document.addEventListener('click', (e) => {
+      const zoomBtn = e.target.closest('[data-zoom-trigger]');
+      if (zoomBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.openLightbox(zoomBtn);
+      }
+    });
+  }
+
+  createLightboxModal() {
+    if (document.querySelector('.teamwear-lightbox')) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'teamwear-lightbox';
+    modal.innerHTML = `
+      <div class="teamwear-lightbox__container">
+        <button class="teamwear-lightbox__close" aria-label="Schließen">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <button class="teamwear-lightbox__nav-btn teamwear-lightbox__nav-btn--prev" aria-label="Vorheriges Bild">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <div class="teamwear-lightbox__image-wrapper">
+          <img class="teamwear-lightbox__image" src="" alt="Product Image">
+        </div>
+        <button class="teamwear-lightbox__nav-btn teamwear-lightbox__nav-btn--next" aria-label="Nächstes Bild">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+        <div class="teamwear-lightbox__counter">
+          <span class="teamwear-lightbox__current">1</span> / <span class="teamwear-lightbox__total">1</span>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    this.lightbox = modal;
+
+    modal.querySelector('.teamwear-lightbox__close').addEventListener('click', () => this.closeLightbox());
+    modal.querySelector('.teamwear-lightbox__nav-btn--prev').addEventListener('click', () => this.navigate(-1));
+    modal.querySelector('.teamwear-lightbox__nav-btn--next').addEventListener('click', () => this.navigate(1));
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) this.closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!this.lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') this.closeLightbox();
+      if (e.key === 'ArrowLeft') this.navigate(-1);
+      if (e.key === 'ArrowRight') this.navigate(1);
+    });
+  }
+
+  openLightbox(button) {
+    const wrapper = button.closest('.teamwear-design__image-wrapper');
+    if (!wrapper) return;
+
+    const images = Array.from(wrapper.querySelectorAll('.teamwear-design__image'));
+    this.currentImages = images.map(img => ({
+      src: img.src.replace('width=400', 'width=1200'),
+      alt: img.alt
+    }));
+
+    const visibleImage = images.find(img => !img.classList.contains('visually-hidden'));
+    this.currentIndex = visibleImage ? parseInt(visibleImage.dataset.imageIndex) || 0 : 0;
+
+    this.lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.updateLightboxImage();
+  }
+
+  closeLightbox() {
+    this.lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  navigate(direction) {
+    this.currentIndex += direction;
+    
+    if (this.currentIndex < 0) {
+      this.currentIndex = this.currentImages.length - 1;
+    } else if (this.currentIndex >= this.currentImages.length) {
+      this.currentIndex = 0;
+    }
+    
+    this.updateLightboxImage();
+  }
+
+  updateLightboxImage() {
+    const img = this.lightbox.querySelector('.teamwear-lightbox__image');
+    const current = this.lightbox.querySelector('.teamwear-lightbox__current');
+    const total = this.lightbox.querySelector('.teamwear-lightbox__total');
+    const prevBtn = this.lightbox.querySelector('.teamwear-lightbox__nav-btn--prev');
+    const nextBtn = this.lightbox.querySelector('.teamwear-lightbox__nav-btn--next');
+
+    if (this.currentImages[this.currentIndex]) {
+      img.src = this.currentImages[this.currentIndex].src;
+      img.alt = this.currentImages[this.currentIndex].alt;
+      current.textContent = this.currentIndex + 1;
+      total.textContent = this.currentImages.length;
+    }
+
+    const hasMultiple = this.currentImages.length > 1;
+    prevBtn.style.display = hasMultiple ? 'flex' : 'none';
+    nextBtn.style.display = hasMultiple ? 'flex' : 'none';
+  }
+}
+
 // Initialize
 if (typeof window.teamwearCalculatorInitialized === 'undefined') {
   window.teamwearCalculatorInitialized = false;
@@ -1306,9 +1434,10 @@ if (!window.teamwearCalculatorInitialized) {
     if (window.teamwearConfig?.sectionId && !window.teamwearCalculator) {
       try {
         window.teamwearCalculator = new TeamwearCalculator(window.teamwearConfig.sectionId);
-        } catch (error) {
+        new TeamwearLightbox();
+      } catch (error) {
         console.error('TeamwearCalculator initialization failed:', error);
-        }
+      }
     }
   };
   

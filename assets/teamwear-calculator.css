@@ -366,11 +366,44 @@
 .teamwear-calculator--volleyball .teamwear-designs,
 .teamwear-calculator--tischtennis .teamwear-designs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(var(--designs-per-row, 2), 1fr);
   gap: 2rem;
-  max-width: 900px;
+  max-width: var(--designs-max-width, 900px);
   margin: 0 auto;
   justify-content: center;
+}
+
+/* Grid-Spalten Optionen - Über Theme Editor steuerbar via data-columns */
+.teamwear-calculator[data-columns="2"] {
+  --designs-per-row: 2;
+  --designs-max-width: 900px;
+}
+
+.teamwear-calculator[data-columns="3"] {
+  --designs-per-row: 3;
+  --designs-max-width: 1200px;
+}
+
+.teamwear-calculator[data-columns="4"] {
+  --designs-per-row: 4;
+  --designs-max-width: 1400px;
+}
+
+.teamwear-calculator[data-columns="5"] {
+  --designs-per-row: 5;
+  --designs-max-width: 1600px;
+}
+
+.teamwear-calculator[data-columns="6"] {
+  --designs-per-row: 6;
+  --designs-max-width: 1800px;
+}
+
+@media screen and (max-width: 1200px) {
+  .teamwear-calculator[data-columns="5"],
+  .teamwear-calculator[data-columns="6"] {
+    --designs-per-row: 4;
+  }
 }
 
 @media screen and (max-width: 1000px) {
@@ -380,8 +413,9 @@
   .teamwear-calculator--handball .teamwear-designs,
   .teamwear-calculator--volleyball .teamwear-designs,
   .teamwear-calculator--tischtennis .teamwear-designs {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 1.5rem;
+    --designs-per-row: 2;
   }
 }
 
@@ -392,9 +426,10 @@
   .teamwear-calculator--handball .teamwear-designs,
   .teamwear-calculator--volleyball .teamwear-designs,
   .teamwear-calculator--tischtennis .teamwear-designs {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 1rem;
     max-width: 400px;
+    --designs-per-row: 1;
   }
 }
 
@@ -447,6 +482,60 @@
   position: relative;
   width: 100%;
   overflow: hidden;
+}
+
+/* Zoom/Lupe Button */
+.teamwear-design__zoom-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.teamwear-design__zoom-btn:hover {
+  background: rgba(163, 230, 53, 0.95);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(163, 230, 53, 0.3);
+}
+
+.teamwear-design__zoom-btn svg {
+  width: 20px;
+  height: 20px;
+  color: #1f2937;
+}
+
+.teamwear-design__zoom-btn:hover svg {
+  color: #ffffff;
+}
+
+.teamwear-design__image-wrapper:hover .teamwear-design__zoom-btn {
+  opacity: 1;
+}
+
+@media screen and (max-width: 749px) {
+  .teamwear-design__zoom-btn {
+    opacity: 1;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .teamwear-design__zoom-btn svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .teamwear-design__image-slider {
@@ -1117,6 +1206,176 @@
 .teamwear-messages.error {
   background-color: #f8d7da;
   color: var(--error-color);
+}
+
+/* ================================================
+   LIGHTBOX / IMAGE ZOOM MODAL
+   ================================================ */
+
+.teamwear-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.teamwear-lightbox.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.teamwear-lightbox__container {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teamwear-lightbox__image-wrapper {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.teamwear-lightbox__image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Lightbox Navigation Buttons */
+.teamwear-lightbox__nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.teamwear-lightbox__nav-btn:hover {
+  background: rgba(163, 230, 53, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.teamwear-lightbox__nav-btn--prev {
+  left: 20px;
+}
+
+.teamwear-lightbox__nav-btn--next {
+  right: 20px;
+}
+
+.teamwear-lightbox__nav-btn svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.teamwear-lightbox__nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.teamwear-lightbox__nav-btn:disabled:hover {
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Close Button */
+.teamwear-lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.teamwear-lightbox__close:hover {
+  background: rgba(239, 68, 68, 0.9);
+  transform: scale(1.1);
+}
+
+.teamwear-lightbox__close svg {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+/* Image Counter */
+.teamwear-lightbox__counter {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Mobile Optimierung */
+@media screen and (max-width: 749px) {
+  .teamwear-lightbox__container {
+    width: 95%;
+    height: 95vh;
+  }
+  
+  .teamwear-lightbox__nav-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .teamwear-lightbox__nav-btn--prev {
+    left: 10px;
+  }
+  
+  .teamwear-lightbox__nav-btn--next {
+    right: 10px;
+  }
+  
+  .teamwear-lightbox__close {
+    top: 10px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* Utility Classes */

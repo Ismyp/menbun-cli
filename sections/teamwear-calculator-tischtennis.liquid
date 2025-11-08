@@ -18,6 +18,7 @@
 
 <div class="teamwear-calculator teamwear-calculator--contained teamwear-calculator--tischtennis" 
      data-section="{{ section.id }}"
+     data-columns="{{ section.settings.designs_per_row | default: 2 }}"
      data-use-dynamic-discounts="{{ section.settings.use_dynamic_discounts }}"
      data-discount-tiers='{{ section.settings.discount_tiers }}'
      data-max-discount-limit="{{ section.settings.max_discount_limit | default: 25 }}">
