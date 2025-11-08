@@ -191,10 +191,12 @@
     </div>
   {%- endif -%}
 
+  <!-- DEBUG: {{ fanshop_collection.products.size }} Produkte in Collection -->
   <div class="tf-grid" data-product-grid>
     {%- if fanshop_collection != blank -%}
       {%- assign all_products = fanshop_collection.products -%}
       {%- for product in all_products -%}
+        <!-- DEBUG Product {{ forloop.index }}: {{ product.title }} -->
         <article class="tf-card" data-product-id="{{ product.selected_or_first_available_variant.id }}" data-tags="{{ product.tags | join: ',' | escape }}">
           <div class="tf-card__media">
             <button type="button" class="tf-zoom-btn" aria-label="Bild vergrößern" data-zoom-trigger data-product-handle="{{ product.handle }}">
