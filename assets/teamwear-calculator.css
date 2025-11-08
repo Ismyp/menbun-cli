@@ -359,14 +359,26 @@
 
 
 /* ================================================
-   CONTAINER BREITE - Nutzt viel mehr Bildschirm
+   CONTAINER BREITE - NUR FÜR KALKULATOREN!
+   Überschreibt Theme CSS-Variablen für mehr Platz
    ================================================ */
 
-.teamwear-calculator .page-width {
-  max-width: none !important;
-  width: 100%;
-  padding-left: 5%;
-  padding-right: 5%;
+.teamwear-calculator--basketball,
+.teamwear-calculator--fussball,
+.teamwear-calculator--handball,
+.teamwear-calculator--volleyball,
+.teamwear-calculator--tischtennis {
+  --page-width: 95vw !important;
+  --page-content-width: 92vw !important;
+  --page-margin: 1.5vw !important;
+}
+
+.teamwear-calculator--basketball .page-width,
+.teamwear-calculator--fussball .page-width,
+.teamwear-calculator--handball .page-width,
+.teamwear-calculator--volleyball .page-width,
+.teamwear-calculator--tischtennis .page-width {
+  max-width: var(--page-width) !important;
 }
 
 /* ================================================
@@ -382,9 +394,9 @@
   display: grid;
   grid-template-columns: repeat(var(--designs-per-row, 2), 1fr);
   gap: 2rem;
-  max-width: none;
+  max-width: 100%;
   width: 100%;
-  margin: 0;
+  margin: 0 auto;
 }
 
 /* ================================================
