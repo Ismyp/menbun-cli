@@ -76,12 +76,12 @@
                           <div class="teamwear-design__image-container">
                             {%- for image in product.images -%}
                               <img class="teamwear-design__image {% unless forloop.first %}visually-hidden{% endunless %}" 
-                                   src="{{ image | image_url: width: 400 }}" 
+                                   src="{{ image | image_url: width: 800 }}" 
                                    alt="{{ product.title | escape }}"
                                    loading="{% if forloop.first %}lazy{% else %}eager{% endif %}"
                                    data-image-index="{{ forloop.index0 }}"
-                                   width="400"
-                                   height="{{ 400 | divided_by: image.aspect_ratio | round }}">
+                                   width="800"
+                                   height="{{ 800 | divided_by: image.aspect_ratio | round }}">
                             {%- endfor -%}
                           </div>
                         </div>
@@ -143,12 +143,12 @@
                     <div class="teamwear-design__image-container">
                       {%- for image in fallback_product.images -%}
                         <img class="teamwear-design__image {% unless forloop.first %}visually-hidden{% endunless %}" 
-                             src="{{ image | image_url: width: 400 }}" 
+                             src="{{ image | image_url: width: 800 }}" 
                              alt="{{ fallback_product.title | escape }}"
                              loading="{% if forloop.first %}lazy{% else %}eager{% endif %}"
                              data-image-index="{{ forloop.index0 }}"
-                             width="400"
-                             height="{{ 400 | divided_by: image.aspect_ratio | round }}">
+                             width="800"
+                             height="{{ 800 | divided_by: image.aspect_ratio | round }}">
                       {%- endfor -%}
                     </div>
                   </div>

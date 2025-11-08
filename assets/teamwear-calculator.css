@@ -11,16 +11,16 @@
   --selected-color: #fff;
 }
 
-/* Zentrales Layout mit begrenzter Breite - für alle Kalkulatoren */
+/* Zentrales Layout - Nutzt volle Container-Breite */
 .teamwear-calculator__inner,
 .teamwear-calculator--basketball .teamwear-calculator__inner,
 .teamwear-calculator--fussball .teamwear-calculator__inner,
 .teamwear-calculator--handball .teamwear-calculator__inner,
 .teamwear-calculator--volleyball .teamwear-calculator__inner,
 .teamwear-calculator--tischtennis .teamwear-calculator__inner {
-  max-width: none;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 20px;
 }
 
 /* Schritt-Layout für alle Kalkulatoren */
@@ -360,7 +360,7 @@
 
 /* ================================================
    CONTAINER BREITE - NUR FÜR KALKULATOREN!
-   Überschreibt Theme CSS-Variablen für mehr Platz
+   Bis zum Logo, nicht darüber hinaus, symmetrisch
    ================================================ */
 
 .teamwear-calculator--basketball,
@@ -368,9 +368,9 @@
 .teamwear-calculator--handball,
 .teamwear-calculator--volleyball,
 .teamwear-calculator--tischtennis {
-  --page-width: 95vw !important;
-  --page-content-width: 92vw !important;
-  --page-margin: 1.5vw !important;
+  --page-width: 1600px !important;
+  --page-content-width: 1520px !important;
+  --page-margin: 40px !important;
 }
 
 .teamwear-calculator--basketball .page-width,
