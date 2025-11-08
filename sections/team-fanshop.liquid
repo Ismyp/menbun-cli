@@ -30,7 +30,7 @@
   #shopify-section-{{ section.id }} .tf-filters { display:flex; gap:8px; justify-content:center; margin: 8px 0 16px; flex-wrap:wrap; }
   #shopify-section-{{ section.id }} .tf-chip { padding:8px 12px; border:1px solid #e5e7eb; border-radius:999px; background:#fff; cursor:pointer; font-weight:600; }
   #shopify-section-{{ section.id }} .tf-chip.is-active { background:#111827; color:#fff; border-color:#111827; }
-  #shopify-section-{{ section.id }} .tf-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  #shopify-section-{{ section.id }} .tf-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; max-width: 1200px; margin: 0 auto; }
   @media (max-width: 900px) { #shopify-section-{{ section.id }} .tf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 640px) { #shopify-section-{{ section.id }} .tf-grid { grid-template-columns: 1fr; } }
   #shopify-section-{{ section.id }} .tf-card { border:1px solid #e5e7eb; background:#fff; border-radius: 12px; overflow:hidden; display:flex; flex-direction:column; }
