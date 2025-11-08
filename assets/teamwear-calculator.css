@@ -358,6 +358,25 @@
 }
 
 
+/* Erweitere page-width für Teamwear Calculators - Mehr Platz nutzen! */
+.teamwear-calculator .page-width {
+  max-width: 95%;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+@media screen and (min-width: 1400px) {
+  .teamwear-calculator .page-width {
+    max-width: 90%;
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  .teamwear-calculator .page-width {
+    max-width: 85%;
+  }
+}
+
 /* Design Selection - Zentraler und übersichtlicher für alle Kalkulatoren */
 .teamwear-designs,
 .teamwear-calculator--basketball .teamwear-designs,
@@ -368,35 +387,30 @@
   display: grid;
   grid-template-columns: repeat(var(--designs-per-row, 2), 1fr);
   gap: 2rem;
-  max-width: var(--designs-max-width, 900px);
+  max-width: 100%;
   margin: 0 auto;
   justify-content: center;
 }
 
-/* Grid-Spalten Optionen - Über Theme Editor steuerbar via data-columns */
+/* Grid-Spalten Optionen - Nutzt jetzt volle Breite! */
 .teamwear-calculator[data-columns="2"] {
   --designs-per-row: 2;
-  --designs-max-width: 900px;
 }
 
 .teamwear-calculator[data-columns="3"] {
   --designs-per-row: 3;
-  --designs-max-width: 1350px;
 }
 
 .teamwear-calculator[data-columns="4"] {
   --designs-per-row: 4;
-  --designs-max-width: 1800px;
 }
 
 .teamwear-calculator[data-columns="5"] {
   --designs-per-row: 5;
-  --designs-max-width: 2250px;
 }
 
 .teamwear-calculator[data-columns="6"] {
   --designs-per-row: 6;
-  --designs-max-width: 2700px;
 }
 
 @media screen and (max-width: 1200px) {
