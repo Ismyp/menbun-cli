@@ -164,7 +164,7 @@
           "number_back_text": "Nummer Rücken",
           "number_back_price": 1.5,
           "player_names_text": "Spielernamen",
-          "player_names_price": 0,
+          "player_names_price": 1,
           "optional_text": "Optional",
           "total_price_label": "Gesamtpreis:",
           "add_to_cart_text": "In den Warenkorb",
